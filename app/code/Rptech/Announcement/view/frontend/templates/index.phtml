@@ -1,0 +1,143 @@
+<?php
+/**
+ * @var \Rptech\Announcement\Block\Index $block
+ * @var \Rptech\Announcement\Model\Announcement $announcement
+ */
+$announcements = $block->getAnnouncementCollection();
+$mediaPath = $block->getAnnounceMediaPath();
+?>
+<?php if (!empty($announcements) && $announcements->getSize()) : ?>
+        <div class="container main-container" style="padding-bottom: 361px;">
+            <div class="main main-inner">
+                <section>
+                    <div class="news-wapper inner-wrapper">
+                        <div class="row">
+                            <div class="col-sm-12 news-events">
+                                <div class="row">
+                                    <div class="col-sm-10">
+                                        <h2><?= __('Announcements') ?></h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12 media-menu">
+                                <?php foreach ($announcements as $announcement) :?>
+                                    <div class="media-sub-menu">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <h4 class="event-dt-title">
+                                                    <a
+                                                        href="<?= $mediaPath.'/'.$announcement->getPdf()?>"
+                                                        target="_blank">
+                                                        <?= __($announcement->getTitle()) ?>
+                                                    </a>
+                                                </h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+<?php else :?>
+    <h1><?= __('Records not Found.') ?></h1>
+<?php endif; ?>
+<style type="text/css" xml="space">
+    <!--
+    .news-wapper {
+        padding: 0px 30px 100px;
+        background-color: #fff;
+    }
+
+    .home-page .main {
+        background: #fff;
+        border-bottom-left-radius: 20px;
+        border-bottom-right-radius: 20px;
+        position: relative;
+        border-top-left-radius: 20px;
+        border-top-right-radius: 20px;
+    }
+
+    .main {
+        background: #fff;
+        position: relative;
+        border-bottom-left-radius: 20px;
+        border-bottom-right-radius: 20px;
+    }
+
+    .box-news {
+        float: left;
+        height: 89px;
+        position: relative;
+        width: 50px;
+    }
+
+    .news-sub-menu {
+        border-bottom: 1px solid #cac9c8;
+    }
+
+    .news-sub-menu h2 {
+        font-size: 24px;
+        color: #2b2b2b;
+    }
+
+    .news-sub-menu p {
+        font-size: 18px;
+    }
+
+    .margin1611 {
+        margin-top: 15px;
+    }
+
+    .media-sub-menu {
+        border-bottom: 1px solid #cac9c8;
+        padding: 1.5em 0 .75em;
+    }
+
+    .media-sub-menu h3 {
+        font-size: 14px;
+        color: #a02a7f;
+        font-weight: 500;
+        margin: 0 0 .4em;
+    }
+
+    .media-sub-menu p {
+        font-size: 16px;
+        margin-bottom: 0;
+    }
+
+    .media-sub-menu .col-right {
+        text-align: center;
+    }
+
+    .media-sub-menu .col-right p {
+        color: #2b2b2b;
+        font-size: 1.125em;
+    }
+    .media-menu {
+        position: relative;
+    }
+
+    .news-wapper .media-sub-menu .event-dt-title,
+    .news-wapper .media-sub-menu .news-title {
+        font-size: 22px;
+        text-transform: capitalize;
+    }
+
+    .news-wapper .media-sub-menu .event-dt-title a {
+        color: #444;
+    }
+
+    .news-wapper .media-sub-menu .event-dt-title a:hover {
+        text-decoration: underline;
+    }
+    -->
+</style>
+
+
+
+

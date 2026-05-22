@@ -1,0 +1,69 @@
+<?php
+/**
+ * @var \Rptech\FinancialReport\Block\Adminhtml\ImageBlock $block
+ */
+$mediaPath = $block->getMediaPath();
+$financialReporData = $block->getFinancialReportData();
+$documentsCollection = $block->getFinancialReportDocsData($financialReporData->getEntityId());
+
+?>
+
+<?php if(!empty($documentsCollection->getData())) : ?>
+    <div class="admin__fieldset">
+        <div class="admin__field" data-bind="css: $data.additionalClasses, visible: visible">
+            <label class="admin__field-label" data-bind="attr: {for: uid}" for="BUGXAED">
+                <span data-bind="attr: {'data-config-scope': $data.scopeLabel}, i18n: label">Uploaded Images/Docs</span>
+            </label>
+            <div class="admin__field-control" data-bind="css: {'_with-tooltip': $data.tooltip}">
+                <?php foreach ($documentsCollection as $image) : ?>
+                    <div class="file-uploader-summary">
+                        <div class="file-uploader-preview">
+                            <a target="_blank" data-bind="attr: {href: $parent.getFilePreview($file)}" href="<?= $mediaPath.$image->getDocument() ?>">
+                                <img class="preview-image" tabindex="0" data-bind="attr: {
+                                    src: $parent.getFilePreview($file),
+                                    alt: $file.name}, event: {load: $parent.onPreviewLoad.bind($parent)}"
+                                     src="<?= $mediaPath.$image->getDocument() ?>"
+                                     alt="<?= $image->getDocument() ?>">
+                            </a>
+
+                            <div class="actions">
+                                <button type="button" class="action-remove" data-role="delete-button" image-id="<?= $image->getEntityId() ?>" data-bind="attr: {title: $t('Delete image')}, click: $parent.removeFile.bind($parent, $file)" title="Delete image">
+                                    <span data-bind="i18n: 'Delete image'">Delete image</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        require([
+            'jquery',
+            'Magento_Ui/js/modal/modal'
+        ], function ($, modal) {
+            $(document).ready(function () {
+                $(".action-remove").on("click", function () {
+                    var event_image_id = $(this).attr('image-id');
+                    $.ajax({
+                        url: "<?= $block->getUrl('financial/admin/imageDelete') ?>",
+                        type: "POST",
+                        data: {
+                            id : event_image_id
+                        },
+                        showLoader: true
+                    }).done(function (data) {
+                        if(data.response.success == true){
+                                location.reload();
+                        } else {
+                            console.log(data);
+                        }
+                    });
+                })
+            });
+        });
+    </script>
+<?php endif; ?>
+
+

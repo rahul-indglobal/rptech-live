@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add
+            id="Rptech_Leadership::leadership"
+            title="Leadership"
+            module="Rptech_Leadership"
+            sortOrder="30"
+            action="leadership/admin/index"
+            resource="Rptech_Leadership::leadership"
+            parent="Rptech_ServiceAddress::main"
+        />
+    </menu>
+</config>

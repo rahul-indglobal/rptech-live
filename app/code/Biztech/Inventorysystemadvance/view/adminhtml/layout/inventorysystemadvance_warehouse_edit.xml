@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Copyright © Biztech, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="admin-2columns-left" xsi:noNamespaceSchemaLocation="../../../../../../../lib/internal/Magento/Framework/View/Layout/etc/page_configuration.xsd">
+    <update handle="editor"/>
+    <head>
+        <css src="Biztech_Inventorysystemadvance::css/bcinventorysystemadvane.css" />
+    </head> 
+    <body>
+        <referenceContainer name="content">
+            <block class="Biztech\Inventorysystemadvance\Block\Adminhtml\Warehouse\Edit" name="inventorysystemadvance_warehouse_edit"/>
+        </referenceContainer>
+        <referenceContainer name="left">
+            <block class="Biztech\Inventorysystemadvance\Block\Adminhtml\Warehouse\Edit\Tabs" name="inventorysystemadvance_warehouse_edit_tabs">
+                <block class="Biztech\Inventorysystemadvance\Block\Adminhtml\Warehouse\Edit\Tab\WarehouseInformation" name="inventorysystemadvance_warehouse_edit_tab_warehouseinformation"/>
+                <action method="addTab">
+                    <argument name="name" xsi:type="string">warehouseinformation_section</argument>
+                    <argument name="block" xsi:type="string">inventorysystemadvance_warehouse_edit_tab_warehouseinformation</argument>
+                </action>                
+                <action method="addTab">
+                    <argument name="name" xsi:type="string">attachment_products</argument>
+                    <argument name="block" xsi:type="array">
+                        <item name="label" xsi:type="string">Associated Products</item>
+                        <item name="title" xsi:type="string">Associated Products</item>
+                        <item name="url" xsi:type="helper" helper="Biztech\Inventorysystemadvance\Helper\Data::getProductsGridUrl"></item>
+                        <item name="class" xsi:type="string">ajax</item>
+                    </argument>
+                </action>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

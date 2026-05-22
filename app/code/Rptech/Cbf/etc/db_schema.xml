@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+<table name="rptech_cbfxv_lead" resource="default" engine="innodb" comment="CBFXV Lead">
+    <column name="entity_id" xsi:type="int" unsigned="true" nullable="false" identity="true" comment="Entity ID"/>
+    <column name="name" xsi:type="varchar" length="100" nullable="true" comment="Name"/>
+    <column name="company" xsi:type="varchar" length="100" nullable="true" comment="Company Name"/>
+    <column name="city" xsi:type="varchar" length="100" nullable="true" comment="City"/>
+    <column name="mobile" xsi:type="varchar" length="100" nullable="true" comment="Mobile"/>
+    <column name="email" xsi:type="varchar" length="255" nullable="true" comment="Email Address"/>
+    <column name="attend_city" xsi:type="varchar" length="255" nullable="true" comment="City (Where to attent)"/>
+    <column name="brand" xsi:type="varchar" length="64" nullable="true" comment="Brand"/>
+    <column name="disclaimer" xsi:type="text" nullable="true" comment="Disclaimer"/>
+    <column name="created_at" xsi:type="timestamp" default="CURRENT_TIMESTAMP" nullable="false" comment="Created At"/>
+
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+        <column name="entity_id"/>
+    </constraint>
+</table>
+</schema>

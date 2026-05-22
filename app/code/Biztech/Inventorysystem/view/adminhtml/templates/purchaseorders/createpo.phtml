@@ -1,0 +1,526 @@
+<?php
+
+$priceHelper = $block->getPricingHelper();
+$currencyCode = $block->getCurrentStore()->getCurrentCurrencyCode();
+$_localeCurrency = $block->getCurrencyInterface();
+$currencySymbol = $_localeCurrency->getCurrency($currencyCode)->getSymbol();
+$_bizHelper = $this->getBizHelper();
+?>
+<?php if ($_bizHelper->isEnable()) : ?>
+    <form enctype="multipart/form-data"
+          method="post"
+          action="<?php echo $this->getUrl('inventorysystem/purchaseorders/save'); ?>"
+          id="createpo_form"
+          data-hasrequired="<?php /* @escapeNotVerified */
+    echo __('* Required Fields')
+    ?>"
+          data-mage-init='{"validation":{}}'>
+              <?php
+              echo $this->getBlockHtml('formkey');
+              ?>
+        <section class="admin__page-section">
+            <div class="admin__page-section-content">
+                <div class="admin__control-table-wrapper admin__table-wrapper">
+                    <table cellspacing="0" class="admin__control-table data-table admin__table-primary edit-order-table"
+                           width="100%">
+                               <?php
+                               $pendingItems = $this->getPendingItemDetails();
+                               $pendingOrders = $this->getOrderDetails();
+
+                               if ($pendingItems && !empty($pendingItems)) {
+                                   ?>
+                            <thead>
+                                <tr class="headings">
+                                    <th class="col-thumbnail"><?php echo __('Image') ?></th>
+                                    <th class="col-name"><span><?php echo __('Name') ?></span></th>
+                                    <th class="col-sku"><span><?php echo __('SKU') ?></span></th>
+                                    <th class="biz-col-qty col-ordered-qty"><span><?php echo __('Quantity Available') ?></span>
+                                    </th>
+                                    <th class="col-supplier"><span><?php echo __('Supplier') ?></span></th>
+                                    <?php if ($_bizHelper->isModuleEnabled('Biztech_Inventorysystemadvance')) { ?>
+                                        <th class="col-warehouse"><span><?php echo __('Warehouse') ?></span></th>
+        <?php } ?>
+                                    <th class="biz-fixed-width col-price"><span><?php echo __('Unit Cost') ?></span></th>
+                                    <th class="biz-fixed-width col-qty"><span><?php echo __('Required Qty.') ?></span></th>
+                                    <th class="biz-last-month-sale col-qty"><span><?php echo __('Last 3 month Sale') ?></span>
+                                    </th>
+                                    <th class="col-row-total"><span><?php echo __('Row Total.') ?></span></th>
+                                    <th class="col-action"></th>
+                                </tr>
+                            </thead>
+                            <?php
+                            $i = 0;
+                            foreach ($pendingItems as $itemID => $data) {
+                                $i++;
+                                ?>
+
+                                <tbody class="<?php /* @escapeNotVerified */
+                                echo ($i % 2) ? 'even' : 'odd'
+                                ?>">
+                                    <tr id="pending_<?php echo $itemID; ?>">
+                                        <td class="a-left col-thumbnail data-grid-thumbnail-cell">
+                                            <img class="admin__control-thumbnail" src="<?php echo $data['image'] ?>"/>
+                                        </td>
+                                        <td class="col-product">
+                                            <div class="product-title">
+                                                <span><?php echo $data['name'] ?></span>
+                                                <input type="hidden" name="product_id[]" id="product_id_<?php echo $itemID ?>"
+                                                       value="<?php echo $itemID ?>">
+                                                <input type="hidden" name="name[]" id="name_<?php echo $itemID ?>"
+                                                       value="<?php echo htmlspecialchars($data['name']) ?>">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="admin__field">
+                                                <span><?php echo $data['sku'] ?></span>
+                                                <input type="hidden" name="sku[]" id="sku_<?php echo $itemID ?>"
+                                                       value="<?php echo htmlspecialchars($data['sku']) ?>">
+                                            </div>
+                                        </td>
+                                        <td class="col-ordered-qty">
+                                            <div class="admin__field">
+                                                <span><?php echo $data['qty'] ?></span>
+                                                <input type="hidden" name="qty[]" id="qty_<?php echo $itemID ?>"
+                                                       value="<?php echo htmlspecialchars($data['qty']) ?>">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="admin__field-control control"><?php echo $data['supplier'] ?></div>
+                                        </td>
+                                        <?php if ($_bizHelper->isModuleEnabled('Biztech_Inventorysystemadvance')) { ?>
+                                            <td>
+                                                <div class="admin__field-control control"><?php echo $data['warehouse'] ?></div>
+                                            </td>
+                                                <?php } ?>
+                                        <td class="">
+                                            <div class="admin__field">
+                                                <?php
+                                                // if (isset($data['price']) && !empty($data['price'])) {
+                                                if (isset($data['cost']) && !empty($data['cost'])) {
+                                                    echo $priceHelper->currency($data['cost'], true, true);
+                                                } else {
+                                                    echo $priceHelper->currency(0.00, true, false);
+                                                }
+                                                ?>
+                                                <input type="hidden" class="reqQtyCost" name="cost[]"
+                                                       id="cost_<?php echo $itemID ?>"
+                                                       value="<?php echo!empty($data['cost']) ? $priceHelper->currency($data['cost'], false, false) : 0; ?>">
+                                                <input type="text" class="admin__control-text reqQtyInpCost" size="5"
+                                                       id="input_cost_<?php echo $itemID ?>" name="input_cost[]"
+                                                       data-id="<?php echo $itemID ?>"
+                                                       value="<?php echo!empty($data['cost']) ? $priceHelper->currency($data['cost'], false, false) : 0; ?>"
+                                                       data-validate="{required:true, 'validate-greater-than-zero': true, 'validate-not-negative-number': true, 'validate-number': true}"/>
+                                            </div>
+                                        </td>
+                                        <td class="biz-fixed-width col-ordered-qty">
+                                            <div class="admin__field">
+                                                <input type="text" size="5" class="input-text item-qty admin__control-text reqQty"
+                                                       name="req_qty[]"
+                                                       data-id="<?php echo $itemID ?>" id="req_qty_<?php echo $itemID ?>"
+                                                       value="0"
+                                                       data-validate="{required:true, 'validate-greater-than-zero': true, 'validate-not-negative-number': true, 'validate-number': true}"/>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div
+                                                class="admin__field"><?php echo $data['last_3_months_sale'] > 0 ? $data['last_3_months_sale'] : 0 ?></div>
+                                        </td>
+                                        <td>
+                                            <div class="admin__field">
+                                                <input type="text" class="input-text admin__control-text input-inactive rowTotal"
+                                                       readonly="readonly"
+                                                       id="row_total_<?php echo $itemID; ?>"
+                                                       size="5" name="row_total[]"/>
+                                            </div>
+                                        </td>
+
+                                        <td class="col-actions">
+                                            <div class="admin__field">
+                                                <button id="row_delete_<?php echo $itemID ?>" data-id="<?php echo $itemID ?>"
+                                                        name="row_delete[]" class="action-delete delete-row" type="button">
+                                                    <span><?php echo __('Delete') ?></span>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+        <?php } ?>
+    <?php } elseif ($pendingOrders && !empty($pendingOrders)) {
+        foreach ($pendingOrders as $orderIncrementId => $itemsData) {
+            ?>
+                                <thead>
+                                    <tr>
+                                        <th colspan="12">
+                                <div class="entry-edit-head">
+                                    <h4 class="icon-head head-products">
+                                        <?php
+                                        if ($this->getRequest()->getParam('pendingorders')) {
+                                            echo __('Items of Order #');
+                                        } else {
+                                            echo __('Purchase Order Items');
+                                        }
+                                        echo $orderIncrementId;
+                                        ?>
+                                    </h4>
+                                    <input type="hidden" id="order_incr_id" name="order_incr_id[]"
+                                           value="<?php echo $orderIncrementId; ?>"/>
+                                </div>
+                                </th>
+                                </tr>
+
+                                <tr class="headings">
+                                    <th class="col-thumbnail"><?php echo __('Image') ?></th>
+                                    <th class="col-name"><span><?php echo __('Name') ?></span></th>
+                                    <th class="col-sku"><span><?php echo __('SKU') ?></span></th>
+                                    <th class="biz-col-qty col-ordered-qty"><span><?php echo __('Quantity Available') ?></span>
+                                    </th>
+                                    <th class="biz-col-qty col-ordered-qty"><span><?php echo __('Ordered Qty.') ?></span></th>
+                                    <th class="col-supplier"><span><?php echo __('Supplier') ?></span></th>
+            <?php if ($_bizHelper->isModuleEnabled('Biztech_Inventorysystemadvance')) { ?>
+                                        <th class="col-warehouse"><span><?php echo __('Warehouse') ?></span></th>
+            <?php } ?>
+                                    <th class="biz-fixed-width col-price"><span><?php echo __('Unit Cost') ?></span></th>
+                                    <th class="biz-fixed-width col-qty"><span><?php echo __('Required Qty.') ?></span></th>
+                                    <th class="biz-last-month-sale col-qty"><span><?php echo __('Last 3 month Sale') ?></span>
+                                    </th>
+                                    <th class="col-row-total"><span><?php echo __('Row Total.') ?></span></th>
+                                    <th class="col-action"></th>
+                                </tr>
+                                </thead>
+
+            <?php
+            $i = 0;
+            foreach ($itemsData as $itemID => $data) {
+                $i++;
+                ?>
+
+                                    <tbody class="<?php /* @escapeNotVerified */
+                echo ($i % 2) ? 'even' : 'odd'
+                ?>">
+                                        <tr id="pending_<?php echo $itemID . '_' . $orderIncrementId; ?>">
+                                            <td>
+                                                <div class="admin__field"><img src="<?php echo $data['image'] ?>"/></div>
+                                            </td>
+                                            <td>
+                                                <div class="admin__field">
+                                                    <span><?php echo $data['name'] ?></span>
+                                                    <input type="hidden" name="product_id[]" id="product_id_<?php echo $itemID ?>"
+                                                           value="<?php echo $itemID ?>">
+                                                    <input type="hidden" name="name[]"
+                                                           id="name_<?php echo $itemID . '_' . $orderIncrementId; ?>"
+                                                           value="<?php echo htmlspecialchars($data['name']) ?>">
+                                                    <input type="hidden" id="order_incr_id_line" name="order_incr_id_line[]"
+                                                           value="<?php echo $orderIncrementId; ?>"/>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="admin__field">
+                                                    <span><?php echo $data['sku'] ?></span>
+                                                    <input type="hidden" name="sku[]"
+                                                           id="sku_<?php echo $itemID . '_' . $orderIncrementId; ?>"
+                                                           value="<?php echo htmlspecialchars($data['sku']) ?>">
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="admin__field">
+                                                    <span><?php echo $data['qty'] ?></span>
+                                                    <input type="hidden" name="qty[]"
+                                                           id="qty_<?php echo $itemID . '_' . $orderIncrementId; ?>"
+                                                           value="<?php echo htmlspecialchars($data['qty']) ?>">
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="admin__field">
+                                                    <span><?php echo isset($data['qty_ordered']) ? round($data['qty_ordered'], 0) : 0; ?></span>
+                                                    <input type="hidden" name="qty_ordered[]"
+                                                           id="qty_ordered_<?php echo $itemID . '_' . $orderIncrementId; ?>"
+                                                           value="<?php echo $data['qty_ordered'] ?>">
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="admin__field"><?php echo $data['supplier'] ?></div>
+                                            </td>
+                                                    <?php if ($_bizHelper->isModuleEnabled('Biztech_Inventorysystemadvance')) { ?>
+                                                <td>
+                                                    <div class="admin__field"><?php echo $data['warehouse'] ?></div>
+                                                </td>
+                                                    <?php } ?>
+                                            <td class="biz-fixed-width">
+                                                <div class="admin__field">
+                                                    <?php
+                                                    if (isset($data['cost']) && !empty($data['cost'])) {
+                                                        echo $priceHelper->currency($data['cost'], true, true);
+                                                    } else {
+                                                        echo $priceHelper->currency(0.00, true, false);
+                                                    }
+                                                    ?>
+                                                    <input type="hidden" class="reqQtyCost" name="cost[]"
+                                                           id="cost_<?php echo $itemID . '_' . $orderIncrementId; ?>"
+                                                           value="<?php echo!empty($data['cost']) ? $priceHelper->currency($data['cost'], false, false) : 0; ?>">
+                                                    <input type="text" class="admin__control-text reqQtyInpCost" size="5"
+                                                           id="input_cost_<?php echo $itemID . '_' . $orderIncrementId; ?>"
+                                                           name="input_cost[]"
+                                                           data-id="<?php echo $itemID . '_' . $orderIncrementId; ?>"
+                                                           value="<?php echo!empty($data['cost']) ? $priceHelper->currency($data['cost'], false, false) : 0; ?>"
+                                                           data-validate="{required:true, 'validate-greater-than-zero': true, 'validate-not-negative-number': true, 'validate-number': true}"/>
+                                                </div>
+                                            </td>
+                                            <td class="biz-fixed-width">
+                                                <div class="admin__field">
+                                                    <input type="text" size="5" class="admin__control-text reqQty" name="req_qty[]"
+                                                           data-id="<?php echo $itemID . '_' . $orderIncrementId; ?>"
+                                                           id="req_qty_<?php echo $itemID . '_' . $orderIncrementId; ?>"
+                                                           value="0"
+                                                           data-validate="{required:true, 'validate-greater-than-zero': true, 'validate-not-negative-number': true, 'validate-number': true}"/>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div
+                                                    class="admin__field"><?php echo $data['last_3_months_sale'] > 0 ? $data['last_3_months_sale'] : 0 ?></div>
+                                            </td>
+                                            <td>
+                                                <div class="admin__field">
+                                                    <input type="text" class="input-text admin__control-text input-inactive rowTotal"
+                                                           readonly="readonly"
+                                                           id="row_total_<?php echo $itemID . '_' . $orderIncrementId; ?>"
+                                                           size="5" name="row_total[]"/>
+                                                </div>
+                                            </td>
+                                            <td class="col-actions">
+                                                <div class="admin__field">
+                                                    <button id="row_delete_<?php echo $itemID ?>"
+                                                            data-id="<?php echo $itemID . '_' . $orderIncrementId; ?>"
+                                                            name="row_delete[]" class="action-delete delete-row" type="button">
+                                                        <span><?php echo __('Delete') ?></span>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                <?php
+                                }
+                            }
+                        } else {
+                            $url = $this->getUrl('inventorysystem/purchaseorders/index');
+                            if ($this->getRequest()->getParam('massaction_prepare_key') == 'pendingitems') {
+                                $url = $this->getUrl('inventorysystem/pendingitems/index');
+                            } elseif ($this->getRequest()->getParam('massaction_prepare_key') == 'pendingorders') {
+                                $url = $this->getUrl('inventorysystem/pendingorders/index');
+                            }
+                            ?>
+
+                            <script type="text/javascript">
+                                require([
+                                    'jquery'], function ($) {
+                                    window.location.href = '<?php echo $url ?>'
+                                })
+                            </script>
+        <?php
+    }
+    ?>
+                    </table>
+                </div>
+            </div>
+        </section>
+        <section class="admin__page-section">
+            <div class="admin__page-section-content">
+                <fieldset id="order-totals" class="admin__fieldset order-totals">
+                    <legend class="admin__legend"><span><?php echo __('Order Totals') ?></span></legend>
+                    <br>
+
+                    <table class="admin__table-secondary data-table">
+                        <tbody>
+                            <tr class="row-totals">
+                                <td style="" class="admin__total-mark" colspan="1">
+    <?php echo('Subtotal') ?>
+                                </td>
+                                <td style="" class="admin__total-amount">
+                                    <span class="price"
+                                          id="sub_total"><?php echo $priceHelper->currency(0.00, true, false); ?></span>
+                                </td>
+                            </tr>
+                            <tr class="row-totals">
+                                <td style="" class="admin__total-mark" colspan="1">
+                                    <strong><?php echo __('Grand Total') ?></strong>
+                                </td>
+                                <td style="" class="admin__total-amount">
+                                    <strong><span class="price"
+                                                  id="grand_total"><?php echo $priceHelper->currency(0.00, true, false); ?></span></strong>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="order-totals-actions">
+                        <div class="actions">
+                            <button id="submit_po" title="Submit PO" type="button"
+                                    class="action-default scalable save primary"
+                                    data-ui-id="widget-button-10">
+                                <span><?php echo __('Submit PO') ?></span>
+                            </button>
+                        </div>
+                    </div>
+
+
+                </fieldset>
+            </div>
+        </section>
+    </form>
+    <script type="text/javascript">
+        require([
+            'jquery',
+            'Magento_Ui/js/modal/alert',
+            'mage/translate',
+            'mage/validation'
+        ], function ($, alert, $t) {
+            $(document).on('click', '#submit_po', function (event) {
+                event.preventDefault();
+                var dataForm = $('#createpo_form');
+                var ignore = null;
+
+                dataForm.mage('validation', {
+                    ignore: ignore ? ':hidden:not(' + ignore + ')' : ':hidden'
+                }).find('input:text').attr('autocomplete', 'off');
+
+                if (dataForm.validation('isValid')) {
+                    var flag = 0;
+                    var supFlag = 0;
+                    var reqQtyFlg = 0;
+
+                    $('.reqQty').each(function (index, el) {
+                        $(this).validation();
+                        if (!$(this).validation('isValid')) {
+                            flag = 1;
+                            return false;
+                        } else {
+                            if ($(el).val() == '' || $(el).val() == 0) {
+                                flag = 1;
+                            }
+                            if (parseFloat($(el).val()) % 1 != 0 && parseFloat($(el).val()) % 1 != NaN) {
+                                flag = 1;
+                            }
+                        }
+                    });
+                    $('.reqQtyInpCost').each(function (index, el) {
+                        $(this).validation();
+                        if (!$(this).validation('isValid')) {
+                            reqQtyFlg = 1;
+                            return false;
+                        } else {
+                            if (isNaN($(el).val())) {
+                                reqQtyFlg = 1;
+                            }
+                        }
+                    });
+
+                    $('.selectSup').each(function (index, el) {
+                        $(this).validation();
+                        if (!$(this).validation('isValid')) {
+                            supFlag = 1;
+                            return false;
+                        } else {
+                            if ($(el).val() == '') {
+                                supFlag = 1;
+                            }
+                        }
+                    });
+
+                    if (reqQtyFlg == 0 && supFlag == 0 && flag == 0 && dataForm.validation('isValid')) {
+                        $('#createpo_form').submit();
+                    }
+                }
+            });
+
+            $('.delete-row').each(function (index, ele) {
+                $(ele).on('click', function (event) {
+                    event.preventDefault();
+                    var itemID = $(this).data('id');
+                    var total = 0;
+                    $('#pending_' + itemID).remove();
+
+                    $('.rowTotal').each(function (index, el) {
+                        total += Number($(el).val());
+                    });
+                    formattedPrice = '<?php echo $currencySymbol ?>' + total.toFixed(2);
+                    $('#grand_total').html(formattedPrice);
+                    $('#sub_total').html(formattedPrice);
+                });
+            });
+
+            $('.selectSup').each(function (index, el) {
+                $(el).on('change', function (event) {
+                    event.preventDefault();
+                    $(this).validation();
+                    if ($(this).validation('isValid')) {
+                    }
+                });
+            });
+
+            $('.warehouse_select').each(function (index, el) {
+                $(el).on('change', function (event) {
+                    event.preventDefault();
+                    $(this).validation();
+                    if ($(this).validation('isValid')) {
+                    }
+                });
+            });
+
+            $('.reqQty').each(function (index, ele) {
+
+                $(ele).on('change', function (event) {
+                    event.preventDefault();
+                    var rowTotal = 0;
+                    var total = 0;
+                    var itemID = $(this).data('id');
+
+                    $(this).validation();
+
+                    if ($(this).validation('isValid')) {
+                        if ($('#input_cost_' + itemID).val() != '') {
+                            rowTotal = $('#input_cost_' + itemID).val() * $(ele).val();
+                        } else {
+                            rowTotal = $('#cost_' + itemID).val() * $(ele).val();
+                        }
+
+                        $('#row_total_' + itemID).val(rowTotal.toFixed(2));
+
+                        $('.rowTotal').each(function (index, el) {
+                            total += Number($(el).val());
+                        });
+                        formattedPrice = '<?php echo $currencySymbol ?>' + total.toFixed(2);
+                        $('#grand_total').html(formattedPrice);
+                        $('#sub_total').html(formattedPrice);
+                    }
+                });
+            });
+
+            $('.reqQtyInpCost').each(function (index, ele) {
+                $(ele).on('change', function (event) {
+                    event.preventDefault();
+                    var rowTotal = 0;
+                    var total = 0;
+                    var itemID = $(this).data('id');
+                    $(this).validation();
+
+                    if ($(this).validation('isValid')) {
+                        if ($('#req_qty_' + itemID).val() != '') {
+                            rowTotal = $('#req_qty_' + itemID).val() * $(ele).val();
+                        } else {
+                            rowTotal = $('#cost_' + itemID).val() * $(ele).val();
+                        }
+
+                        $('#row_total_' + itemID).val(rowTotal.toFixed(2));
+
+                        $('.rowTotal').each(function (index, el) {
+                            total += Number($(el).val());
+                        });
+                        formattedPrice = '<?php echo $currencySymbol ?>' + total.toFixed(2);
+                        $('#grand_total').html(formattedPrice);
+                        $('#sub_total').html(formattedPrice);
+                    }
+                })
+            });
+        });
+    </script>
+<?php
+endif;?>

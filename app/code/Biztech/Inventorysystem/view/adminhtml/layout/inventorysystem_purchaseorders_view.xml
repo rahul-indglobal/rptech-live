@@ -1,0 +1,17 @@
+<?xml version = "1.0"?>
+<!--
+/**
+ * Copyright © Biztech, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../../../../lib/internal/Magento/Framework/View/Layout/etc/page_configuration.xsd">
+
+	<body>
+		<referenceContainer name="content">
+			<block class="Biztech\Inventorysystem\Block\Adminhtml\Purchaseorders\Edit\Tab\View" name="inventorysystem_purchaseorders_view" template="Biztech_Inventorysystem::purchaseorders/viewpo.phtml">				
+				<block class="Biztech\Inventorysystem\Block\Adminhtml\Purchaseorders\Edit\Tab\History" name="po_order_history" template="Biztech_Inventorysystem::purchaseorders/viewpo/history.phtml"/>
+			</block>
+		</referenceContainer>
+	</body>
+</page>

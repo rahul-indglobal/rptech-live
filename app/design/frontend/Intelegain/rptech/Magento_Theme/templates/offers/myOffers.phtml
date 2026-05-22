@@ -1,0 +1,230 @@
+<?php
+$blockObj= $block->getLayout()->createBlock('Rptech\Offerzone\Block\Offer\Zone');
+$collectionTodaysDeal = $blockObj->getProductCollection();
+$categories_id = $blockObj->getCategoryIds();
+$priceHelper = $this->helper('Magento\Framework\Pricing\Helper\Data');
+$width = 200;
+$height = 300;
+$label_new_status = $this->helper('Rptech\General\Helper\Data')->getLabelNewStatus();
+$label_sale_status = $this->helper('Rptech\General\Helper\Data')->getLabelSaleStatus();
+$label_sold_status = $this->helper('Rptech\General\Helper\Data')->getLabelSoldStatus();
+$label_new = $this->helper('Rptech\General\Helper\Data')->getLabelNewImage();
+$label_sale = $this->helper('Rptech\General\Helper\Data')->getLabelSaleImage();
+$label_sold = $this->helper('Rptech\General\Helper\Data')->getLabelSoldImage();
+?>
+<div class="categoryProductsWrap todays_deal">
+    <div class="categoryName">Weekly Offers</div>
+    <div class="categoryProducts clearfix offerzone-slider products-wrapper">
+        <?php
+        foreach ($collectionTodaysDeal as $product) {
+            $addToCartUrl = $blockObj->getAddtoCartUrl($product);
+            $resizedImageUrl = $blockObj->resizeImage($product, 'product_base_image', $width, $height)->getUrl();
+            ?>
+            <div class="product-box">
+                <div class="product-inner-box">
+                    <div class="txt-content">
+                        <?php
+                        $class = '';
+                        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+                        $media_url = $objectManager->get('Magento\Store\Model\StoreManagerInterface')->getStore()
+                                                ->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
+                        $stock_item = $objectManager->get('Magento\CatalogInventory\Api\StockRegistryInterface')->getStockItemBySku($product->getSku());
+                        if(!$stock_item->getIsInStock()==1) {
+                            $class = "product-sold";
+                        } 
+                        else if ($product->getSpecialPrice() && $product->getFinalPrice() == $product->getSpecialPrice() && $product->getIsSalable()) {
+                            $class = "product-sale";
+                        }
+                        else if($product->getNewsFromDate() || $product->getNewsToDate()) {
+                            $from_date = date('d/m/Y',strtotime($product->getNewsFromDate()));
+                            $to_date = date('d/m/Y',strtotime($product->getNewsToDate()));
+                            $today = date('d/m/Y');
+                            if($from_date<$today || $to_date>$today || ($from_date<$today && $today<$to_date)) {
+                                $class = "product-new";
+                            }
+                        }
+                        ?>
+                        <div class="product-tag <?= $class; ?>">
+                            <?php
+                            if($label_sold_status && !$stock_item->getIsInStock()==1) {
+                                echo "<img class='tag-sold' src='".$media_url.'catalog/product/label/'.$label_sold."' />";
+                            }
+                            else if ($label_sale_status && $product->getSpecialPrice() && $product->getFinalPrice() == $product->getSpecialPrice() && $product->getIsSalable()) {
+                                echo "<img class='tag-sale' src='".$media_url.'catalog/product/label/'.$label_sale."' />";
+                            }
+                            else if($product->getNewsFromDate() || $product->getNewsToDate()) {
+                                $from_date = date('d/m/Y',strtotime($product->getNewsFromDate()));
+                                $to_date = date('d/m/Y',strtotime($product->getNewsToDate()));
+                                $today = date('d/m/Y');
+                                if($label_new_status && ($from_date<$today || $to_date>$today || ($from_date<$today && $today<$to_date))) {
+                                    echo "<img class='tag-new' src='".$media_url.'catalog/product/label/'.$label_new."' />";
+                                }
+                            }
+                            ?>
+                        </div>
+                        <div class="img-box">
+                            <a href="<?= $product->getProductUrl(); ?>" class="product-thumbnail">
+                                <img class="product-img img-responsive" src="<?php echo $resizedImageUrl; ?>">
+                            </a>
+                        </div>
+                        <h3 class="product-title">
+                            <a href="<?= $product->getProductUrl(); ?>"><?= substr($product->getName(), 0, 45); ?></a>
+                        </h3>
+                        <p class="price-tag"><span><?= $priceHelper->currency($product->getFinalPrice(), true, false); ?> </span> <small><strike><?= $priceHelper->currency($product->getPrice(), true, false); ?></strike></small> </p>
+                    </div>
+                    <div class="clearfix btn-wrapper">
+                        <a href="<?= $product->getProductUrl(); ?>" class="btn btn-view">View</a>
+                        <form data-role="tocart-form" action="<?php echo $addToCartUrl; ?>" method="post"> 
+                            <?php echo $block->getBlockHtml('formkey') ?>
+                            <?php
+                            $sell_status = $product->getResource()->getAttribute('sell_status')->getFrontend()->getValue($product);
+                            if ($sell_status == 'Yes' && $product->getIsSalable()) {
+                               ?>
+                                <button type="submit" title="Add to Cart" class="action tocart primary btn btn-cart">
+                                    <span><i class="fa fa-shopping-cart"></i>Add to Cart</span>
+                                </button>
+                            <?php } else { ?>
+                                <span style="display: none" class="prosku"><?php echo $product->getSku(); ?></span>
+                                <a class="btn btn-enq" id="product<?= $block->escapeHtml($product->getId()) ?>">Send Enquiry</a>
+                            <?php } ?>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        <?php }
+        ?>
+    </div>
+</div>
+<div class="offer-title"><?= __("Our Best Offers") ?></div>
+<div class="all-offer-products"> 
+<?php
+foreach ($categories_id as $key => $cat) {
+    $cat_flg = 1;
+    $collectionCateProducts = $blockObj->getCategoryProducts($key);
+    if($collectionCateProducts->getSize()>0){
+        foreach ($collectionCateProducts as $productMob) {
+            $addToCartUrlMob = $blockObj->getAddtoCartUrl($productMob);
+            $resizedImageUrl = $blockObj->resizeImage($productMob, 'product_base_image', $width, $height)->getUrl();
+            ?>
+            <div class="product-box">
+                <div class='categoryName'>
+                <?php
+                if($cat_flg) {
+                    echo $cat;
+                    $cat_flg = 0;
+                }
+                ?>
+                </div>
+                <div class="product-inner-box">
+                    <div class="txt-content">
+                        <?php
+                        $class = '';
+                        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+                        $media_url = $objectManager->get('Magento\Store\Model\StoreManagerInterface')->getStore()
+                                                ->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
+                        $stock_item = $objectManager->get('Magento\CatalogInventory\Api\StockRegistryInterface')->getStockItemBySku($productMob->getSku());
+                        if(!$stock_item->getIsInStock()==1) {
+                            $class = "product-sold";
+                        } 
+                        else if ($productMob->getSpecialPrice() && $productMob->getFinalPrice() == $productMob->getSpecialPrice() && $productMob->getIsSalable()) {
+                            $class = "product-sale";
+                        }
+                        else if($productMob->getNewsFromDate() || $productMob->getNewsToDate()) {
+                            $from_date = date('d/m/Y',strtotime($productMob->getNewsFromDate()));
+                            $to_date = date('d/m/Y',strtotime($productMob->getNewsToDate()));
+                            $today = date('d/m/Y');
+                            if($from_date<$today || $to_date>$today || ($from_date<$today && $today<$to_date)) {
+                                $class = "product-new";
+                            }
+                        }
+                        ?>
+                        <div class="product-tag <?= $class; ?>">
+                            <?php
+                            if($label_sold_status && !$stock_item->getIsInStock()==1) {
+                                echo "<img class='tag-sold' src='".$media_url.'catalog/product/label/'.$label_sold."' />";
+                            }
+                            else if ($label_sale_status && $productMob->getSpecialPrice() && $productMob->getFinalPrice() == $productMob->getSpecialPrice() && $productMob->getIsSalable()) {
+                                echo "<img class='tag-sale' src='".$media_url.'catalog/product/label/'.$label_sale."' />";
+                            }
+                            else if($productMob->getNewsFromDate() || $productMob->getNewsToDate()) {
+                                $from_date = date('d/m/Y',strtotime($productMob->getNewsFromDate()));
+                                $to_date = date('d/m/Y',strtotime($productMob->getNewsToDate()));
+                                $today = date('d/m/Y');
+                                if($label_new_status && ($from_date<$today || $to_date>$today || ($from_date<$today && $today<$to_date))) {
+                                    echo "<img class='tag-new' src='".$media_url.'catalog/product/label/'.$label_new."' />";
+                                }
+                            }
+                            ?>
+                        </div>
+                        <div class="img-box">
+                            <a href="<?= $productMob->getProductUrl(); ?>" class="product-thumbnail">
+                                <img class="product-img img-responsive" src="<?php echo $resizedImageUrl; ?>">
+                            </a>
+                        </div>
+                        <h3 class="product-title">
+                            <a href="<?= $productMob->getProductUrl(); ?>"><?= substr($productMob->getName(), 0, 45); ?></a>
+                        </h3>
+                        <p class="price-tag"><span><?= $priceHelper->currency($productMob->getFinalPrice(), true, false) ?> </span> <small><strike><?= $priceHelper->currency($productMob->getPrice(), true, false) ?></strike></small> </p>
+                    </div>
+                    <div class="clearfix btn-wrapper">
+                        <a href="<?= $productMob->getProductUrl(); ?>" class="btn btn-view">View</a>
+                        <form data-role="tocart-form" action="<?php echo $addToCartUrlMob; ?>" method="post"> 
+                            <?php echo $block->getBlockHtml('formkey') ?>
+                                <button type="submit" title="Add to Cart" class="action tocart primary btn btn-cart">
+                                <span><i class="fa fa-shopping-cart"></i>Add to Cart</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        <?php } ?>
+<?php } } ?>
+</div>
+<script> 
+require(['jquery' 
+  ], function($) { 
+jQuery(document).ready(function(){ 
+      equalheight = function(container){ 
+        var currentTallest = 0, 
+            currentRowStart = 0, 
+            rowDivs = new Array(), 
+            $el, 
+            topPosition = 0; 
+            jQuery(container).each(function() { 
+         
+          $el = jQuery(this); 
+          jQuery($el).height('auto') 
+          topPostion = $el.position().top; 
+            if (currentRowStart != topPostion) { 
+              for (currentDiv = 0 ; currentDiv < rowDivs.length ; currentDiv++) { 
+                rowDivs[currentDiv].height(currentTallest); 
+              } 
+              rowDivs.length = 0; // empty the array 
+              currentRowStart = topPostion; 
+              currentTallest = $el.height(); 
+              rowDivs.push($el); 
+            } else { 
+              rowDivs.push($el); 
+              currentTallest = (currentTallest < $el.height()) ? ($el.height()) : (currentTallest); 
+            } 
+          for (currentDiv = 0 ; currentDiv < rowDivs.length ; currentDiv++) { 
+            rowDivs[currentDiv].height(currentTallest); 
+          } 
+        }); 
+      } 
+    });
+    
+       jQuery(document).ready(function () { 
+         equalheight('.offerpage .product-box .product-inner-box .product-title'); 
+         equalheight('.offerpage .categoryName'); 
+         equalheight('.all-offer-products .product-box .product-inner-box .price-tag'); 
+         equalheight('.offerpage .product-box .txt-content .price-tag'); 
+         equalheight('.all-offer-products .img-box .product-thumbnail'); 
+       }); 
+    
+
+}); 
+
+  
+
+</script> 

@@ -1,0 +1,133 @@
+<script type="text/javascript">
+    require(['jquery'], function($) {
+        $(document).ready(function() {
+            $(".all-banner-slide").owlCarousel({
+                items: 1,
+                autoplay: true,
+                lazyLoad: true,
+                loop: true,
+                dots: true,
+                autoplayTimeout: 8000,
+            });
+
+            var owl = $(".testimonials .owl-carousel").owlCarousel({
+                items: 1,
+                margin: 10,
+                loop: true,
+                autoplay: false,
+                autoplayHoverPause: true,
+                nav: true,
+                responsive: {
+                    0: {
+                        items: 1,
+                    },
+                    600: {
+                        items: 1,
+                    },
+                    1000: {
+                        items: 1,
+                    },
+                },
+            });
+            $(".next-btn").click(function () {
+                owl.trigger("next.owl.carousel");
+            });
+            $(".prev-btn").click(function () {
+                owl.trigger("prev.owl.carousel");
+            });
+            $(".prev-btn").addClass("disabled");
+            $(owl).on("translated.owl.carousel", function (event) {
+                if ($(".owl-prev").hasClass("disabled")) {
+                    $(".prev-btn").addClass("disabled");
+                } else {
+                    $(".prev-btn").removeClass("disabled");
+                }
+                if ($(".owl-next").hasClass("disabled")) {
+                    $(".next-btn").addClass("disabled");
+                } else {
+                    $(".next-btn").removeClass("disabled");
+                }
+            });
+
+            var owl = $(".partners.show-desktop .owl-carousel").owlCarousel({
+                items: 1,
+                margin: 10,
+                loop: true,
+                autoplay: true,
+                autoplayHoverPause: true,
+                nav: true,
+                responsive: {
+                    0: {
+                        items: 1,
+                    },
+                    600: {
+                        items: 1,
+                    },
+                    1000: {
+                        items: 1,
+                    },
+                },
+            });
+            $(".next-btn").click(function () {
+                owl.trigger("next.owl.carousel");
+            });
+            $(".prev-btn").click(function () {
+                owl.trigger("prev.owl.carousel");
+            });
+            $(".prev-btn").addClass("disabled");
+            $(owl).on("translated.owl.carousel", function (event) {
+                if ($(".owl-prev").hasClass("disabled")) {
+                    $(".prev-btn").addClass("disabled");
+                } else {
+                    $(".prev-btn").removeClass("disabled");
+                }
+                if ($(".owl-next").hasClass("disabled")) {
+                    $(".next-btn").addClass("disabled");
+                } else {
+                    $(".next-btn").removeClass("disabled");
+                }
+            });
+
+            var owl = $(".partners.show-mobile .owl-carousel").owlCarousel({
+                items: 1,
+                margin: 10,
+                loop: true,
+                autoplay: true,
+                autoplayHoverPause: true,
+                nav: false,
+                responsive: {
+                    0: {
+                        items: 1,
+                    },
+                    600: {
+                        items: 1,
+                    },
+                    1000: {
+                        items: 1,
+                    },
+                },
+            });
+            $(".next-btn").click(function () {
+                owl.trigger("next.owl.carousel");
+            });
+            $(".prev-btn").click(function () {
+                owl.trigger("prev.owl.carousel");
+            });
+            $(".prev-btn").addClass("disabled");
+            $(owl).on("translated.owl.carousel", function (event) {
+                if ($(".owl-prev").hasClass("disabled")) {
+                    $(".prev-btn").addClass("disabled");
+                } else {
+                    $(".prev-btn").removeClass("disabled");
+                }
+                if ($(".owl-next").hasClass("disabled")) {
+                    $(".next-btn").addClass("disabled");
+                } else {
+                    $(".next-btn").removeClass("disabled");
+                }
+            });
+
+
+        });
+    });
+</script>

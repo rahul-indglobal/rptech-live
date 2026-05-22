@@ -1,0 +1,8 @@
+.admin__data-grid-wrap {
+    margin-bottom: 2rem;
+    max-width: 100%;
+    overflow-x: visible !important;
+    padding-bottom: 1rem;
+    padding-top: 2rem;
+}
+/*#purchaseorder_create_product_grid_table .col-supplier{ width: 90px !important; }*/

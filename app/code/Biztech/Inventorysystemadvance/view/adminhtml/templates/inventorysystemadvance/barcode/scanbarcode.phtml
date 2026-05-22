@@ -1,0 +1,158 @@
+<div class="content-header">
+    <h3 class="icon-head head-adminhtml-purchaseorders"><?php echo __('Input Barcode'); ?></h3>
+    <p class="form-buttons">
+        <button onclick="setLocation('<?php echo $this->getUrl('inventorysystemadvance/barcode/index'); ?>')" class="scalable back" type="button" title="Back" id="id_e1eb589d2403625b8ca0834db5ff9116"><span><span><span>Back</span></span></span></button>
+    </p>
+</div>
+<div class="entry-edit">
+<!--    <div class="entry-edit-head">
+        <h4 class="icon-head head-edit-form fieldset-legend"><?php //echo __('Input Barcode'); ?></h4>
+    </div>-->
+    <div id="supplier_form" class="fieldset">
+        <input id="barcode_search" class="input-text" type="text" autocomplete="off" placeholder="Search by Barcode" name="barcode_query" class="barcode_scan" tabindex="1">
+        <div class="clear"></div>
+    </div>
+    <form method="post" action="<?php echo $this->getUrl('inventorysystemadvance/barcode/updateStock'); ?>" id="barcodeview_form">
+        <?php echo $this->getBlockHtml('formkey') ?>
+        <div id="search_result"></div>
+    </form>
+</div>
+
+<div style="display: none; width: auto;" id="scan-barcode-printer" class="scan-barcode-printer">
+    <table>
+        <tr>
+            <td><label><?php echo __('Symbology'); ?></label></td>
+            <td><select id="sym_code" name="sym_code" onchange="changeTemplate();">
+                    <option value="code128">code128</option>
+                    <option value="code128b">code128b</option>
+                    <option value="code128a">code128a</option>
+                    <option value="code39">code39</option>
+                    <option value="code25">code25</option>
+                    <option value="codabar">codabar</option>
+                </select></td>
+        </tr>
+        <tr>
+            <td><?php echo __('Barcode Qty'); ?></td>
+            <td><input type="text" size="5" id="barcode_print_qty" name="barcode_print_qty" /></td>
+        </tr>
+        <tr>
+            <td><?php echo __('Select Template'); ?></td>
+            <td><select id="select_template" name="select_template" onchange="changeTemplate();">
+                    <option value="barcode"><?php echo __('Barcode'); ?></option>
+                    <option value="barcode_prodname"><?php echo __('Product Name and Barcode'); ?></option>
+                    <option value="barcode_prodname_price"><?php echo __('Product Name, Price and Barcode'); ?></option>
+                </select><br><br></td>
+        </tr>
+        <tr>
+            <td>&nbsp;&nbsp;</td>
+            <td align="center"><div id="scanbarcode_attribs"></div></td>
+        </tr>
+    </table>
+</div>  
+<script type="text/javascript">
+<?php
+
+$baseUrlpath = $block->getCurrentStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_WEB);
+?>
+    require([
+        'jquery'
+    ], function ($, mageTemplate) {
+
+        $("#barcode_search").on('change', function () {
+            var params = document.getElementById('barcode_search').value;
+            var url = "<?php echo $this->getUrl('inventorysystemadvance/Barcode/ScanBarcode'); ?>" + "barcode/" + params + "/form_key/" + FORM_KEY;
+            $.ajax({
+                url: url,
+                type: 'POST',
+                dataType: 'json',
+                processData: false,
+                showLoader: true,
+                success: function (data) {
+                    document.getElementById('search_result').innerHTML = '<br>' + data;
+                },
+                error: function (error) {
+                    document.getElementById('search_result').innerHTML = '<br><strong>No Data Found</strong>';
+                }
+            });
+        });
+    }
+    );
+
+    function changeTemplate()
+    {
+        var url = '<?php echo $baseUrlpath . "lib/internal/bcinventorysystemadvance/barcode/Barcode.php?text="; ?>';
+        var url_append = url + document.getElementById('barcode').value + '&codetype=' + document.getElementById("sym_code").value;
+        if (document.getElementById('select_template').value == 'barcode_prodname')
+        {
+            document.getElementById('scanbarcode_attribs').innerHTML = '<div id="attr_prodname">' + document.getElementById('prod_name').value + '</div><div id="barcode_img"><img src="' + url_append + '" /></div><div id="attr_barcode">' + document.getElementById('barcode').value + '</div>';
+        }
+        if (document.getElementById('select_template').value == 'barcode_prodname_price')
+        {
+            document.getElementById('scanbarcode_attribs').innerHTML = '<div id="barcode_img"><img src="' + url_append + '" /></div><div id="attr_barcode">' + document.getElementById('barcode').value + '</div><div id="attr_prodname">' + document.getElementById('prod_name').value + '</div><div id="attr_price">$' + parseFloat(document.getElementById('prod_price').value).toFixed(2) + '</div>';
+        }
+        if (document.getElementById('select_template').value == 'barcode')
+        {
+            document.getElementById('scanbarcode_attribs').innerHTML = '<div id="barcode_img"><img src="' + url_append + '" /></div><div id="attr_barcode">' + document.getElementById('barcode').value + '</div>';
+        }
+    }
+
+    function printDiv()
+    {
+        var divToPrint = document.getElementById('scanbarcode_attribs');
+        var barcodeQty = document.getElementById('barcode_print_qty');
+        var finalDivToPrint = "<table cellpadding='5' cellspacing='5' width='100%'>";
+        for (var i = 0; i < barcodeQty.value; i++)
+        {
+            if (i % 2 == 0)
+            {
+                if (i == 0)
+                    finalDivToPrint = finalDivToPrint + "<tr>";
+                else
+                    finalDivToPrint = finalDivToPrint + "</tr><tr>";
+            }
+            finalDivToPrint = finalDivToPrint + "<td align='center'>" + divToPrint.innerHTML + "</td>";
+        }
+        var params = [
+            'height=' + screen.height,
+            'width=' + screen.width / 1.25,
+            'fullscreen=yes' // only works in IE, but here for completeness
+        ].join(',');
+        finalDivToPrint = finalDivToPrint + "</tr></table>";
+        var popupWin = window.open('', '_blank', params);
+        popupWin.moveTo(0, 0);
+        popupWin.document.open();
+        popupWin.document.write('<html><body onload="window.print()">' + finalDivToPrint + '</html>');
+        popupWin.document.close();
+    }
+    function printBarcodeWindow() {
+        require([
+            'jquery',
+            'Magento_Ui/js/modal/modal'
+        ], function ($, modal) {
+            var options = {
+                type: 'popup',
+                responsive: true,
+                innerScroll: true,
+                className: 'magento',
+                title: 'Scan Barcode Print',
+                buttons: [{
+                        text: $.mage.__('Print'),
+                        class: '',
+                        click: function () {
+                            printDiv();
+                        }
+                    }]
+            };
+            var popup = modal(options, $('#scan-barcode-printer'));
+            var url = '<?php echo $baseUrlpath . "lib/internal/bcinventorysystemadvance/barcode/Barcode.php?text="; ?>';
+            var url_append = url + $('#barcode').val() + '&codetype=' + $('#sym_code').val();
+            document.getElementById('scanbarcode_attribs').innerHTML = '<div id="barcode_img"><img src="' + url_append + '" /></div><div id="attr_barcode">' + $('#barcode').val() + '</div>';
+            $("#scan-barcode-printer").modal("openModal");
+        }
+        );
+    }
+
+    function submitForm() {
+        jQuery('#barcodeview_form').submit();
+    }
+</script>

@@ -1,0 +1,123 @@
+<form enctype="multipart/form-data" method="post" action="<?php echo $this->getUrl('inventorysystemadvance/barcode/save'); ?>" id="create_barcode">
+    <input name="tempid" id="tempid" type="hidden" />  
+    <input name="productid" id="productid"  type="hidden" />  
+    <input name="purchaseordercreate" id="purchaseordercreate" type="hidden" />  
+    <div class='entry-edit'>
+        <div class='entry-edit-head'><h4 class='icon-head head-products'><?php echo __('Select Products to generate barcode'); ?> </h4></div>
+        <?php echo $this->getBlockHtml('formkey') ?>
+        <div class="hor-scroll">
+            <div id="productgrid"> 
+                <?php echo $this->getChildHtml('create_barcode') ?>   
+            </div>
+        </div>
+    </div> 
+</form>
+<script type="text/javascript">
+    function submition() {
+        var submitFlag = 0;
+
+        $$('.supplierSel').each(function (ele) {
+            if ($('supplier_' + ele.getAttribute('item_id')).value == '' && $('supplier_' + ele.getAttribute('item_id')).disabled == false) {
+                submitFlag = 1;
+                throw $break;
+            }
+        });
+
+        if (submitFlag == 1) {
+            alert("Please select Supplier!");
+            return false;
+
+        }
+
+        if (document.getElementById('productid').value == "") {
+            alert("Please select products");
+            return false;
+        }
+        else {
+            document.forms["create_barcode"].submit();
+            return true;
+        }
+    }
+
+
+    function changetextCountry(ele) {
+        if (this.value != 'on')
+        {
+            if (ele.value != undefined) {
+                this.value = ele.value;
+                this.checked = ele.checked;
+            }
+
+            this.id = this.value;
+            if (this.checked == false) {
+                var remove = this.value + ",";
+                var str = document.getElementById('productid').value
+                document.getElementById('productid').value = str.replace(remove, "");
+
+                $('supplier_' + this.value).disable();
+                $('auto_generate_' + this.value).disable();
+                $('ud_barcode_' + this.value).disable();
+                $('status_' + this.value).disable();
+                $('barcode_qty_' + this.value).disable();
+                $('prod_sku_' + this.value).disable();
+                $('purchase_order_' + this.value).disable();
+                
+
+                return false;
+            }
+
+            var id = this.value;
+
+            $('tempid').value = this.value;
+            var tempid = $('tempid').value;
+            var add = tempid + ",";  //add = " " + num + ",";
+            var hiddenGuy = document.getElementById('productid');
+
+            var newvalue = hiddenGuy.value + add;
+            hiddenGuy.value = newvalue;
+
+            $('supplier_' + this.value).enable();
+            $('auto_generate_' + this.value).enable();
+            $('status_' + this.value).enable();
+            $('barcode_qty_' + this.value).enable();
+            $('prod_sku_' + this.value).enable();
+            $('purchase_order_' + this.value).enable();
+            
+        }
+        else {
+            $$('.checkbox').each(function (ele) {
+                var chkBxVal = ele.value;
+                if (chkBxVal != 'on')
+                    changetextCountry(ele);
+            });
+        }
+    }
+
+
+    require([
+        "prototype"
+    ], function (jQuery) {
+        Event.observe(window, 'mousemove', function () {
+            for (var i = 0; i < $$('.checkbox').length; i++) {
+                Event.observe($$('.checkbox')[i], 'change', changetextCountry)
+            }
+        });
+
+        Event.observe(window, 'mousemove', function () {
+            for (var i = 0; i < $$('.autoGenChkbx').length; i++) {
+                Event.observe($$('.autoGenChkbx')[i], 'click', changeBarcodeInput)
+            }
+        });
+    });
+
+    function changeBarcodeInput(ele) {
+        if (this.checked == false) {
+            $('ud_barcode_' + this.value).enable();
+            return false;
+        }
+        else {
+            $('ud_barcode_' + this.value).disable();
+            return false;
+        }
+    }
+</script>

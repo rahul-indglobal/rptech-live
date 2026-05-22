@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">mysmsmodul_enquiry_listing.mysmsmodul_enquiry_listing_data_source</item>
+        </item>
+    </argument>
+    <settings>
+        <spinner>mysmsmodul_enquiry_columns</spinner>
+        <deps>
+            <dep>mysmsmodul_enquiry_listing.mysmsmodul_enquiry_listing_data_source</dep>
+        </deps>
+    </settings>
+    <dataSource name="mysmsmodul_enquiry_listing_data_source" component="Magento_Ui/js/grid/provider">
+        <argument name="dataProvider" xsi:type="configurableObject">
+            <argument name="class" xsi:type="string">Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider</argument>
+            <argument name="name" xsi:type="string">mysmsmodul_enquiry_listing_data_source</argument>
+            <argument name="primaryFieldName" xsi:type="string">id</argument>
+            <argument name="requestFieldName" xsi:type="string">id</argument>
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="component" xsi:type="string">Magento_Ui/js/grid/provider</item>
+                    <item name="update_url" path="mui/index/render" xsi:type="url"/>
+                    <item name="storageConfig" xsi:type="array">
+                        <item name="indexField" xsi:type="string">id</item>
+                    </item>
+                </item>
+            </argument>
+        </argument>
+<!--        <settings>-->
+<!--            <updateUrl path="mui/index/render"/>-->
+<!--        </settings>-->
+<!--        <dataProvider class="Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider" name="mysmsmodul_enquiry_listing_data_source">-->
+<!--            <settings>-->
+<!--                <requestFieldName>id</requestFieldName>-->
+<!--                <primaryFieldName>id</primaryFieldName>-->
+<!--            </settings>-->
+<!--        </dataProvider>-->
+    </dataSource>
+    <listingToolbar name="listing_top">
+        <settings>
+            <sticky>true</sticky>
+        </settings>
+        <bookmark name="bookmarks"/>
+        <columnsControls name="columns_controls"/>
+        <filterSearch name="fulltext"/>
+        <filters name="listing_filters"/>
+        <paging name="listing_paging"/>
+        <massaction name="listing_massaction">
+            <action name="export">
+                <settings>
+                    <url path="mysmsmodul/enquiry/export"/>
+                    <type>export</type>
+                    <label translate="true">Export</label>
+                </settings>
+            </action>
+        </massaction>
+    </listingToolbar>
+    <columns name="mysmsmodul_enquiry_columns">
+        <selectionsColumn name="ids">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="storageConfig" xsi:type="array">
+                        <item name="indexField" xsi:type="string">id</item>
+                    </item>
+                    <item name="resizeEnabled" xsi:type="boolean">false</item>
+                    <item name="resizeDefaultWidth" xsi:type="string">55</item>
+                    <item name="indexField" xsi:type="string">id</item>
+                </item>
+            </argument>
+        </selectionsColumn>
+        <column name="id">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">ID</label>
+            </settings>
+        </column>
+        <column name="username">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Username</label>
+            </settings>
+        </column>
+        <column name="useremail">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Email</label>
+            </settings>
+        </column>
+        <column name="sku">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">SKU</label>
+            </settings>
+        </column>
+        <column name="productname">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Product Name</label>
+            </settings>
+        </column>
+        <column name="mobile">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Mobile</label>
+            </settings>
+        </column>
+        <column name="comments">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Comments</label>
+            </settings>
+        </column>
+        <column name="user_type">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Like To Know</label>
+            </settings>
+        </column>
+        <column name="where_parts_will_be_used">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Parts Will be used</label>
+            </settings>
+        </column>
+        <column name="company_name">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Company / University Name</label>
+            </settings>
+        </column>
+        <column name="quantity">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Quantity</label>
+            </settings>
+        </column>
+        		<column name="date" class="Magento\Ui\Component\Listing\Columns\Date">
+        			<argument name="data" xsi:type="array">
+        				<item name="config" xsi:type="array">
+        					<item name="filter" xsi:type="string">dateRange</item>
+        					<item name="component" xsi:type="string">Magento_Ui/js/grid/columns/date</item>
+        					<item name="dataType" xsi:type="string">date</item>
+        					<item name="label" xsi:type="string" translate="true">Created</item>
+        				</item>
+        			</argument>
+        		</column>
+    </columns>
+</listing>

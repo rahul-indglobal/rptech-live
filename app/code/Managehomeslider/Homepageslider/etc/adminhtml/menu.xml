@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!--
+/** Grid menu xml
+ * @category  Leaders 
+ * @package   Manageleaders_Leaders
+ * @author    Lalita Rajput
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+<!--        <add id="Managehomeslider_Homepageslider::manager" title="Manage Home Page Slider" module="Managehomeslider_Homepageslider" sortOrder="10" resource="Managehomeslider_Homepageslider::manager" />
+        <add id="Managehomeslider_Homepageslider::add_row" title="Slider List" module="Managehomeslider_Homepageslider" sortOrder="20" parent="Managehomeslider_Homepageslider::manager" action="homepageslider/grid" resource="Managehomeslider_Homepageslider::add_row"/>-->
+    </menu>
+</config>

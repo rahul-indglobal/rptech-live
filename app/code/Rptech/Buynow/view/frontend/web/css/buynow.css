@@ -1,0 +1,59 @@
+.catalog-category-view .product-item-inner.buynow {
+	position: relative;
+    border: none;
+    box-shadow: none;
+    padding: 0 0 5px 1px;
+}
+
+.catalog-category-view button.buynow {
+    width: 103px;
+}
+
+.catalog-product-view #product-addtocart-button {
+	float: left;
+}
+
+/*.catalog-product-view #buy-now
+{
+	margin-bottom: 15px;
+	width: 49%;
+    line-height: 2.2rem;
+    padding: 14px 17px;
+    font-size: 1.8rem;
+}*/
+
+.button.buynow {
+    width: 100%;
+    margin-bottom: 10%;
+}
+
+.catalog-category-view .product.actions.product-item-actions {
+    margin: 0px;
+}
+
+/*** PDP Code for Button css ****/
+button#product-addtocart-button:hover, button#buy-now:hover, button#product-addtocwishlist-button:hover, button#checkpincode:hover{
+    color: white;
+    opacity: .6;
+}
+
+button#product-addtocart-button:focus, button#checkpincode:focus{
+    color: white;
+}
+
+#pincode_check-error{
+    float: left;
+    width: 100%;
+}
+.product-detail-wrapper .tab{
+    float: left;
+}
+.product-detail-wrapper .tabContainer .tabcontent{
+    border: none;
+}
+.avail-check {
+    margin-bottom: 1em;
+    float: left;
+    width: 100%;
+}
+/*** PDP Code for Button css ****/

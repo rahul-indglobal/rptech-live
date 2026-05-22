@@ -1,0 +1,40 @@
+<?php
+/**
+ * Copyright © Biztech, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+namespace Biztech\Inventorysystem\Block\Adminhtml\Purchaseorders\Purchaseorderform;
+
+use Magento\Backend\Block\Widget\Form\Generic;
+
+class Form extends Generic
+{
+
+    /**
+     * Customer Service.
+     *
+     * @var CustomerAccountServiceInterface
+     */
+    protected $_customerAccountService;
+
+    /**
+     * @return mixed
+     */
+    protected function _prepareForm()
+    {
+        /** @var \Magento\Framework\Data\Form $form */
+        $form = $this->_formFactory->create(
+            array(
+                'data' => [
+                    'id' => 'edit_form',
+                    'action' => $this->getUrl('*/*/save', ['id' => $this->getRequest()->getParam('id')]),
+                    'method' => 'post',
+                    'enctype' => 'multipart/form-data'
+                ]
+            )
+        );
+        $form->setUseContainer(true);
+        $this->setForm($form);
+        return parent::_prepareForm();
+    }
+}

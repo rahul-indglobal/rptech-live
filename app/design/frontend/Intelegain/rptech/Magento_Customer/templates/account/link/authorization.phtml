@@ -1,0 +1,54 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+/** @var \Magento\Customer\Block\Account\AuthorizationLink $block */
+
+$dataPostParam = '';
+if ($block->isLoggedIn()) {
+    $dataPostParam = sprintf(" data-post='%s'", $block->getPostParams());
+}
+
+?>
+<?php 
+
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$customerSession = $objectManager->create('Magento\Customer\Model\Session');
+$storeManager = $objectManager->get('\Magento\Store\Model\StoreManagerInterface');
+
+?>
+
+<?php 
+if ($customerSession->isLoggedIn()) {?>
+
+
+
+        
+<li class="dropdown">
+    <a href="javascript:void(0)" class="btn button dropdown-toggle" data-toggle="dropdown">
+        <span class="icon icon-people"></span><span class="user-sign"><?php //echo substr($customerSession->getCustomer()->getName(), 0, -6);?></span><span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu">
+            <li class="mobile-visible"><span class=""><i class="fa fa-user"></i> <?=$customerSession->getCustomer()->getName();?></span></li>
+            <li><a href="<?=$storeManager->getStore()->getBaseUrl().'customer/account'?>">Dashboard</a></li>
+            <li>   <a <?= /* @noEscape */ $block->getLinkAttributes() ?><?= /* @noEscape */ $dataPostParam ?> class="">
+            <?= $block->escapeHtml($block->getLabel()) ?></a></li>
+        </ul>
+    </li>
+    
+<?php }
+else{
+?>
+    <li>
+        <a <?= /* @noEscape */ $block->getLinkAttributes() ?><?= /* @noEscape */ $dataPostParam ?> class="btn button">
+            <span class="icon icon-people"></span>
+            <span class="user-sign"><?= $block->escapeHtml($block->getLabel()) ?></span>
+        </a>
+    </li>
+    <?php } ?>
+
+    

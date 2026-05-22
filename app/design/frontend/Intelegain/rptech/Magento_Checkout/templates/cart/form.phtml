@@ -1,0 +1,146 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+// @codingStandardsIgnoreFile
+
+/**  @var $block \Magento\Checkout\Block\Cart\Grid */
+?>
+<?php $mergedCells = ($this->helper('Magento\Tax\Helper\Data')->displayCartBothPrices() ? 2 : 1); ?>
+<?= $block->getChildHtml('form_before') ?>
+<form action="<?= /* @escapeNotVerified */ $block->getUrl('checkout/cart/updatePost') ?>"
+      method="post"
+      id="form-validate"
+      data-mage-init='{"Magento_Checkout/js/action/update-shopping-cart":
+      {"validationURL" : "/checkout/cart/updateItemQty"}
+      }'
+      class="form form-cart">
+          <?= $block->getBlockHtml('formkey') ?>
+    <div class="cart table-wrapper<?= $mergedCells == 2 ? ' detailed' : '' ?>">
+        <?php if ($block->getPagerHtml()): ?>
+            <div class="cart-products-toolbar cart-products-toolbar-top toolbar" data-attribute="cart-products-toolbar-top"><?= $block->getPagerHtml() ?></div>
+        <?php endif ?>
+        <div id="shopping-cart-table"
+             class="cart-wrapper cart items data table"
+             data-mage-init='{"shoppingCart":{"emptyCartButton": ".action.clear",
+             "updateCartActionContainer": "#update_cart_action_container"}}'>
+            <div class="cart-items-wrapper cart item">
+                <?php foreach ($block->getItems() as $_item): ?>
+                    <?= $block->getItemHtml($_item) ?>
+                <?php endforeach ?>
+            </div>
+        </div>
+    </div>
+    <?php if ($block->getPagerHtml()): ?>
+        <div class="cart-products-toolbar cart-products-toolbar-bottom toolbar" data-attribute="cart-products-toolbar-bottom"><?= $block->getPagerHtml() ?></div>
+    <?php endif ?>
+
+    <div class="cart main actions clearfix">
+        <?php if ($block->getContinueShoppingUrl()): ?>
+            <a class="btn action continue"
+               href="<?= $block->escapeUrl($block->getContinueShoppingUrl()) ?>"
+               title="<?= $block->escapeHtml(__('Continue Shopping')) ?>">
+                <span><?= /* @escapeNotVerified */ __('Continue Shopping') ?></span>
+            </a>
+        <?php endif; ?>
+        <button type="submit"
+                name="update_cart_action"
+                data-cart-empty=""
+                value="empty_cart"
+                title="<?= $block->escapeHtml(__('Clear Shopping Cart')) ?>"
+                class="btn action clear" id="empty_cart_button">
+            <span><?= /* @escapeNotVerified */ __('Clear Shopping Cart') ?></span>
+        </button>
+        <button type="submit"
+                name="update_cart_action"
+                data-cart-item-update=""
+                value="update_qty"
+                title="<?= $block->escapeHtml(__('Update Shopping Cart')) ?>"
+                class="btn action update">
+            <span><?= /* @escapeNotVerified */ __('Update Shopping Cart') ?></span>
+        </button>
+        <input type="hidden" value="" id="update_cart_action_container" data-cart-item-update=""/>
+    </div>
+</form>
+<?= $block->getChildHtml('checkout.cart.order.actions') ?>
+<?= $block->getChildHtml('shopping.cart.table.after') ?>
+
+<!--<div class="similar-products-bought">
+    <h3 class="heading">Customers who bought HP Entry Level Backpack (Black) also bought these items from other categories:</h3>
+    <div class="similar-products-bought-slider">
+        <div>
+            <div class="similar">
+                <a href="#" class="product-img"><img  src="https://rptech.dweb.in/pub/media/catalog/product/cache/12479842094003d6e8198e99b15d1aad/m/b/mb04-black-0.jpg"></a>
+                <div class="similar-text">
+                    <strong class="product-item-name">
+                        <a  href="https://rptech.dweb.in/crown-summit-backpack.html">Crown Summit Backpack</a>
+                    </strong>
+                    <p class="product-price">&#8377;57,990</p>
+                    <button class="action tocart">Add To Cart</button>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="similar">
+                <a href="#" class="product-img"><img src="https://rptech.dweb.in/pub/media/catalog/product/cache/12479842094003d6e8198e99b15d1aad/m/b/mb04-black-0.jpg"></a>
+                <div class="similar-text">
+                    <strong class="product-item-name">
+                        <a  href="https://rptech.dweb.in/crown-summit-backpack.html">Crown Summit Backpack</a>
+                    </strong>
+                    <p class="product-price">&#8377;57,990</p>
+                    <button class="action tocart">Add To Cart</button>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="similar">
+                <a href="#" class="product-img"><img src="https://rptech.dweb.in/pub/media/catalog/product/cache/12479842094003d6e8198e99b15d1aad/m/b/mb04-black-0.jpg"></a>
+                <div class="similar-text">
+                    <strong class="product-item-name">
+                        <a  href="https://rptech.dweb.in/crown-summit-backpack.html">Crown Summit Backpack</a>
+                    </strong>
+                    <p class="product-price">&#8377;57,990</p>
+                    <button class="action tocart">Add To Cart</button>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="similar">
+                <a href="#" class="product-img"><img src="https://rptech.dweb.in/pub/media/catalog/product/cache/12479842094003d6e8198e99b15d1aad/m/b/mb04-black-0.jpg"></a>
+                <div class="similar-text">
+                    <strong class="product-item-name">
+                        <a  href="https://rptech.dweb.in/crown-summit-backpack.html">Crown Summit Backpack</a>
+                    </strong>
+                    <p class="product-price">&#8377;57,990</p>
+                    <button class="action tocart">Add To Cart</button>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="similar">
+                <a href="#" class="product-img"><img src="https://rptech.dweb.in/pub/media/catalog/product/cache/12479842094003d6e8198e99b15d1aad/m/b/mb04-black-0.jpg"></a>
+                <div class="similar-text">
+                    <strong class="product-item-name">
+                        <a  href="https://rptech.dweb.in/crown-summit-backpack.html">Crown Summit Backpack</a>
+                    </strong>
+                    <p class="product-price">&#8377;57,990</p>
+                    <button class="action tocart">Add To Cart</button>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="similar">
+                <a href="#" class="product-img"><img src="https://rptech.dweb.in/pub/media/catalog/product/cache/12479842094003d6e8198e99b15d1aad/m/b/mb04-black-0.jpg"></a>
+                <div class="similar-text">
+                    <strong class="product-item-name">
+                        <a  href="https://rptech.dweb.in/crown-summit-backpack.html">Crown Summit Backpack</a>
+                    </strong>
+                    <p class="product-price">&#8377;57,990</p>
+                    <button class="action tocart">Add To Cart</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>-->
+

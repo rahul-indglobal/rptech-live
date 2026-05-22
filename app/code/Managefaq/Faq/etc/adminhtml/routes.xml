@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!--
+/** Grid adminhtml routes xml
+ * @category  faq 
+ * @package   Managefaq_Faq
+ * @author    Lalita Rajput
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:App/etc/routes.xsd">
+    <router id="admin">
+        <route id="faq" frontName="faq">
+            <module name="Managefaq_Faq" />
+        </route>
+    </router>
+</config>

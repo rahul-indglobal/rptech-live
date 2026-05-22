@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/menu.xsd">
+    <menu>
+        <add id="Rptech_QuantumRma::quantumrma"
+             title="QuantumRma Submissions"
+             module="Rptech_QuantumRma"
+             sortOrder="40"
+             parent="Rptech_ServiceAddress::main"
+             action="quantum_support/quantumrma/index"
+             resource="Rptech_QuantumRma::quantumrma"/>
+    </menu>
+</config>

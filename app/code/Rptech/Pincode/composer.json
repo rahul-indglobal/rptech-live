@@ -1,0 +1,21 @@
+{
+    "name": "rptech/pincode",
+    "description": "Magento2 Pincode checker Module",
+    "type": "magento2-module",
+    "version": "1.0.0",
+    "license": "GPL-3.0-or-later",
+    "authors": [
+        {
+          "name": "Rptech India",
+          "email": ""
+        }
+    ],
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Rptech\\Pincode\\": ""
+        }
+    }
+}

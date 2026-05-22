@@ -1,0 +1,22 @@
+{
+    "name": "rptech/whatsapp",
+    "description": "To send WhatsApp message on order place and shipment",
+    "require": {
+        "php": "^7.1.0",
+        "rptech/general": "^1.0.0"
+    },
+    "suggest": {},
+    "type": "magento2-module",
+    "version": "1.0.0",
+    "license": [
+        "Commercial"
+    ],
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Rptech\\WhatsApp\\": ""
+        }
+    }
+}

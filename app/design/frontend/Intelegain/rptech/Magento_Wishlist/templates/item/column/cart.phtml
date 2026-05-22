@@ -1,0 +1,46 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+/** @var \Magento\Wishlist\Block\Customer\Wishlist\Item\Column\Cart $block */
+
+/** @var \Magento\Wishlist\Model\Item $item */
+$item = $block->getItem();
+$product = $item->getProduct();
+?>
+<?php foreach ($block->getChildNames() as $childName): ?>
+    <?= /* @noEscape */ $block->getLayout()->renderElement($childName, false) ?>
+<?php endforeach;?>
+<td>
+    <div class="box-tocart">
+        <?php if ($item->canHaveQty() && $product->isVisibleInSiteVisibility()): ?>
+            <div class="field qty">
+<!--                <label class="label" for="qty[<?= $block->escapeHtmlAttr($item->getId()) ?>]"><span><?= $block->escapeHtml(__('Qty')) ?></span></label>-->
+                <div class="control">
+                    <input type="number" data-role="qty" id="qty[<?= $block->escapeHtmlAttr($item->getId()) ?>]" class="form-control input-text qty" data-validate="{'required-number':true,'validate-greater-than-zero':true}"
+                   name="qty[<?= $block->escapeHtmlAttr($item->getId()) ?>]" value="<?= /* @noEscape */ (int)($block->getAddToCartQty($item) * 1) ?>">
+                </div>
+            </div>
+        <?php endif; ?>
+    </div>
+</td>
+<td class="box-tocart">
+	<div class="actions product-btn">
+	<?php
+	$sell_status = $product->getResource()->getAttribute('sell_status')->getFrontend()->getValue($product);
+	if ($sell_status == 'Yes' && $product->getFinalPrice() > 0 && $product->isSaleable()) {
+		?>
+		<button type="button" data-role="tocart" data-post='<?= $block->getItemAddToCartParams($item) ?>' title="<?= $block->escapeHtmlAttr(__('Add to Cart')) ?>" data-item-id="<?= $block->escapeHtmlAttr($item->getId()) ?>" class="btn action tocart primary">
+                <span><?= $block->escapeHtml(__('Add to Cart')) ?></span>
+            </button>
+	<?php }else{ ?>
+	<span style="display: none" class="prosku"><?php echo $product->getSku(); ?></span>
+		<a class="btn btn-enq" id="product<?= $block->escapeHtml($product->getId()) ?>">Send Enquiry</a>
+	<?php } ?>
+		</div>
+</td>
+

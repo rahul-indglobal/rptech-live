@@ -1,0 +1,17 @@
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Email:etc/email_templates.xsd">
+    <template id="rptech_webinar_otp_email_template"
+              label="Webinar OTP Email Template"
+              file="email_otp.html"
+              type="html"
+              module="Rptech_Webinar"
+              area="frontend"
+    />
+
+    <template id="rptech_webinar_data_email_template"
+              label="Webinar Data Email Template"
+              file="data_email_template.html"
+              type="html"
+              module="Rptech_Webinar"
+              area="frontend"
+    />
+</config>

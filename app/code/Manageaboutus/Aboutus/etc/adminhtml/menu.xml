@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!--
+/** Grid menu xml
+ * @category  Manageaboutus_Aboutus 
+ * @package   Manageaboutus_Aboutus
+ * @author    Lalita Rajput
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+<!--        <add id="Manageaboutus_Aboutus::manager" title="About Us Content Management" module="Manageaboutus_Aboutus" sortOrder="10" resource="Manageaboutus_Aboutus::manager" />-->
+<!--        <add id="Manageaboutus_Aboutus::add_row" title="About Us Content Management" module="Manageaboutus_Aboutus" sortOrder="20" parent="Manageaboutus_Aboutus::manager" action="aboutus/grid" resource="Manageaboutus_Aboutus::add_row"/>-->
+    </menu>
+</config>

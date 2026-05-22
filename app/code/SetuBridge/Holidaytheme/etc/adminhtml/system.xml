@@ -1,0 +1,183 @@
+<?xml version="1.0"?>
+<!-- 
+/** Setubridge Technolabs
+* http://www.setubridge.com/
+* @author SetuBridge
+* @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+**/
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="setubridge" translate="label" sortOrder="300">
+            <label>SetuBridge</label>
+        </tab>
+        <section id="setubridge_holidaytheme" translate="label" sortOrder="300" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Festive Theme</label>
+            <tab>setubridge</tab>
+            <resource>SetuBridge_Holidaytheme::setubridge_holidaytheme</resource>
+            <group id="general" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0" translate="label">
+                <label>General</label>
+                <field id="generalactive" type="select" translate="label comment" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+                    <label>Enable</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="festivedatestart" translate="label" type="date" showInDefault="1" showInWebsite="1" showInStore="1" sortOrder="10">
+                    <label>Festive Date Start</label>
+                    <frontend_model>SetuBridge\Holidaytheme\Block\Adminhtml\System\Config\Date</frontend_model>
+                </field>
+                <field id="festivedateend" translate="label" type="date" showInDefault="1" showInWebsite="1" showInStore="1" sortOrder="20">
+                    <label>Festive Date End</label>
+                    <frontend_model>SetuBridge\Holidaytheme\Block\Adminhtml\System\Config\Date</frontend_model>
+                </field>
+                <field id="cmspages" translate="Module" type="multiselect" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Allowed Pages</label>
+                    <source_model>SetuBridge\Holidaytheme\Model\Config\Source\ConfigOption</source_model>
+                </field>                                                               
+            </group>
+
+            <group id="backgroundimageconfig" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0" translate="label">
+                <label>Background Image Configuration</label>
+                <field id="backgroundactive" type="select" translate="label comment" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Active</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>select yes to enable uploaded background image</comment>
+                </field>
+                <field id="backgroundimg" translate="label" sortOrder="10" type="Magento\Config\Block\System\Config\Form\Field\Image" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Upload Background Image</label>
+                    <comment>Uploaded image will be loaded as site background image.</comment>
+                    <backend_model>SetuBridge\Holidaytheme\Model\Config\Backend\Image</backend_model>
+                    <base_url type="media" scope_info="1">festivethemebackgroundimage</base_url>
+                    <validate>required-entry</validate>
+                    <upload_dir config="system" scope_info="1">festivethemebackgroundimage</upload_dir>
+                </field>                                               
+            </group>
+
+            <group id="snowfallsconfig" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0" translate="label">
+                <label>Decorative Fall Elements Configuration</label>
+                <field id="snowfallsactive" type="select" translate="label comment" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+                    <label>Active</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+
+                </field>
+                <field id="snowfallsdesignpattern" translate="label" type="textarea" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Design Pattern</label>
+
+                    <comment><![CDATA[ <span class="notice">Enter comma separated design patterns in "unicode|color" format. Few examples &#x266b;|#000000, &#x2764;|#fffff, &#10053;|#8ed6e6, &#9733;|#8ed6e6, &#x2022;|#8ed6e6, &#x25bd;|#fffff, &#x2600;|#fffff, &#x2727;|#fffff, &#x2723;|#fffff, &#x2745;|#fffff, &#x2723;|#fffff or any text,
+                            </span><a style="color:blue" href="http://www.alt-codes.net/miscellaneous-symbols" target="__blank">Click here to get more unicode pattern</a> ]]>
+                    </comment>
+
+
+                </field>
+                <field id="snowfallsduplicatecount" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Elements duplication count</label>
+                    <comment><![CDATA[ <span class="notice">Elements will get duplicated as per count set here]]></comment>
+                </field>
+                <field id="snowfallsfallanimatespeed" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Fall animation speed</label>
+                    <comment>Recommended: 10000 to 50000</comment>
+                    <validate>validate-greater-than-zero</validate>
+                </field> 
+                <field id="snowfallselementminspeed" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Element Minimum size</label>
+                    <comment>Default: 5</comment>
+                    <validate>validate-greater-than-zero</validate>
+                </field>  
+                <field id="snowfallselementmaxspeed" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Element Maximum size</label>
+                    <comment>Default: 15</comment>
+                    <validate>validate-greater-than-zero</validate>
+                </field>                                            
+            </group>
+
+            <group id="headerimageconfiguration" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0" translate="label">
+                <label>Festive Header Design Configuration</label>
+                <field id="headerimageactive" type="select" translate="label comment" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+                    <label>Active</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="headerimageselect" translate="label" type="radios" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Choose Header image</label>
+                    <source_model>SetuBridge\Holidaytheme\Model\Headerpattern</source_model>
+                    <frontend_model>SetuBridge\Holidaytheme\Block\Headerimages</frontend_model>
+                </field> 
+                <field id="headerimagebrowse" translate="label" sortOrder="20" type="Magento\Config\Block\System\Config\Form\Field\Image" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Upload custom Image</label>
+                    <comment><![CDATA[ <span class="notice">File types allowed: jpeg, gif, png.<br /> Recommended image height: 52px.]]></comment>
+                    <backend_model>SetuBridge\Holidaytheme\Model\Config\Backend\Image</backend_model>
+                    <base_url type="media" scope_info="1">festivethemebackgroundimage</base_url>
+                    <validate>required-entry</validate>
+                    <upload_dir config="system" scope_info="1">festivethemebackgroundimage</upload_dir>
+                </field>                           
+            </group>
+
+            <group id="contentimageconfiguration" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0" translate="label">
+                <label>Random Content Images Configuration</label>
+                <field id="contentimageactive" type="select" translate="label comment" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+                    <label>Active</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="contentimagemovingeffect" type="select" translate="label comment" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+                    <label>Animation Type</label>
+                    <comment><![CDATA[ <span class="notice">If selected yes image of santa claus,cupid etc will move randomly on page]]></comment>
+                    <source_model>SetuBridge\Holidaytheme\Model\Animationmode</source_model>
+                </field>
+
+                <field id="contentimageanimatespeed" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Image Animation Speed</label>
+                    <comment><![CDATA[ <span class="notice">enter speed to animate image. Higher the value lower the speed will be.<br /> Recommended value between range 6000-9000. Default is 8000]]></comment>
+                </field> 
+                <field id="contentimageselect" translate="label" type="radios" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Choose Pattern Image</label>
+                    <source_model>SetuBridge\Holidaytheme\Model\Movingpattern</source_model>
+                    <frontend_model>SetuBridge\Holidaytheme\Block\Movingimages</frontend_model>
+                </field>
+                <field id="contentimagebrowse" translate="label" sortOrder="40" type="Magento\Config\Block\System\Config\Form\Field\Image" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Upload custom Pattern Image</label>
+                    <comment><![CDATA[ <span class="notice">Recommended file types gif. Moving Santa Claus]]></comment>
+                    <backend_model>SetuBridge\Holidaytheme\Model\Config\Backend\Image</backend_model>
+                    <base_url type="media" scope_info="1">festivethemebackgroundimage</base_url>
+                    <validate>required-entry</validate>
+                    <upload_dir config="system" scope_info="1">festivethemebackgroundimage</upload_dir>
+                </field>                           
+            </group>
+
+            <group id="footerimageconfiguration" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0" translate="label">
+                <label>Festive Footer Design Configuration</label>
+                <field id="footerimageactive" type="select" translate="label comment" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Active</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+
+                <field id="footerimageselect" translate="label" type="radios" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Choose Festive Banner</label>
+                    <source_model>SetuBridge\Holidaytheme\Model\Footerpattern</source_model>
+                    <frontend_model>SetuBridge\Holidaytheme\Block\Footerimages</frontend_model>
+                </field>
+                <field id="footerimagebrowse" translate="label" sortOrder="20" type="Magento\Config\Block\System\Config\Form\Field\Image" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Upload Festive Banner</label>
+                    <comment><![CDATA[ <span class="notice">Recommended file types: jpeg, gif, png. Displayed In Footer.<br />Recommended image height:52px]]></comment>
+                    <backend_model>SetuBridge\Holidaytheme\Model\Config\Backend\Image</backend_model>
+                    <base_url type="media" scope_info="1">festivethemebackgroundimage</base_url>
+                    <validate>required-entry</validate>
+                    <upload_dir config="system" scope_info="1">festivethemebackgroundimage</upload_dir>
+                </field> 
+                <field id="footerimagebrowseleft" translate="label" sortOrder="30" type="Magento\Config\Block\System\Config\Form\Field\Image" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Upload Left banner image</label>
+                    <comment><![CDATA[ <span class="notice">Recommended file types gif. Image will be displayed in Left Side of footer.]]></comment>
+                    <backend_model>SetuBridge\Holidaytheme\Model\Config\Backend\Image</backend_model>
+                    <base_url type="media" scope_info="1">festivetheme/footer</base_url>
+                    <validate>required-entry</validate>
+                    <upload_dir config="system" scope_info="1">festivetheme/footer</upload_dir>
+                </field>  
+                <field id="footerimagebrowseright" translate="label" sortOrder="40" type="Magento\Config\Block\System\Config\Form\Field\Image" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Upload Right banner image</label>
+                    <comment><![CDATA[ <span class="notice">Recommended file types gif. Image will be displayed in Right Side of footer.]]></comment>
+                    <backend_model>SetuBridge\Holidaytheme\Model\Config\Backend\Image</backend_model>
+                    <base_url type="media" scope_info="1">festivetheme/footer</base_url>
+                    <validate>required-entry</validate>
+                    <upload_dir config="system" scope_info="1">festivetheme/footer</upload_dir>
+                </field>                          
+            </group>
+        </section>
+    </system>
+</config>

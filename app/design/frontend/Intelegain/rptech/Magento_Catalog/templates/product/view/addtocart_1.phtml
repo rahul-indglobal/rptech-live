@@ -1,0 +1,154 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+// @codingStandardsIgnoreFile
+
+/** @var $block \Magento\Catalog\Block\Product\View */
+?>
+<?php $_product = $block->getProduct(); ?>
+<?php $buttonTitle = __('Add to Cart'); ?>
+<?php $btnTitle = __('Add to Wishlist'); ?>
+<?php //if ($_product->isSaleable()): ?>
+
+<?php if($_product->getTypeID()=="bundle") { ?>
+    
+    <div class="box-tocart">
+		<div class="fieldset row">
+			<?php if ($block->shouldRenderQuantity()): ?>
+				<div class="col-sm-6 field qty">
+					<?php
+					$sell_status = $_product->getResource()->getAttribute('sell_status')->getFrontend()->getValue($_product);
+                                        if($_product->getTypeID()=="bundle"){
+                                            $condtion = "$sell_status == 'Yes'";
+                                        }else{
+                                           $condtion = "$sell_status == 'Yes' && $_product->getFinalPrice() > 0 && $_product->getIsSalable()";  
+                                        }
+					if ($condtion) {
+						?>
+						<label class="label" for="qty"><span><?= /* @escapeNotVerified */ __('Qty') ?></span></label>
+						<div class="control">
+							<input type="number"
+							       name="qty"
+							       min="1"
+							       id="qty"
+							       value="<?= /* @escapeNotVerified */ $block->getProductDefaultQty() * 1 ?>"
+							       title="<?= /* @escapeNotVerified */ __('Qty') ?>"
+							       class="input-text form-control qty"
+							       data-validate="<?= $block->escapeHtml(json_encode($block->getQuantityValidators())) ?>"
+							       />
+						</div>
+					<?php } ?>
+				</div>
+			<?php endif; ?>
+			<div class="col-sm-6 actions product-btn">
+				<?php
+				$sell_status = $_product->getResource()->getAttribute('sell_status')->getFrontend()->getValue($_product);
+                                 if($_product->getTypeID()=="bundle"){
+                                            $condtion1 = "$sell_status == 'Yes'";
+                                        }else{
+                                           $condtion1 = "$sell_status == 'Yes' && $_product->getFinalPrice() > 0 && $_product->getIsSalable()";  
+                                        }
+				//if ($sell_status == 'Yes' && $_product->getFinalPrice() > 0  && $_product->getIsSalable()) {
+                                        if ($condtion1) {
+					?>
+					<button type="submit"
+						title="<?= /* @escapeNotVerified */ $buttonTitle ?>"
+						class="btn action primary tocart"
+                                                id="product-addtocart-button">
+						<span><?= /* @escapeNotVerified */ $buttonTitle ?></span>
+					</button>
+					<?= $block->getChildHtml('', true) ?>
+				<?php } else { ?>
+				<span style="display: none" class="prosku"><?php echo $_product->getSku(); ?></span>
+					<a class="btn btn-enq" id="product<?= $block->escapeHtml($_product->getId()) ?>">Send Enquiry</a>
+				<?php } ?>
+                                         <?php  if($_product->getTypeID()!="bundle"){ ?>   
+				<button type="button"
+					data-role="add-to-links" 
+					data-post='<?= /* @noEscape */ $block->getAddToWishlistParams($_product) ?>'
+					title="<?= /* @escapeNotVerified */ $btnTitle ?>"
+					class="btn action primary towishlist"
+					id="product-addtocwishlist-button">
+					<span><?= /* @escapeNotVerified */ $btnTitle ?></span>
+				</button>
+                                         <?php } ?>
+
+			</div>
+		</div>
+	</div>
+    
+<?php }else{?>
+	<div class="box-tocart">
+		<div class="fieldset">
+			<?php if ($block->shouldRenderQuantity()): ?>
+				<div class="field qty">
+					<?php
+					$sell_status = $_product->getResource()->getAttribute('sell_status')->getFrontend()->getValue($_product);
+                                        if($_product->getTypeID()=="bundle"){
+                                            $condtion = "$sell_status == 'Yes'";
+                                        }else{
+                                           $condtion = "$sell_status == 'Yes' && $_product->getFinalPrice() > 0 && $_product->getIsSalable()";  
+                                        }
+					if ($condtion) {
+						?>
+						<label class="label" for="qty"><span><?= /* @escapeNotVerified */ __('Qty') ?></span></label>
+						<div class="control">
+							<input type="number"
+							       name="qty"
+							       min="1"
+							       id="qty"
+							       value="<?= /* @escapeNotVerified */ $block->getProductDefaultQty() * 1 ?>"
+							       title="<?= /* @escapeNotVerified */ __('Qty') ?>"
+							       class="input-text form-control qty"
+							       data-validate="<?= $block->escapeHtml(json_encode($block->getQuantityValidators())) ?>"
+							       />
+						</div>
+					<?php } ?>
+				</div>
+			<?php endif; ?>
+			<div class="actions product-btn">
+				<?php
+				$sell_status = $_product->getResource()->getAttribute('sell_status')->getFrontend()->getValue($_product);
+                                 if($_product->getTypeID()=="bundle"){
+                                            $condtion1 = "$sell_status == 'Yes'";
+                                        }else{
+                                           $condtion1 = "$sell_status == 'Yes' && $_product->getFinalPrice() > 0 && $_product->getIsSalable()";  
+                                        }
+				//if ($sell_status == 'Yes' && $_product->getFinalPrice() > 0  && $_product->getIsSalable()) {
+                                        if ($condtion1) {
+					?>
+					<button type="submit"
+						title="<?= /* @escapeNotVerified */ $buttonTitle ?>"
+						class="btn action primary tocart"
+                                                id="product-addtocart-button">
+						<span><?= /* @escapeNotVerified */ $buttonTitle ?></span>
+					</button>
+					<?= $block->getChildHtml('', true) ?>
+				<?php } else { ?>
+				<span style="display: none" class="prosku"><?php echo $_product->getSku(); ?></span>
+					<a class="btn btn-enq" id="product<?= $block->escapeHtml($_product->getId()) ?>">Send Enquiry</a>
+				<?php } ?>
+                               <?php  if($_product->getTypeID()!="bundle"){ ?>         
+				<button type="button"
+					data-role="add-to-links" 
+					data-post='<?= /* @noEscape */ $block->getAddToWishlistParams($_product) ?>'
+					title="<?= /* @escapeNotVerified */ $btnTitle ?>"
+					class="btn action primary towishlist"
+					id="product-addtocwishlist-button">
+					<span><?= /* @escapeNotVerified */ $btnTitle ?></span>
+				</button>
+                               <?php } ?>
+
+			</div>
+		</div>
+	</div>
+<?php }//endif; ?>
+<script type="text/x-magento-init">
+	{
+        "#product_addtocart_form": {
+	"Magento_Catalog/js/validate-product": {}
+        }
+	}
+</script>

@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <remove src="css/styles-m.css" />
+        <remove src="css/styles-l.css" />
+        <link rel="stylesheet" type="text/css" src="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" src_type="url" />
+        <css src="css/bootstrap.min.css" />     
+        <css src="fonts/icomoon/style.css" />
+        <css src="css/font-awesome.min.css" />
+        <css src="css/slick.css" />
+        <css src="css/slick-theme.css" />
+        <css src="css/jquery.mCustomScrollbar.css" />
+       
+        <css src="css/layout.css"/>
+        <css src="css/responsive.css" />
+<!--        <css src="css/my.css" />-->
+        <css src="css/jquery.fancybox.css" />
+        <css src="css/nouislider.min.css" />
+        <css src="css/jquery.dataTables.css" />
+        <css src="css/responsive.dataTables.min.css" />
+        <css src="css/main.css" />
+        <!-- link rel="stylesheet" type="text/css" src="https://unpkg.com/simplebar@latest/dist/simplebar.css" src_type="url" / -->
+        <!-- link type="text/javascript"  src="https://unpkg.com/simplebar@latest/dist/simplebar.js" src_type="url" / -->
+        <link src="js/custom.js?v=1.1"  />
+        
+    </head>
+</page>

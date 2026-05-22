@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <section>
+            <group>
+                <smsUrl>http://vas.mobilogi.com/api.php</smsUrl>
+                <smsUserName>rashe</smsUserName>
+                <smsPassword>pass1234</smsPassword>
+                <smsSender>RPTECH</smsSender>
+                <smsRoute>1</smsRoute>
+            </group>
+        </section>
+	<cartban>
+            <general>
+                <hours_limit>24</hours_limit>
+		<display_text>Unable to process your Request, you have already bought same Product. You can purchase the product after next 24 hours.</display_text>
+		<display_text_order>Products ([products_info]) are not eligible for purchase. Please try again later.</display_text_order>
+            </general>
+        </cartban>
+
+        <enquiry>
+            <email>
+                <template>enquiry_email_template</template>
+            </email>
+        </enquiry>
+    </default>
+</config>

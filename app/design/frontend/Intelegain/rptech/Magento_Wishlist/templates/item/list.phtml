@@ -1,0 +1,53 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+?>
+<?php
+/** @var \Magento\Wishlist\Block\Customer\Wishlist\Items $block */
+$columns = $block->getColumns();
+?>
+
+<div class="block products-grid wishlist">
+    <div class="block-title"><strong>My Wish List</strong></div>
+    <div class="block-content">
+        <?php $iterator = 1; ?>
+        <?php if (count($block->getItems())): ?>
+        <table class="wishlist-table table table-bordered product-items responsive" id="testwish">
+                <thead>
+                        <tr>
+                <th>Product</th>
+                <th>Name</th>
+                <th>Price</th>
+                <td></td>
+                <th>Comment</th>
+                <th>Quantity</th>
+                <th>Availability</th>
+                <th>Actions</th>
+            </tr>
+                </thead>
+                <tbody>
+            <?php foreach ($block->getItems() as $item): ?>
+            <?= /* @noEscape */ ($iterator++ == 1) ? '<tr data-row="product-item" class="product-item" id="item_' . $block->escapeHtmlAttr($item->getId()) . '">' : '</tr><tr class="product-item" id="item_' . $block->escapeHtmlAttr($item->getId()) . '">' ?>
+                    <?php foreach ($columns as $column): ?>
+                        <?= $column->setItem($item)->toHtml() ?>
+                    <?php endforeach; ?>
+            <?= ($iterator == count($block->getItems())+1) ? '</li>' : '' ?>
+            <?php endforeach; ?>
+                        </tbody>
+        </table>
+        <?php else: ?>
+            <div class="message info empty">
+                <span><?= $block->escapeHtml(__('This Wish List has no Items')) ?></span>
+            </div>
+        <?php endif; ?>
+    </div>
+</div>
+
+<?php foreach ($columns as $column): ?>
+    <?= $column->getAdditionalHtml() ?>
+<?php endforeach; ?>

@@ -1,0 +1,21 @@
+<?php
+/**
+ * @var \Rptech\Brand\Block\Brand\Index $block
+ */
+    $mediaPath  =   $block->getBrandMediaUrl();
+    $brands     =   $block->getBrands();
+?>
+<?php if (!empty($brands) && $brands->getSize()) :?>
+
+        <h2 class="heading text-uppercase"><strong><?php echo __('BRANDS WE DISTRIBUTE') ?></strong></h2>
+        <div class="clearfix">
+            <?php foreach ($brands as $brand) :?>
+                <div class="brand-horz-list">
+                    <a href="<?= $brand->getLink() ?>" target="_blank">
+                        <img class="brand-horz-list-img" src="<?= $mediaPath.'/'.$brand->getImage() ?>" />
+                    </a>
+                </div>
+            <?php endforeach;?>
+        </div>
+
+<?php endif;?>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <!-- Image Uploader -->
+    <type name="Rptech\HomepageSlider\Model\ImageUploader">
+        <arguments>
+            <argument name="baseTmpPath" xsi:type="string">homepage/images</argument>
+            <argument name="basePath" xsi:type="string">homepage/images</argument>
+            <argument name="allowedExtensions" xsi:type="array">
+                <item name="jpg" xsi:type="string">jpg</item>
+                <item name="jpeg" xsi:type="string">jpeg</item>
+                <item name="gif" xsi:type="string">gif</item>
+                <item name="png" xsi:type="string">png</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Rptech\HomepageSlider\Controller\Adminhtml\Slider\Upload">
+        <arguments>
+            <argument name="imageUploader" xsi:type="object">VirtualTypeName</argument>
+        </arguments>
+    </type>
+    <!-- End Image Uploader -->
+
+    <!--Admin GRID -->
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="homepageslider_grid_listing_data_source" xsi:type="string">
+                    Rptech\HomepageSlider\Model\ResourceModel\HomepageSlider\Grid\Collection
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <virtualType name="Rptech\HomepageSlider\Model\ResourceModel\HomepageSlider\Grid\Collection"
+                 type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">homepageslider</argument>
+            <argument name="resourceModel" xsi:type="string">Rptech\HomepageSlider\Model\ResourceModel\HomepageSlider</argument>
+        </arguments>
+    </virtualType>
+    <!--End Admin GRID -->
+</config>

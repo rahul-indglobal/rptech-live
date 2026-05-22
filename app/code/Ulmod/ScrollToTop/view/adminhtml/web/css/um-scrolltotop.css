@@ -1,0 +1,37 @@
+/**
+ * Copyright © Ulmod. All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+
+/** arrows tooltip **/
+#um-arrows-tooltip,
+#um-nextarrows-tooltip,
+#um-backarrows-tooltip{
+float: left;
+display: block;
+}
+#um-arrows-tooltip span,
+#um-nextarrows-tooltip span,
+#um-backarrows-tooltip span{
+font-size: 12px;
+font-weight: 600;
+margin-left: 5px;
+float: left;
+width: 50%;
+}
+#um-arrows-tooltip  i,
+#um-nextarrows-tooltip  i,
+#um-backarrows-tooltip  i {
+font-size: 18px;
+float: left;
+width: 10%;
+text-align: center;
+}
+#um-arrows-tooltip div,
+#um-nextarrows-tooltip div,
+#um-backarrows-tooltip div {
+padding-bottom: 5px;
+float: left;
+display: block;
+width: 100%;
+}

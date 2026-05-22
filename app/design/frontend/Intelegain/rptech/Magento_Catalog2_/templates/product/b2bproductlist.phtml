@@ -1,0 +1,118 @@
+<?php
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$productCollectionFactory = $objectManager->get('\Magento\Catalog\Model\ResourceModel\Product\CollectionFactory');
+$priceHelper = $objectManager->create('Magento\Framework\Pricing\Helper\Data'); // Instance of Pricing Helper
+
+
+$categoryCollection = $objectManager->get('\Magento\Catalog\Model\ResourceModel\Category\CollectionFactory');
+$categories = $categoryCollection->create();
+$categories->addAttributeToSelect('*');
+
+foreach ($categories as $key => $category) {
+	if ($key > 2)
+		$categories_id[$category->getId()] = $category->getName();
+}
+//get offer banner from  home page slider
+$mediaURL = $objectManager->get('Magento\Store\Model\StoreManagerInterface')
+	->getStore()
+	->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
+$resource = $objectManager->get('Magento\Framework\App\ResourceConnection');
+$connection = $resource->getConnection();
+$tableName = $resource->getTableName('rptech_homeSlider');
+$sql = "Select entity_id,title,content,slider_path,slider_link FROM " . $tableName . " where entity_id=3";
+$resultBanner = $connection->fetchAll($sql);
+
+//echo "<pre>";print_r($resultBanner);
+$store = $objectManager->get('Magento\Store\Model\StoreManagerInterface')->getStore();
+?>
+
+
+
+<div class="container-fluid">
+	<div class="offerpage">
+		<!--        <div class="offerzonebanner">
+			    <a href="<?= $resultBanner[0]['slider_link']; ?>"><img src="<?php echo $mediaURL . $resultBanner[0]['slider_path'] ?>"></a>
+			</div>-->
+
+		<?php
+		foreach ($categories_id as $key => $cat) {
+			$category = [$key];
+			$collectionCateProducts = $productCollectionFactory->create();
+			$collectionCateProducts->addAttributeToSelect('*');
+			$collectionCateProducts->addAttributeToFilter('b2bproducttype', '1');
+			$collectionCateProducts->addAttributeToFilter('visibility', array('neq' => "1"));
+			$collectionCateProducts->addCategoriesFilter(['in' => $category]);
+			if ($collectionCateProducts->getSize() > 0) {
+				?>
+				<div class="categoryProductsWrap">
+					<div class="categoryName"><?= $cat ?></div>
+					<div class="categoryProducts clearfix offerzone-slider products-wrapper equalheight_wrapper">
+						<?php
+						foreach ($collectionCateProducts as $productMob) {
+
+							// echo "<pre>";print_r($productMob->getData());die;
+							$listBlockMob = $objectManager->get('\Magento\Catalog\Block\Product\ListProduct');
+							$addToCartUrlMob = $listBlockMob->getAddToCartUrl($productMob);
+							?>
+
+							<div class="product-box">
+								<div class="product-inner-box">
+									<div class="txt-content equalheight">
+										<div class="img-box">
+											<a href="#" class="product-thumbnail">
+												<img class="product-img img-responsive" src="<?= $store->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA) . 'catalog/product' . $productMob->getImage(); ?>">
+											</a>
+										</div>
+										<h3 class="product-title">
+											<a href="<?= $productMob->getProductUrl(); ?>">
+												<?php
+												if (strlen($productMob->getName()) > 15) {
+													echo substr($productMob->getName(), 0, 15) . '...';
+												} else {
+													echo $productMob->getName();
+												}
+												?>
+											</a>
+										</h3>
+						    <!--                                    <p class="price-tag">₹<span>4,299</span> <small>53%Off</small></p>-->
+										<p class="price-tag"><span><?= $priceHelper->currency($productMob->getData('b2bproductprice'), true, false); ?> </span>
+										</p>
+									</div>
+									<div class="clearfix btn-wrapper">
+										<a href="<?= $productMob->getProductUrl(); ?>" class="btn btn-view"> View</a>
+										<form data-role="tocart-form" action="<?php echo $addToCartUrlMob; ?>" method="post"> 
+											<?php echo $block->getBlockHtml('formkey') ?>
+											<?php
+											$sell_status = $productMob->getResource()->getAttribute('sell_status')->getFrontend()->getValue($productMob);
+											if ($sell_status == 'Yes' && $productMob->getIsSalable()) {
+												?>
+												<button type="submit" title="Add to Cart" class="action tocart primary btn btn-cart">
+													<span><i class="fa fa-shopping-cart"></i>Add to Cart</span>
+												</button>
+											<?php } else { ?>
+												<span style="display: none" class="prosku"><?php echo $productMob->getSku(); ?></span>
+												<a class="btn btn-enq" id="product<?= $block->escapeHtml($productMob->getId()) ?>">Send Enquiry</a>
+											<?php } ?>
+										</form>
+
+									</div>
+								</div>
+							</div>
+
+						<?php }
+						?>
+
+
+					</div>
+				</div>
+
+
+			<?php }
+		} ?>
+
+
+
+
+
+	</div>
+</div>

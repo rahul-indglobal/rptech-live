@@ -1,0 +1,110 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+// @codingStandardsIgnoreFile
+
+/**
+ * Product media data template
+ *
+ * @var $block \Magento\Catalog\Block\Product\View\Gallery
+ */
+?>
+<?php
+$product = $block->getProduct();
+$images = $product->getMediaGalleryImages();
+?>
+<?php if($product->getTypeId()!="bundle") { ?>
+<div class="col-right">
+	<div class="main-slider mainslide">
+		<?php foreach ($images as $image) { ?>
+			<a href="<?php echo $image->getUrl() ?>" data-fancybox="gallery" id="fancybox"><img style="border:1px solid #e8e8e6;" id="zoom_03" src="<?php echo $image->getUrl() ?>" 
+													    data-zoom-image="<?php echo $image->getUrl() ?>" width="500px" /></a>
+				<?php
+				break;
+			}
+			?>
+	</div>
+	<div id="gallery_01" class="slider-nav mainslide">
+		<?php
+		$i = 0;
+		foreach ($images as $image) {
+			?>
+			<a  href="<?php echo $image->getUrl() ?>" data-fancybox="gallery" class="elevatezoom-gallery fancybox item <?php echo($i == 0) ? 'active' : ''; ?>" data-update="" data-image="<?php echo $image->getUrl() ?>" 
+			    data-zoom-image="<?php echo $image->getUrl() ?>">
+				<img src="<?php echo $image->getUrl() ?>"  />
+			</a>
+
+			<?php
+			$i++;
+		}
+		?>
+	</div>
+
+	<?php
+	if ($product->getTypeId() == 'configurable') {
+		$colorAttributeId = $product->getResource()->getAttribute('color')->getId(); // Get Color Attribute Id
+		$configurableAttrs = $product->getTypeInstance()->getConfigurableAttributesAsArray($product); // Get Used Attributes with its values
+		$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+		if (isset($configurableAttrs[$colorAttributeId])) {
+//			foreach ($configurableAttrs as $configurableAttr) {
+//				echo "<pre>";
+//				print_r($configurableAttr['attribute_code']); // Give you values used
+//				echo "</pre>";
+//			}
+			$_configChild = $product->getTypeInstance()->getUsedProducts($product);
+			$getChildId = array();
+			foreach ($_configChild as $child) {
+				$getChildId[] = $child->getSku();
+				$productCon = $objectManager->create('Magento\Catalog\Model\Product')->load($child->getId());
+				$images = $productCon->getMediaGalleryImages();
+				?>
+				<div class="mainslide <?php echo $child->getSku(); ?>  <?php echo 'images' . $child->getId(); ?>" style="display: none;">
+					<?php
+					foreach ($images as $image) {
+						?>
+						<a href="<?php echo $image->getUrl() ?>" class="fancybox" data-fancybox="gallery<?php echo $child->getId(); ?>" id="fancybox"><img style="border:1px solid #e8e8e6;" id="zoom_03" src="<?php echo $image->getUrl() ?>" 
+																						   data-zoom-image="<?php echo $image->getUrl() ?>" width="500px" /></a>
+							<?php
+							break;
+						}
+						?>
+				</div>
+				<div id="gallery_<?php echo $child->getId(); ?>" class="  mainslide <?php echo $child->getSku(); ?>  <?php echo 'gallery' . $child->getId(); ?>" style="display: none;">
+					<?php
+					$k = 0;
+					foreach ($images as $image) {
+						?>
+						<a  href="<?php echo $image->getUrl() ?>" data-fancybox="gallery<?php echo $child->getId(); ?>" class="elevatezoom-gallery fancybox item <?php echo($i == 0) ? 'active' : ''; ?>" data-update="" data-image="<?php echo $image->getUrl() ?>" 
+						    data-zoom-image="<?php echo $image->getUrl() ?>">
+							<img src="<?php echo $image->getUrl() ?>"  />
+						</a>
+						<?php
+						$k++;
+					}
+					?>
+				</div>
+				<script>
+//					require([
+//						'jquery',
+//						'elevateZoom'
+//					], function ($, url) {
+//						$("#zoom_<?php echo $child->getId(); ?>").elevateZoom({
+//							responsive: true,
+//							gallery: 'gallery_<?php echo $child->getId(); ?>',
+//							cursor: 'pointer',
+//							galleryActiveClass: "active",
+//							imageCrossfade: true
+//						});
+//					});
+				</script>
+				<?php
+			}
+//			echo "<pre>";
+//			print_r($getChildId);
+		}
+	}
+	?>
+</div>
+<?php } ?>

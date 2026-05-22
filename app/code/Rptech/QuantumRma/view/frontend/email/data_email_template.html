@@ -1,0 +1,166 @@
+<!--@subject {{trans "Rptech Quantum Rma customer data"}} @-->
+{{template config_path="design/email/header_template"}}
+<table style="float:left; margin-right: 10px" class="fue-abc-items">
+    <tr>
+        <td>
+            <p class="greeting">{{trans "Hi Please check the quantumrma data submit by customer"}}</p>
+            <p>
+                <table style="float:left; margin-right: 10px" class="fue-abc-items">
+                    <tr>
+                        <th>
+                            <p>{{trans "Case Number"}}</p>
+                        </th>
+                        <td>
+                            <p>{{trans "%case_number" case_number=$model.case_number}}</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            <p>{{trans "Product"}}</p>
+                        </th>
+                        <td>
+                            <p>{{trans "%product" product=$model.product}}</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            <p>{{trans "Serial Number"}}</p>
+                        </th>
+                        <td>
+                            <p>{{trans "%serial_number" serial_number=$model.serial_number}}</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            <p>{{trans "Service Level Type"}}</p>
+                        </th>
+                        <td>
+                            <p>{{trans "%service_level_type" service_level_type=$model.service_level_type}}</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            <p>{{trans "Company"}}</p>
+                        </th>
+                        <td>
+                            <p>{{trans "%company" company=$model.company}}</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            <p>{{trans "Address"}}</p>
+                        </th>
+                        <td>
+                            <p>{{trans "%address" address=$model.address}}</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            <p>{{trans "Postal Code"}}</p>
+                        </th>
+                        <td>
+                            <p>{{trans "%postal_code" postal_code=$model.postal_code}}</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            <p>{{trans "Country"}}</p>
+                        </th>
+                        <td>
+                            <p>{{trans "%country" country=$model.country}}</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            <p>{{trans "Primary Contact Name"}}</p>
+                        </th>
+                        <td>
+                            <p>{{trans "%pri_contact_name" pri_contact_name=$model.pri_contact_name|raw}}</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            <p>{{trans "Primary E-mail Address"}}</p>
+                        </th>
+                        <td>
+                            <p>{{trans "%pri_email" pri_email=$model.pri_email}}</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            <p>{{trans "Primary Contact Number"}}</p>
+                        </th>
+                        <td>
+                            <p>{{trans "%pri_contact_number" pri_contact_number=$model.pri_contact_number}}</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            <p>{{trans "Primary Alt Contact Number"}}</p>
+                        </th>
+                        <td>
+                            <p>{{trans "%pri_alt_contact_number" pri_alt_contact_number=$model.pri_alt_contact_number}}</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            <p>{{trans "Alt Contact Name"}}</p>
+                        </th>
+                        <td>
+                            <p>{{trans "%alt_contact_name" alt_contact_name=$model.alt_contact_name}}</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            <p>{{trans "Alt E-mail Address"}}</p>
+                        </th>
+                        <td>
+                            <p>{{trans "%alt_email" alt_email=$model.alt_email}}</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            <p>{{trans "Alt Contact Number"}}</p>
+                        </th>
+                        <td>
+                            <p>{{trans "%alt_contact_number" alt_contact_number=$model.alt_contact_number}}</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            <p>{{trans "Alt Extra Contact Number"}}</p>
+                        </th>
+                        <td>
+                            <p>{{trans "%alt_extra_contact_number" alt_extra_contact_number=$model.alt_extra_contact_number}}</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            <p>{{trans "Severity/Impact"}}</p>
+                        </th>
+                        <td>
+                            <p>{{trans "%severity_impact" severity_impact=$model.severity_impact}}</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            <p>{{trans "Non-returnable Drive or Array coverage"}}</p>
+                        </th>
+                        <td>
+                            <p>{{trans "%non_returnable_drive" non_returnable_drive=$model.non_returnable_drive}}</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            <p>{{trans "Description"}}</p>
+                        </th>
+                        <td>
+                            <p>{{trans "%description" description=$model.description}}</p>
+                        </td>
+                    </tr>
+                </table>
+            </p>
+        </td>
+    </tr>
+</table>
+{{template config_path="design/email/footer_template"}}

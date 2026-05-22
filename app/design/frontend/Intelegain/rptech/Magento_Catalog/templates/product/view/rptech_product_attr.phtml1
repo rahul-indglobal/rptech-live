@@ -1,0 +1,375 @@
+<html>
+
+<head>
+	<style>
+		table {
+			font-family: arial, sans-serif;
+			border-collapse: collapse;
+			width: 100%;
+		}
+
+		td,
+		th {
+			border: 1px solid #dddddd;
+			text-align: left;
+			padding: 8px;
+		}
+
+		/* Updated Tab */
+
+		/* Style the tab */
+		.tab {
+			overflow: hidden;
+			/* border: 1px solid #ccc;
+			background-color: #f1f1f1; */
+			/* width: 402px; */
+		}
+
+		/* Style the buttons inside the tab */
+		.tab button {
+			background-color: inherit;
+			float: left;
+			border: none;
+			outline: none;
+			cursor: pointer;
+			padding: 14px 16px;
+			transition: 0.3s;
+			font-size: 17px;
+			width: 200px;
+			background-color: #eee;
+		}
+
+		/* Change background color of buttons on hover */
+		.tab button:hover {
+			background-color: #c1c0c0;
+		}
+
+		/* Create an active/current tablink class */
+		.tab button.active {
+			background-color: #ccc;
+		}
+
+		/* Style the tab content */
+		.tabcontent {
+			display: none;
+			padding: 0px 10px;
+			border: 1px solid #ccc;
+			/* border-top: none; */
+		}
+
+		.tabContainer {
+			margin-top: 0px;
+		}
+	</style>
+</head>
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+// @codingStandardsIgnoreFile
+?>
+<?php /** @var $block \Magento\Catalog\Block\Product\AbstractProduct */ ?>
+<?php
+$product = $block->getProduct();
+$attributeSetId = $product->getAttributeSetId();
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+/** @var  $coll \Magento\Eav\Model\ResourceModel\Entity\Attribute\Collection */
+$groupCollection = $objectManager->create('Magento\Eav\Model\ResourceModel\Entity\Attribute\Group\Collection');
+$groupCollection->addFieldToFilter('attribute_set_id', $attributeSetId);
+$groupCollection->addFieldToFilter('tab_group_code', array('null' => true));
+$groupCollection->addFieldToFilter('attribute_group_code', array('neq' => 'magemob-inventory'));
+$groupCollection->addFieldToFilter('attribute_group_code', array('neq' => 'gift-options'));
+$groupCollection->addFieldToFilter('attribute_group_code', array('neq' => 'bundle-items'));
+$groupCollection->setOrder('sort_order', 'ASC');
+$priceHelper = $objectManager->create('Magento\Framework\Pricing\Helper\Data'); // Instance of Pricing Helper
+?>
+<?php if ($product->getTypeId() != "bundle") { ?>
+	<div class="avail-check">
+		<input type="text" maxlength="6" name="pincode_check" id="pincode_check" class="" />
+		<button type="submit" id="checkpincode" class="btn">Pincode Check<span id="spanpinloader" style="display: none;"><img class="pincodeloaderImg" src="<?php echo $this->getViewFileUrl('images/pincodeloader.gif'); ?>"></span></button>
+		<span id="showpincodemsg"></span>
+		<div class="errorDiv" style="color: red;">
+			<span id="errorMsg"></span>
+		</div>
+
+
+	</div>
+
+	<!-- <div class="tab">
+		<button class="tablinks" onclick="openTab(event, 'London')">London</button>
+		<button class="tablinks" onclick="openTab(event, 'Paris')">Paris</button>
+		<button class="tablinks" onclick="openTab(event, 'Tokyo')">Tokyo</button>
+	</div>
+
+	<div id="London" class="tabcontent">
+		<h3>London</h3>
+		<p>London is the capital city of England.</p>
+	</div>
+
+	<div id="Paris" class="tabcontent">
+		<h3>Paris</h3>
+		<p>Paris is the capital of France.</p>
+	</div>
+
+	<div id="Tokyo" class="tabcontent">
+		<h3>Tokyo</h3>
+		<p>Tokyo is the capital of Japan.</p>
+	</div> -->
+
+	<div class="tab">
+		<?php
+		$i = 0;
+		$productAttributes = $product->getAttributes();
+
+		foreach ($groupCollection as $gp) {
+			$group = $gp->getData();
+			$group_id = $group['attribute_group_id'];
+
+		?>
+			<button class="tablinks <?php if ($i == 0) {echo 'active';} ?>" onclick="openTab(event, '<?php echo $group['attribute_group_name']; ?>')"><?php echo $group['attribute_group_name']; ?></button>
+
+		<?php $i++; }
+		?>
+
+
+		<!-- <button class="tablinks" onclick="openTab(event, 'London')">London</button>
+		<button class="tablinks" onclick="openTab(event, 'Paris')">Paris</button>
+		<button class="tablinks" onclick="openTab(event, 'Tokyo')">Tokyo</button> -->
+	</div>
+
+	<div class="tabContainer">
+
+		<?php
+		$i = 0;
+		$productAttributes = $product->getAttributes();
+
+		foreach ($groupCollection as $gp) {
+			$group = $gp->getData();
+			$group_id = $group['attribute_group_id'];
+
+		?>
+			<?php
+			$attrs = array();
+			//echo '<pre>';
+			foreach ($productAttributes as $attribute) {
+				//print_r($attribute);
+				if (($attribute->isInGroup($attributeSetId, $group_id) && $attribute->getFrontend()->getValue($product) != '') || $attribute->getFrontend()->getLabel() == 'Processor Specifications') {
+					$attrs[] = $attribute->getFrontend();
+				}
+			}
+			//echo '</pre>';
+			?>
+
+			<div id="<?php echo $group['attribute_group_name']; ?>" class="tabcontent" <?php if ($i == 0) {
+																							echo 'style="
+    display: block;"';
+																						} ?>>
+				<?php if (count($attrs) > 1) { ?>
+					<table>
+						<?php
+						foreach ($attrs as $single) {
+						?>
+							<tr>
+								<td width="200px">
+									<?php
+									echo '<b>' . $single->getLabel() . ':</b>';
+									?>
+								</td>
+								<th><?php
+									$val = $single->getValue($product);
+									echo $val;
+									?></th>
+							</tr>
+						<?php
+						}
+						?>
+					</table>
+					<?php
+				} else {
+					foreach ($attrs as $single) {
+					?>
+						<tr>
+							<td width="200px">
+								<?php
+								echo '<b>' . $single->getLabel() . ':</b>';
+								?>
+							</td>
+							<th><?php
+								$val = $single->getValue($product);
+								echo $val;
+								?></th>
+						</tr>
+				<?php
+					}
+				}
+				?>
+			</div>
+
+		<?php $i++;
+		}
+		?>
+	</div>
+	<script>
+		function openTab(evt, cityName) {
+			var i, tabcontent, tablinks;
+			tabcontent = document.getElementsByClassName("tabcontent");
+			for (i = 0; i < tabcontent.length; i++) {
+				tabcontent[i].style.display = "none";
+			}
+			tablinks = document.getElementsByClassName("tablinks");
+			for (i = 0; i < tablinks.length; i++) {
+				tablinks[i].className = tablinks[i].className.replace(" active", "");
+			}
+			document.getElementById(cityName).style.display = "block";
+			evt.currentTarget.className += " active";
+		}
+	</script>
+
+	<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true" style="
+    display: none;">
+		<!-- <div class="panel panel-default">
+			<a class="collapsed" role="button" data-toggle="collapse"  style="text-decoration: none;">
+				<div class="panel-heading" role="tab" id="headingTwo" style="color: black;">
+					<h4 class="panel-title heading">
+						Specification
+					</h4>
+				</div>
+			</a>
+		</div> -->
+		<?php
+		$i = 0;
+		$productAttributes = $product->getAttributes();
+
+		foreach ($groupCollection as $gp) {
+			$group = $gp->getData();
+			$group_id = $group['attribute_group_id'];
+		?>
+			<?php
+			$attrs = array();
+			//echo '<pre>';
+			foreach ($productAttributes as $attribute) {
+				//print_r($attribute);
+				if (($attribute->isInGroup($attributeSetId, $group_id) && $attribute->getFrontend()->getValue($product) != '') || $attribute->getFrontend()->getLabel() == 'Processor Specifications') {
+					$attrs[] = $attribute->getFrontend();
+				}
+			}
+			//echo '</pre>';
+			?>
+			<div class="panel panel-default abc2">
+				<a class="ext" role="button" data-toggle="collapse" data-parent="#accordion" href="#<?php echo $group['attribute_group_code']; ?>" aria-expanded="true" aria-controls="<?php echo $group['attribute_group_name']; ?>" style="text-decoration: none;">
+					<div class="panel-heading" role="tab" id="heading<?php echo $group_id; ?>" style="color: black;">
+						<h4 class="panel-title">
+							<?php echo $group['attribute_group_name']; ?> </br>
+					</div>
+				</a>
+				<div id="<?php echo $group['attribute_group_code']; ?>" class="panel-collapse collapse <?php echo ($i == 0) ? 'in' : ''; ?> " role="tabpanel" aria-labelledby="heading<?php echo $group_id; ?>">
+					<div class="panel-body">
+						<?php if (count($attrs) > 1) { ?>
+							<table>
+								<?php
+								foreach ($attrs as $single) {
+								?>
+									<tr>
+										<td width="200px">
+											<?php
+											echo '<b>' . $single->getLabel() . ':</b>';
+											?>
+										</td>
+										<th><?php
+											$val = $single->getValue($product);
+											echo $val;
+											?></th>
+									</tr>
+								<?php
+								}
+								?>
+							</table>
+							<?php
+						} else {
+							foreach ($attrs as $single) {
+							?>
+								<tr>
+									<td width="200px">
+										<?php
+										echo '<b>' . $single->getLabel() . ':</b>';
+										?>
+									</td>
+									<th><?php
+										$val = $single->getValue($product);
+										echo $val;
+										?></th>
+								</tr>
+						<?php
+							}
+						}
+						?>
+					</div>
+				</div>
+			</div>
+		<?php
+			$i++;
+		}
+		?>
+	</div>
+	<script type="text/javascript">
+		require(['jquery'], function($) {
+			$(document).ready(function() {
+				$("#checkpincode").click(function() {
+					$("#spanpinloader").show();
+					<?php
+					header('Access-Control-Allow-Origin: *');
+					header('Authorization: Token f939438eba9c2d712539be8fc9991c056a142696');
+					?>
+					var pincode = $("#pincode_check").val();
+					var flag = true;
+					if (isNaN(pincode)) {
+						flag = false;
+					}
+					if (pincode) {
+						//alert(pincode + "==>not empty")
+						//call remote api to check pincode
+						if (flag) {
+							var api_url = 'https://staging-express.delhivery.com/c/api/pin-codes/json/'
+							var key = '5b578yg9yvi8sogirbvegoiufg9v9g579gviuiub8' // not real
+							$.ajax({
+								url: 'callRemoteApi.php', //api_url + "?filter_codes=" + pincode,
+								type: 'GET',
+								dataType: 'json',
+								data: {
+									pincode: pincode
+								},
+								contentType: 'application/json',
+								success: function(result) {
+									$("#spanpinloader").hide();
+									var msg;
+									if (result > 0) {
+										msg = "This product can be delivered on given pincode";
+									} else {
+
+										msg = "This product not delivered on given pincode";
+									}
+									$("#showpincodemsg").text(msg);
+								},
+								error: function(error) {
+									console.log(error);
+								}
+							});
+
+						} else {
+							$("#spanpinloader").hide();
+							alert('Please enter numebers only');
+
+						}
+
+					} else {
+						$("#spanpinloader").hide();
+						alert('Please enter pincode');
+					}
+				});
+			});
+		});
+	</script>
+<?php } ?>
+
+</html>

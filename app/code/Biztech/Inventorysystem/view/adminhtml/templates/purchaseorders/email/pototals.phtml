@@ -1,0 +1,19 @@
+<tfoot class="order-totals">
+    <tr>
+      <td align="right" style="padding:3px 9px" colspan="4"><?php echo __('Subtotal') ?></td>
+      <td align="right" style="padding:3px 9px">
+        <span><?php echo $this->getPomodel()->getTotal(); ?></span>
+      </td>
+    </tr>
+    <tr>
+      <td align="right" style="padding:3px 9px" colspan="4">
+        <strong><?php echo __('Grand Total') ?></strong>
+      </td>
+      <td align="right" style="padding:3px 9px">
+        <strong>
+            <span><?php echo $this->getPomodel()->getTotal(); ?></span>
+        </strong>
+      </td>
+    </tr>
+</tfoot>
+</table>

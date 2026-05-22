@@ -1,0 +1,86 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+// @codingStandardsIgnoreFile
+
+/* @var $block \Magento\Catalog\Block\Product\AbstractProduct */
+?>
+
+<?php
+switch ($type = $block->getType()) {
+
+
+	case 'related':
+		/** @var \Magento\Catalog\Block\Product\ProductList\Related $block */
+		if ($exist = $block->getItems()->getSize()) {
+			$type = 'related';
+			$class = $type;
+
+			$image = 'related_products_list';
+			$title = __('Related Products');
+			$items = $block->getItems();
+			$limit = 0;
+			$shuffle = 0;
+			$canItemsAddToCart = $block->canItemsAddToCart();
+
+			$showAddTo = true;
+			$showCart = false;
+			$templateType = null;
+			$description = false;
+			$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+			$priceHelper = $objectManager->create('Magento\Framework\Pricing\Helper\Data');
+		}
+		break;
+
+	case 'viewed':
+		if ($exist = ($block->getRecentlyViewedProducts() && $block->getRecentlyViewedProducts()->getSize())) {
+			echo $type = 'related';
+			$class = $type;
+
+			$image = 'related_products_list';
+			$title = __('Related Products');
+			$items = $block->getRecentlyViewedProducts();
+			$limit = 0;
+			$shuffle = 0;
+			$canItemsAddToCart = $block->canItemsAddToCart();
+
+			$showAddTo = true;
+			$showCart = false;
+			$templateType = null;
+			$description = false;
+			$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+			$priceHelper = $objectManager->create('Magento\Framework\Pricing\Helper\Data');
+		}
+		break;
+
+	default:
+		$exist = null;
+}
+
+?>
+<h3 class="heading">Similar Products</h3>
+<?php if ($exist): ?>
+	
+	<div class="similar-products-slider">
+		<?php foreach ($items as $_item): ?>
+			<div>
+				<div class="similar">
+					<a href="<?= /* @escapeNotVerified */ $block->getProductUrl($_item) ?>" class="product-img">
+						<img width="185" height="164"  src="<?= $block->getImage($_item, $image)->getImageUrl(); ?>">
+					</a>
+					<div class="similar-text">
+						<a href="<?= /* @escapeNotVerified */ $block->getProductUrl($_item) ?>" class="product-title">
+							<?= $block->escapeHtml($_item->getName()) ?>
+							<?= substr($_item->getShortDescription(), 0, 50) . '...' ?>
+						</a>
+						<p class="product-price"><?php echo $priceHelper->currency($_item->getFinalPrice(), true, false); ?></p>
+					</div>
+				</div>
+			</div>
+		<?php endforeach ?>
+	</div>
+	<?php else: ?>
+    <div class="message info empty"><div><?= /* @escapeNotVerified */ __('No related product found.') ?></div></div>
+<?php endif; ?>

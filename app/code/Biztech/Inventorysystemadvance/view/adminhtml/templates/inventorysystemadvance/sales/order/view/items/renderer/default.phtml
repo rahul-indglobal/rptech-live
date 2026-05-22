@@ -1,0 +1,50 @@
+<?php
+/**
+ * Copyright © 2016 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+// @codingStandardsIgnoreFile
+?>
+<?php /** @var \Magento\Sales\Block\Adminhtml\Order\View\Items\Renderer\DefaultRenderer $block */ ?>
+<?php $_item = $block->getItem() ?>
+<?php $block->setPriceDataObject($_item) ?>
+<tr>
+    <?php
+    $i = 0;
+    $columns = $block->getColumns();
+    $lastItemNumber = count($columns)
+    ?>
+    <?php foreach ($columns as $columnName => $columnClass): ?>
+        <?php
+        $i++;
+        if ($columnName == 'gr_warehouse') {
+            ?>
+            <td class="<?php echo /* @noEscape */ $columnClass ?><?php /* @noEscape */ echo ($i === $lastItemNumber ? ' last' : '') ?>">
+                <?php echo $block->getProductWarehouse($_item->getProductId(), $_item->getWarehouseId(), $_item->getOrderId(), $_item->getItemId(), $_item->getQtyOrdered()); ?>
+            </td>
+        <?php } else {
+            ?>
+            <td class="<?php echo /* @noEscape */ $columnClass ?><?php /* @noEscape */ echo ($i === $lastItemNumber ? ' last' : '') ?>"><?php /* @escapeNotVerified */ echo $block->getColumnHtml($_item, $columnName) ?></td>
+        <?php } ?>
+    <?php endforeach; ?>
+</tr>
+
+<?php /* Ajax request to update order item's warehouse id and manage qty as per that */ ?>
+<script type="text/javascript">
+    function changewarehouse(productID, itemID, qty) {
+        url = "<?php echo $this->getUrl("inventorysystemadvance/warehouse/changeOrderWarehouse"); ?>";
+        var newWarehouse_id = warehouseId(productID);
+        var productArray = {"product_id": productID, "newWarehouse_id": newWarehouse_id, "qty": qty, "item_id": itemID};
+        new Ajax.Request(url, {
+            method: 'POST',
+            parameters: productArray,
+            onSuccess: function (response) {
+            },
+        });
+    }
+
+    function warehouseId(productID) {
+        var id = document.getElementById("gr_warehouse_" + productID);
+        return id.options[id.selectedIndex].value;
+    }
+</script>

@@ -1,0 +1,967 @@
+<?php
+/**
+ * Copyright © Biztech, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+namespace Biztech\Inventorysystemadvance\Observer;
+
+use Biztech\Inventorysystemadvance\Model\Managehistory\Actiontype;
+use Biztech\Inventorysystemadvance\Model\Managehistory\Systemaction;
+use Biztech\Inventorysystemadvance\Model\Managehistory\SystemInterface;
+use Biztech\Inventorysystemadvance\Model\WarehouseproductFactory;
+use Biztech\Inventorysystem\Helper\Data as BizInventoryHelper;
+use Magento\Backend\Model\Auth\Session as AuthSession;
+use Magento\CatalogInventory\Api\StockRegistryInterface;
+use Magento\CatalogInventory\Model\Stock\StockItemRepository;
+use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
+use Magento\Customer\Model\Session as customerSession;
+use Magento\Framework\App\ResourceConnection;
+use Magento\Framework\Event\Observer;
+use Magento\Framework\Event\ObserverInterface;
+
+class ManageafterSave implements ObserverInterface
+{
+    public $_bizInvHelper;
+    public $_systemAction;
+    public $_systemActionType;
+    public $_systemInterface;
+    public $_catalogStock;
+    public $_authSession;
+    public $_customerSession;
+    public $_warehouseproductModel;
+    public $_configurableModel;
+    public $moduleManager;
+    public $scopeConfig;
+    protected $_resource;
+    protected $_StockRegistryInterface;
+    protected $_managehistoryModel;
+    protected $_dateTime;
+    protected $_productModel;
+    protected $_orderModel;
+    protected $_backendSession;
+    protected $_stockRegistry;
+    protected $_warehouseModel;
+    protected $_resourceConnection;
+
+    /**
+     * @param \Magento\Framework\App\Helper\Context               $context
+     * @param BizInventoryHelper                                  $bizInvHelper
+     * @param Systemaction                                        $systemAction
+     * @param Actiontype                                          $systemActionType
+     * @param SystemInterface                                     $systemInterface
+     * @param AuthSession                                         $authSession
+     * @param WarehouseproductFactory                             $warehouseproductModel
+     * @param Configurable                                        $configurableModel
+     * @param StockItemRepository                                 $catalogStock
+     * @param customerSession                                     $customerSession
+     * @param ResourceConnection                                  $resource
+     * @param StockRegistryInterface                              $StockRegistryInterface
+     * @param \Biztech\Inventorysystemadvance\Model\Managehistory $managehistoryModel
+     * @param \Magento\Framework\Stdlib\DateTime\DateTime         $dateTime
+     * @param \Magento\Catalog\Model\Product                      $productModel
+     * @param \Magento\Sales\Model\Order                          $orderModel
+     * @param \Magento\Backend\Model\Session                      $backendSession
+     * @param \Magento\CatalogInventory\Model\StockRegistry       $stockRegistry
+     * @param \Biztech\Inventorysystemadvance\Model\Warehouse     $warehouseModel
+     * @param \Magento\Framework\App\ResourceConnection           $resourceConnection
+     */
+    public function __construct(
+        \Magento\Framework\App\Helper\Context $context,
+        BizInventoryHelper $bizInvHelper,
+        Systemaction $systemAction,
+        Actiontype $systemActionType,
+        SystemInterface $systemInterface,
+        AuthSession $authSession,
+        WarehouseproductFactory $warehouseproductModel,
+        Configurable $configurableModel,
+        StockItemRepository $catalogStock,
+        customerSession $customerSession,
+        ResourceConnection $resource,
+        StockRegistryInterface $StockRegistryInterface,
+        \Biztech\Inventorysystemadvance\Model\Managehistory $managehistoryModel,
+        \Magento\Framework\Stdlib\DateTime\DateTime $dateTime,
+        \Magento\Catalog\Model\Product $productModel,
+        \Magento\Sales\Model\Order $orderModel,
+        \Magento\Backend\Model\Session $backendSession,
+        \Magento\CatalogInventory\Model\StockRegistry $stockRegistry,
+        \Biztech\Inventorysystemadvance\Model\Warehouse $warehouseModel,
+        \Magento\Framework\App\ResourceConnection $resourceConnection
+    ) {
+        $this->_bizInvHelper = $bizInvHelper;
+        $this->_systemAction = $systemAction;
+        $this->_systemActionType = $systemActionType;
+        $this->_systemInterface = $systemInterface;
+        $this->_authSession = $authSession;
+        $this->_customerSession = $customerSession;
+        $this->_catalogStock = $catalogStock;
+        $this->_warehouseproductModel = $warehouseproductModel;
+        $this->_configurableModel = $configurableModel;
+        $this->moduleManager = $context->getModuleManager();
+        $this->scopeConfig = $context->getScopeConfig();
+        $this->_resource = $resource;
+        $this->_StockRegistryInterface = $StockRegistryInterface;
+        $this->_managehistoryModel = $managehistoryModel;
+        $this->_dateTime = $dateTime;
+        $this->_productModel = $productModel;
+        $this->_orderModel = $orderModel;
+        $this->_backendSession = $backendSession;
+        $this->_stockRegistry = $stockRegistry;
+        $this->_warehouseModel = $warehouseModel;
+        $this->_resourceConnection = $resourceConnection;
+    }
+
+    /**
+     * @param  Observer $observer [description]
+     * @return object
+     */
+    public function execute(Observer $observer)
+    {
+        if ($this->moduleManager->isEnabled('Biztech_Inventorysystemadvance')) {
+            $interface = '';
+            $sysActionArr = $this->_systemAction->toOptionArray();
+            $actionArr = $this->_systemActionType->toOptionArray();
+            $intrfcArr = $this->_systemInterface->toOptionArray();
+
+            $getEvnt = $observer->getEvent();
+            $event = $getEvnt->getName();
+            $product = $getEvnt->getProduct();
+            $params = $this->_bizInvHelper->getRequest()->getParams();
+            if ($this->_authSession->isLoggedIn()) {
+                $currentUser = $this->_authSession->getUser();
+                $firstName = $currentUser->getFirstName();
+                $lastName = $currentUser->getLastName();
+                $user = $firstName . ' ' . $lastName;
+                $interface = $intrfcArr['Admin']->getText();
+            } elseif ($this->_customerSession->getCustomer()->getEmail()) {
+                $user = $this->_customerSession->getCustomer()->getEmail();
+                $interface = $intrfcArr['Frontend']->getText();
+            } else {
+                $user = 'frontuser';
+                $interface = $intrfcArr['Mobile']->getText();
+            }
+            $objDate = $this->_dateTime;
+            $date = $objDate->gmtDate();
+            $defWareID = $this->_bizInvHelper->getConfig('inventorysystem/inventorysystemadvance/default_warehouse_select');
+            switch ($event) {
+                case "checkout_submit_all_after":
+                    $this->getOrderItemStatus($observer);
+                    $orderData = $observer->getOrder();
+                    $this->updateWarehoseQty($observer);
+                    $websites = $this->_bizInvHelper->getAllWebsites();
+                    foreach ($orderData->getAllItems() as $item) {
+                        $prodWebsiteIDs = $this->_productModel->load($item->getProductId())->getWebsiteIds();
+                        $chckWebsite = array_intersect($prodWebsiteIDs, $websites);
+                        if (!empty($chckWebsite)) {
+                            $orderQty = $item->getQtyOrdered();
+                            $productId = $item->getProductId();
+                            if ($item->getProductType() == 'simple' || $item->getProductType() == 'grouped') {
+                                $getOptions = $item->getProductOptions();
+                                if (!empty($getOptions['options']) && is_array($getOptions['options'])) {
+                                    $getProdData = $item->getProduct()->getData();
+                                    $sku = $getProdData['sku'];
+                                } else {
+                                    $sku = $item->getSku();
+                                }
+                                $stockItem = $this->_StockRegistryInterface->getStockItem($productId);
+                                $finalQty = $stockItem->getQty();
+                                $beforeQty = $orderQty + $stockItem->getQty();
+                                $orderStatus = $orderData->getStatus();
+                                $ordrIncrID = $orderData->getIncrementId();
+
+                                $model = $this->_managehistoryModel;
+                                $model->setData('sku', $sku);
+                                $model->setData('update_date', $date);
+                                $sysAction[] = $sysActionArr['Order Created'];
+                                $model->setData('system_action', $sysAction[0]->getText());
+                                $model->setData('action_type', $actionArr['Quantity Decreased']->getText());
+
+                                $model->setData('qty_before', $beforeQty);
+                                $model->setData('qty_processed', $orderQty);
+                                $model->setData('final_qty', $finalQty);
+                                $model->setData('interface', $interface);
+                                if ($user == null) {
+                                    $user = $orderData->getCustomerEmail();
+                                }
+                                $model->setData('user', $user);
+                                $model->setData('order', $ordrIncrID);
+
+                                $model->save();
+                            }
+                        }
+                    }
+                    break;
+                case 'catalog_product_save_after':
+                    $getMobileProductSaveSession = $this->_backendSession->getMobileProductSaveSession();
+                    $websites = $this->_bizInvHelper->getAllWebsites();
+                    $prodWebsites = $getEvnt->getProduct()->getWebsiteIds();
+                    $chckWebsite = array_intersect($websites, $prodWebsites);
+
+                    if (!isset($getMobileProductSaveSession)) {
+                        if (!empty($chckWebsite)) {
+                            if (isset($params['callFrom']) && $params['callFrom'] == 'mob') {
+                                /* TODO Mobile Calls */
+                            } else {
+                                $systemActionArray[] = $sysActionArr['Inventory Update'];
+                                $systemAction = $systemActionArray[0]->getText();
+                                //$stockItem = $this->_catalogStock->get($getEvnt->getProduct()->getId());
+                                $stockItem = $this->_StockRegistryInterface->getStockItem($getEvnt->getProduct()->getId());
+
+                                if ($stockItem) {
+                                    $prodType = $product->getTypeId();
+                                    if ($prodType == 'simple') {
+                                        $stockData = $stockItem->getData();
+                                        $originalProductData = $product->getOrigData('quantity_and_stock_status');
+                                        $originalQty = isset($originalProductData['qty']) ? $originalProductData['qty'] : 0;
+
+                                        if ((int) $originalQty != (int) $stockData['qty']) {
+                                            if ((int) $originalQty < (int) $stockData['qty']) {
+                                                $addedQty = (int) $stockData['qty'] - (int) $originalQty;
+                                                $this->warehouseProductRel($observer->getProduct(), $addedQty, $interface, $user, $sysActionArr, $actionArr);
+                                                $stockData['original_inventory_qty'] = $originalQty;
+                                                $stockData['qty_correction'] = $addedQty;
+                                                $stockData['qty'] = $originalQty + $addedQty;
+                                                $this->updateProductInventoryLog($getEvnt->getProduct()->getSku(), $systemAction, $actionArr['Quantity Increased']->getText(), $stockData, $interface, $user);
+                                            } elseif ((int) $originalQty > (int) $stockData['qty']) {
+                                                //$stockItemModel = $this->_catalogStock->get($getEvnt->getProduct()->getId());
+                                                $stockItemModel = $this->_StockRegistryInterface->getStockItem($getEvnt->getProduct()->getId());
+                                                $stockItemModel->setQty($originalQty);
+                                                $stockItemModel->save();
+                                                throw new \Exception(__('You cannot decrease the quantity directly from here. Please manage it from Warehouses!'));
+                                            }
+                                        } else {
+                                            $this->warehouseProductRel($observer->getProduct(), '', $interface, $user, $sysActionArr, $actionArr);
+                                        }
+                                    } elseif ($prodType == 'grouped') {
+                                    } elseif ($prodType == 'configurable') {
+                                        $getAssocProds = $getEvnt->getProduct()->getTypeInstance()->getUsedProducts($observer->getProduct());
+
+                                        foreach ($getAssocProds as $prod) {
+                                            $prodData = $prod->getData();
+                                            $stockData = $this->_stockRegistry->getStockItem($prod->getId(), $prod->getStore()->getWebsiteId())->getData();
+                                            $orgproductData = $this->_productModel->load($prod->getId());
+                                            $orgStockData = $orgproductData->getOrigData('quantity_and_stock_status');
+                                            $orgStockQty = isset($orgStockData['qty']) ? $orgStockData['qty'] : 0;
+
+                                            if ($stockData['qty'] != $orgStockQty) {
+                                                if ((int) $orgStockQty < (int) $stockData['qty']) {
+                                                    $addedQty = (int) $stockData['qty'] - (int) $orgStockQty;
+                                                    $this->warehouseProductRel($prod, $addedQty, $interface, $user, $sysActionArr, $actionArr);
+                                                    $stockData['original_inventory_qty'] = $orgStockQty;
+                                                    $stockData['qty_correction'] = $addedQty;
+                                                    $stockData['qty'] = $orgStockQty + $addedQty;
+                                                    $this->updateProductInventoryLog($prodData['sku'], $systemAction, $actionArr['Quantity Increased']->getText(), $stockData, $interface, $user);
+                                                } elseif ((int) $orgStockQty > (int) $stockData['qty']) {
+                                                    //$stockItemModel = $this->_catalogStock->get($prod->getEntityId());
+                                                    $stockItemModel = $this->_StockRegistryInterface->getStockItem($prod->getEntityId());
+                                                    $stockItemModel->setQty($orgStockQty);
+                                                    $stockItemModel->save();
+                                                    throw new \Exception("You cannot decrease the quantity directly from here. Please manage it from Warehouses!");
+                                                }
+                                            } else {
+                                                $this->warehouseProductRel($orgproductData, '', $interface, $user, $sysActionArr, $actionArr);
+                                            }
+                                        }
+                                    } elseif ($prodType == 'bundle') {
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    break;
+                case "is_manage_stock_grid_save":
+                    $systemAction = $sysActionArr['Manage Stock'];
+                    /* get item details after update */
+                    if ($getEvnt->getStockdata()) {
+                        $item = $getEvnt->getStockdata();
+                    } else {
+                        $item = $getEvnt->getData()->getData();
+                    }
+
+                        /* get item details before update */
+                    if ($getEvnt->getStockdata()) {
+                        $orgItm = $getEvnt->getStockdata();
+                    } else {
+                        $orgItm = $getEvnt->getData()->getOrigData();
+                    }
+
+                    if ($item['qty'] != $orgItm['original_quantity']) {
+                        $websites = $this->_bizInvHelper->getAllWebsites();
+                        /* load product data */
+                        $productData = $this->_productModel->load($item['product_id']);
+                        $prodWebsites = $productData->getWebsiteIds();
+                        $chckWebsite = array_intersect($websites, $prodWebsites);
+                        if (!empty($chckWebsite)) {
+                            $model = $this->_managehistoryModel;
+                            $model->setData('sku', $productData->getSku());
+                            $model->setData('update_date', $date);
+
+                            $model->setData('system_action', $systemAction);
+
+                            if ($item['qty'] < $orgItm['original_quantity']) {
+                                $model->setData('action_type', $actionArr['Quantity Decreased']);
+                                $qty_processed = (int) $orgItm['original_quantity'] - (int) $item['qty'];
+                            } elseif ($item['qty'] > $orgItm['original_quantity']) {
+                                $model->setData('action_type', $actionArr['Quantity Increased']);
+                                $qty_processed = (int) $item['qty'] - (int) $orgItm['original_quantity'];
+                            }
+
+                            $model->setData('qty_before', $orgItm['original_quantity']);
+                            $model->setData('qty_processed', $qty_processed);
+                            $model->setData('final_qty', $item['qty']);
+                            $model->setData('interface', $interface);
+                            $model->setData('user', $user);
+                            $model->setData('order', $getEvnt->getComment());
+                            $model->save();
+                        }
+                    }
+                    break;
+                case "order_cancel_after":
+                    $orderData = $observer->getOrder();
+
+                    // Set default store wise (Warehouse) for the add qty after cancel order on that storeview (Warehouse)
+                    
+                    $defWareID = $this->scopeConfig->getValue('inventorysystem/inventorysystemadvance/default_warehouse_select', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $orderData->getStoreId());
+
+                    // Complete here code for the multiwebsite
+
+                    $websites = $this->_bizInvHelper->getAllWebsites();
+                    foreach ($orderData->getAllItems() as $item) {
+                        $prodWebsiteIDs = $this->_productModel->load($item->getProductId())->getWebsiteIds();
+                        $chckWebsite = array_intersect($prodWebsiteIDs, $websites);
+                        if (!empty($chckWebsite)) {
+                            $orderQty = $item->getQtyOrdered();
+                            $canceledQty = $item->getQtyCanceled();
+                            $productId = $item->getProductId();
+                            //$stockItem = $this->_catalogStock->get($productId);
+                            $stockItem = $this->_StockRegistryInterface->getStockItem($productId);
+                            $finalQty = $stockItem->getQty();
+                            $beforeQty = $stockItem->getQty() - $canceledQty;
+                            $orderStatus = $orderData->getStatus();
+                            $ordrIncrID = $orderData->getIncrementId();
+
+                            /* update def. warehouse qty */
+                            $this->updateDefaultWarehouse($productId, $defWareID, $item->getSku(), $canceledQty, $interface, $user, $sysActionArr, $actionArr);
+
+                            $model = $this->_managehistoryModel;
+                            $model->setData('sku', $item->getSku());
+                            $model->setData('update_date', $date);
+
+                            $model->setData('system_action', $sysActionArr['Order Canceled']);
+                            $model->setData('action_type', $actionArr['Quantity Increased']);
+
+                            $model->setData('qty_before', $beforeQty);
+                            $model->setData('qty_processed', $canceledQty);
+                            $model->setData('final_qty', $finalQty);
+                            $model->setData('interface', $interface);
+                            $model->setData('user', $user);
+                            $model->setData('order', $ordrIncrID);
+
+                            $model->save();
+                        }
+                    }
+                    break;
+                case "sales_order_creditmemo_refund":
+                    $creditmemo = $observer->getEvent()->getCreditmemo();
+                    $websites = $this->_bizInvHelper->getAllWebsites();
+
+                    // Set default store wise (Warehouse) for the add qty after creditmemo order on that storeview (Warehouse)
+
+                    $defWareID = $this->scopeConfig->getValue('inventorysystem/inventorysystemadvance/default_warehouse_select', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $creditmemo->getStoreId());
+
+                    // Complete here code for the multiwebsite
+
+                    foreach ($creditmemo->getAllItems() as $item) {
+                        $prodWebsiteIDs = $this->_productModel->load($item->getProductId())->getWebsiteIds();
+                        $chckWebsite = array_intersect($prodWebsiteIDs, $websites);
+                        if ($item->getBackToStock() != false && !empty($chckWebsite)) {
+                            //$productCollection = $this->_catalogStock->get($item->getProductId());
+                            $productCollection = $this->_StockRegistryInterface->getStockItem($item->getProductId());
+                            $beforeQty = $productCollection->getQty();
+                            $processedQty = $item->getQty();
+                            $finalQty = $beforeQty + $processedQty;
+                            $orderData = $this->_orderModel->load($creditmemo->getOrderId());
+                            $Incrementid = $orderData->getIncrementId();
+
+                            /* update def. warehouse qty */
+                            $this->updateDefaultWarehouse($item->getProductId(), $defWareID, $item->getSku(), $processedQty, $interface, $user, $sysActionArr, $actionArr);
+
+                            $model = $this->_managehistoryModel;
+                            $model->setData('sku', $item->getSku());
+                            $model->setData('update_date', $date);
+                            $model->setData('system_action', $sysActionArr['Credit Memo']);
+                            $model->setData('action_type', $actionArr['Quantity Increased']);
+                            $model->setData('qty_before', $beforeQty);
+                            $model->setData('qty_processed', $processedQty);
+                            $model->setData('final_qty', $finalQty);
+                            $model->setData('interface', $interface);
+                            $model->setData('user', $user);
+                            $model->setData('order', $Incrementid);
+
+                            $model->save();
+                        }
+                    }
+                    break;
+                case 'update_product_stock_after_stock_received':
+                    $data = $getEvnt->getData();
+                    for ($i = 0; $i < count($data['product_id']); $i++) {
+                        //$productStockCol = $this->_catalogStock->get($data['product_id'][$i]);
+                        $productStockCol = $this->_StockRegistryInterface->getStockItem($data['product_id'][$i]);
+                        $beforeQty = $productStockCol->getQty();
+                        $finalQty = $beforeQty + $data['qty_received'][$i];
+
+                        $productStockCol->setQty($finalQty);
+                        $productStockCol->save();
+                        if (array_key_exists('mobile_call', $data)) {
+                            $this->updateDefaultWarehouse($data['product_id'][$i], $data['gr_warehouse'][$i], $data['sku'][$i], $data['qty_received'][$i], $interface, $user, $sysActionArr, $actionArr);
+                        } else {
+                            $this->updateDefaultWarehouse($data['product_id'][$i], $data['warehouse'][$i], $data['sku'][$i], $data['qty_received'][$i], $interface, $user, $sysActionArr, $actionArr);
+                        }
+                    
+
+                        $model = $this->_managehistoryModel;
+                        $model->setData('sku', $data['sku'][$i]);
+                        $model->setData('update_date', $date);
+                        $model->setData('system_action', $sysActionArr['Goods Received']);
+                        $model->setData('action_type', $actionArr['Quantity Increased']);
+                        $model->setData('qty_before', $beforeQty);
+                        $model->setData('qty_processed', $data['qty_received'][$i]);
+                        $model->setData('final_qty', $finalQty);
+                        $model->setData('interface', $interface);
+                        $model->setData('user', $user);
+                        $model->setData('order', '');
+
+                        $model->save();
+                    }
+                    break;
+                case "product_stock_update_barcode_scan":
+                    //TODO
+                    /* get item details after update */
+                    $data = $getEvnt->getData();
+
+                    //$productStockCol = $this->_catalogStock->get($data['product_id']);
+                    $productStockCol = $this->_StockRegistryInterface->getStockItem($data['product_id']);
+                    $productData = $this->_productModel->load($data['product_id'])->getData();
+                    $beforeQty = $productStockCol->getQty();
+                    $finalQty = $beforeQty + $data['bar_scan_qty'];
+                    $productStockCol->setQty($finalQty);
+                    $productStockCol->setIsInStock(1);
+                    $productStockCol->save();
+
+                    if ($beforeQty != $finalQty) {
+                        $model = $this->_managehistoryModel;
+                        $model->setData('sku', $productData['sku']);
+                        $model->setData('update_date', $date);
+                        $model->setData('system_action', $sysActionArr['Goods Received']);
+                        $model->setData('action_type', $actionArr['Quantity Increased']);
+                        $model->setData('qty_before', $beforeQty);
+                        $model->setData('qty_processed', $data['bar_scan_qty']);
+                        $model->setData('final_qty', $finalQty);
+                        $model->setData('interface', $interface);
+                        $model->setData('user', $user);
+                        $model->setData('order', '');
+                        $model->save();
+                    }
+                    break;
+                case "product_update_mobile_call":
+                    //TODO
+                    if (isset($params['callFrom']) && $params['callFrom'] == 'mob') {
+                        $oldStockData = $getEvnt->getData();
+                        $sku = $this->_productModel->load($params['productid'])->getSku();
+                        $systemAction = $sysActionArr['Inventory Update'];
+                        $model = $this->_managehistoryModel;
+                        $model->setData('sku', $sku);
+                        $model->setData('update_date', $date);
+                        $model->setData('system_action', $systemAction);
+
+                        if ($oldStockData[0]['qty'] != $params['qty']) {
+                            if ($oldStockData[0]['qty'] < $params['qty']) {
+                                $model->setData('action_type', $actionArr['Quantity Increased']);
+                            } elseif ($oldStockData[0]['qty'] > $params['qty']) {
+                                $model->setData('action_type', $actionArr['Quantity Decreased']);
+                            }
+
+                            $model->setData('qty_before', $oldStockData[0]['qty']);
+                            $model->setData('qty_processed', $params['qty']);
+                            $model->setData('final_qty', $params['qty']);
+                            $model->setData('interface', 'Admin');
+                            $model->setData('user', $params['user']);
+                            $model->setData('order', $params['comment']);
+
+                            $model->save();
+                        }
+                    }
+                    break;
+                case "warehouse_stock_update_log_barcode":
+                    /* get warehouse details after update */
+                    $data = $getEvnt->getData();
+                    //$productQty = $this->_catalogStock->get($data['product_id'])->getQty();
+                    $productQty = $this->_StockRegistryInterface->getStockItem($data['product_id'])->getQty();
+                    $productSku = $this->_productModel->load($data['product_id'])->getSku();
+
+                    $model = $this->_managehistoryModel;
+                    $model->setData('sku', $productSku);
+                    $model->setData('update_date', $date);
+                    $model->setData('system_action', $sysActionArr['Warehouse Transaction']);
+                    if ($data['qty_before_upd'] > $data['qty_after_upd']) {
+                        $model->setData('action_type', $actionArr['Quantity Decreased']);
+                    } else {
+                        $model->setData('action_type', $actionArr['Quantity Increased']);
+                    }
+
+                        $model->setData('qty_before', $productQty);
+                        $model->setData('qty_processed', $productQty);
+                        $model->setData('final_qty', $productQty);
+                        $model->setData('warhouse_qty_before', $data['qty_before_upd']);
+                        $model->setData('warhouse_qty_after', $data['qty_after_upd']);
+                        $model->setData('interface', $interface);
+                        $model->setData('user', $user);
+                        $model->setData('order', $data['warehouse_name']);
+                        $model->save();
+                    break;
+                case "manage_stock_update_warehouse_log":
+                    /* get warehouse details after update */
+                    $data = $getEvnt->getData();
+                    //$productQty = $this->_catalogStock->get($data['product_id'])->getQty();
+                    $productQty = $this->_StockRegistryInterface->getStockItem($data['product_id'])->getQty();
+                    $productSku = $this->_productModel->load($data['product_id'])->getSku();
+
+                    $model = $this->_managehistoryModel;
+                    $model->setData('sku', $productSku);
+                    $model->setData('update_date', $date);
+                    $model->setData('system_action', $sysActionArr['Warehouse Transaction']);
+                    if ($data['qty_before_upd'] > $data['qty_after_upd']) {
+                        $model->setData('action_type', $actionArr['Quantity Decreased']);
+                    } else {
+                        $model->setData('action_type', $actionArr['Quantity Increased']);
+                    }
+
+                        $model->setData('qty_before', $data['qty_before_upd']);
+                        $model->setData('qty_processed', abs($data['qty_after_upd'] - $data['qty_before_upd']));
+                        $model->setData('final_qty', $data['qty_after_upd']);
+                        $model->setData('warhouse_qty_before', $data['qty_before_upd']);
+                        $model->setData('warhouse_qty_after', $data['qty_after_upd']);
+                        $model->setData('interface', $interface);
+                        $model->setData('user', $user);
+                        $model->setData('order', $data['warehouse_name']);
+                        $model->save();
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    /**
+     * @param   $productData
+     * @param   $addedQty
+     * @param   $interface
+     * @param   $user
+     * @param   $sysActionArr
+     * @param   $actionArr
+     * @return  $this
+     */
+    public function warehouseProductRel($productData, $addedQty, $interface, $user, $sysActionArr, $actionArr)
+    {
+        $defaultWarehouseID = $this->_bizInvHelper->getConfig('inventorysystem/inventorysystemadvance/default_warehouse_select');
+        $productId = $productData->getEntityId();
+        $ttlProdQty = (int) $this->_StockRegistryInterface->getStockItem($productId)->getQty();
+        //$ttlProdQty = (int) $this->_catalogStock->get($productId)->getQty();
+
+        $prodWarehouseData = $productData->getBcWarehouseProduct() ? $productData->getBcWarehouseProduct() : [];
+        $qtyToBeAssigned = 0;
+        if (is_array($prodWarehouseData) && !empty($prodWarehouseData)) {
+            $oldWarehouseID = [];
+            $finalproductWareHouse = [];
+            foreach ($prodWarehouseData as $key => $value) {
+                $k = array_search($value['warehouse_name'], $oldWarehouseID);
+                if ($k === 0 && $k !== false) {
+                    // var_dump($value);
+                    if (isset($value['delete']) && $value['delete'] == 1) {
+                        continue;
+                    } else {
+                        $finalproductWareHouse[$k]['warehouse_qty'] += $value['warehouse_qty'];
+                    }
+                } else {
+                    $finalproductWareHouse[$key] = $value;
+                    $oldWarehouseID[$key] = $value['warehouse_name'];
+                }
+            }
+
+            $ids = array_map(function ($ar) {
+                return $ar['warehouse_name'];
+            }, $finalproductWareHouse);
+
+            foreach ($finalproductWareHouse as $key => $data) {
+                if (isset($data['delete']) && $data['delete'] == 1 && $data['warehouse_name'] == $defaultWarehouseID) {
+                    throw new \Exception('Please select one Default warehouse.');
+                }
+
+                $details = [];
+                $assignWarehouseQty = 0;
+                $whpModel = $this->_warehouseproductModel->create();
+
+                $getWareQtySel = $whpModel->getCollection()
+                    ->addFieldToFilter('product_id', ['eq' => $productId])
+                    ->addFieldToFilter('warehouse_id', ['eq' => $data['warehouse_name']]);
+                $getWareQty = $getWareQtySel->getData();
+
+                if (isset($data['delete']) && $data['delete'] == 1) {
+                    if (!empty($getWareQty) && is_array($getWareQty)) {
+                        $relID = $getWareQty[0]['rel_id'];
+                        $qtyBefore = $getWareQty[0]['quantity'];
+                    }
+                } else {
+                    if (!empty($getWareQty) && is_array($getWareQty)) {
+                        $relID = $getWareQty[0]['rel_id'];
+                        $qtyBefore = $getWareQty[0]['quantity'];
+                    }
+
+                    if ($addedQty && $addedQty != '') {
+                        if (count($prodWarehouseData) == 1) {
+                            $assignWarehouseQty = $ttlProdQty;
+                            $qtyBefore = $getWareQty[0]['quantity'];
+                        } elseif (count($prodWarehouseData) > 1 && $data['warehouse_name'] == $defaultWarehouseID) {
+                            $assignWarehouseQty = $addedQty + (int) $data['warehouse_qty'];
+                        } else {
+                            $assignWarehouseQty = (int) $data['warehouse_qty'];
+                        }
+                    } else {
+                        $assignWarehouseQty = (int) $data['warehouse_qty'];
+                    }
+
+                    if (!isset($qtyBefore)) {
+                        $qtyBefore = 0;
+                    }
+                }
+                $details = [
+                    'warehouse_name' => $data['warehouse_name'],
+                    'product_id' => $productId,
+                    'position' => 0,
+                    'qty' => $assignWarehouseQty,
+                ];
+
+                if (isset($relID) && !is_null($relID) && !empty($getWareQty)) {
+                    $a = ['relId' => $relID];
+                    $details = array_merge($details, $a);
+                }
+
+                if (isset($relID) && !is_null($relID) && !empty($getWareQty) && isset($data['delete']) && $data['delete'] == 1) {
+                    $a = ['delete' => $data['delete']];
+                    $details = array_merge($details, $a);
+                } elseif (isset($data['delete']) && $data['delete'] == 1) {
+                    $a = ['delete' => $data['delete']];
+                    $details = array_merge($details, $a);
+                }
+
+                $this->saveWareHouseProductRelation($details);
+
+                if (isset($relID) && $relID != '' && !empty($getData)) {
+                    $qtyToBeAssigned += (int) $data['warehouse_qty'];
+                } else {
+                    $qtyToBeAssigned += $assignWarehouseQty;
+                }
+            }
+            $stockItemModel = $this->_StockRegistryInterface->getStockItem($productId);
+            $stockItemModel->setQty($qtyToBeAssigned);
+            $stockItemModel->save();
+
+            if (!$addedQty) {
+                if ($ttlProdQty > $qtyToBeAssigned) {
+                    $actionArr = $actionArr['Quantity Decreased']->getText();
+                    $qtyCorrection = $ttlProdQty - $qtyToBeAssigned;
+                } else {
+                    $actionArr = $actionArr['Quantity Increased']->getText();
+                    $qtyCorrection = $qtyToBeAssigned - $ttlProdQty;
+                }
+                $stockData['original_inventory_qty'] = $ttlProdQty;
+                $stockData['qty_correction'] = $qtyCorrection;
+                $stockData['qty'] = $qtyToBeAssigned;
+
+                $systemActionArray[] = $sysActionArr['Inventory Update'];
+                $this->updateProductInventoryLog($productData->getSku(), $systemActionArray[0]->getText(), $actionArr, $stockData, $interface, $user);
+            }
+        } else {
+            $details = [
+                'warehouse_name' => $defaultWarehouseID,
+                'product_id' => $productId,
+                //'priority' => 1,
+                'position' => 1,
+                'qty' => $ttlProdQty,
+            ];
+            $this->saveWareHouseProductRelation($details);
+            $this->warehouseInventoryLog($defaultWarehouseID, 0, $ttlProdQty, $ttlProdQty, $productData->getSku(), $interface, $user, $sysActionArr, $actionArr);
+        }
+    }
+
+    /**
+     * @param  array  $details
+     * @return $this
+     */
+    public function saveWareHouseProductRelation(array $details)
+    {
+        if (isset($details['relId']) && !isset($details['delete'])) {
+            $warehouseProducts = $this->_warehouseproductModel->create();
+            $warehouseProducts->load(['rel_id' => $details['relId']]);
+            $warehouseProducts
+            //->setPriority($details['priority'])
+            ->setPosition($details['position'])
+                ->setQuantity($details['qty'])
+            // ->setRelId($details['relId'])
+                ->save();
+        } elseif (isset($details['delete']) && isset($details['relId'])) {
+            $warehouseProducts = $this->_warehouseproductModel->create();
+            $warehouseProducts->setRelId($details['relId'])->delete()->save();
+        } elseif (!isset($details['delete']) && !isset($details['relId'])) {
+            /*ADDED:BY ASHISH TASK: REMOVE DUPLICATE RNTEY OF MAGEMON INVENTORY PRODUCT QUANTITY*/
+            $productID = $details['product_id'];
+            $warehouseId = $details['warehouse_name'];
+
+            $connection = $this->_resource->getConnection();
+            $tblName = $this->_resource->getTableName('bc_warehouse_product_is');
+            $getWarehousesql = $connection->select()
+                ->from($tblName, ['*'])
+                ->where('product_id = ' . $productID)
+                ->where('warehouse_id =' . $warehouseId);
+            $getWarehouse = $connection->fetchAll($getWarehousesql);
+            if (!isset($getWarehouse[0])) {
+                $warehouseProducts = $this->_warehouseproductModel->create();
+                $warehouseProducts->setWarehouseId($details['warehouse_name'])
+                    ->setProductId($details['product_id'])
+                //->setPriority($details['priority'])
+                    ->setPosition($details['position'])
+                    ->setQuantity($details['qty'])
+                    ->save();
+            }
+            /*END:BY ASHISH TASK: REMOVE DUPLICATE RNTEY OF MAGEMON INVENTORY PRODUCT QUANTITY*/
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param   $wareID
+     * @param   $qtyBefore
+     * @param   $assignWarehouseQty
+     * @param   $ttlProdQty
+     * @param   $sku
+     * @param   $interface
+     * @param   $user
+     * @param   $sysActionArr
+     * @param   $actionArr
+     * @return  void
+     */
+    protected function warehouseInventoryLog($wareID, $qtyBefore, $assignWarehouseQty, $ttlProdQty, $sku, $interface, $user, $sysActionArr, $actionArr)
+    {
+        if ($qtyBefore != $assignWarehouseQty) {
+            $model = $this->_managehistoryModel;
+            $objDate = $this->_dateTime;
+            $date = $objDate->gmtDate();
+            $model->setData('sku', $sku);
+            $model->setData('update_date', $date);
+            $model->setData('system_action', $sysActionArr['Warehouse Transaction']);
+            if ($qtyBefore > $assignWarehouseQty) {
+                $model->setData('action_type', $actionArr['Quantity Decreased']);
+            } else {
+                $model->setData('action_type', $actionArr['Quantity Increased']);
+            }
+            $model->setData('warhouse_qty_before', $qtyBefore);
+            $model->setData('qty_before', $qtyBefore);
+            $model->setData('qty_processed', abs($assignWarehouseQty - $qtyBefore)); //convert -ve to +ve number
+            $model->setData('final_qty', $assignWarehouseQty);
+            $model->setData('warhouse_qty_after', $assignWarehouseQty);
+            $model->setData('interface', $interface);
+            $model->setData('user', $user);
+            $model->setData('order', $this->_warehouseModel->load($wareID)->getWarehouseName());
+            $model->save();
+        }
+    }
+
+    /**
+     * @param   $sku
+     * @param   $systemAction
+     * @param   $actionArr
+     * @param   $stockData
+     * @param   $interface
+     * @param   $user
+     * @return  void
+     */
+    public function updateProductInventoryLog($sku, $systemAction, $actionArr, $stockData, $interface, $user)
+    {
+        $model = $this->_managehistoryModel;
+        $objDate = $this->_dateTime;
+        $date = $objDate->gmtDate();
+        $model->setData('sku', $sku);
+        $model->setData('update_date', $date);
+        $model->setData('system_action', $systemAction);
+        $model->setData('action_type', $actionArr);
+        $model->setData('qty_before', $stockData['original_inventory_qty']);
+        $model->setData('qty_processed', $stockData['qty_correction']);
+        $model->setData('final_qty', $stockData['qty']);
+        $model->setData('interface', $interface);
+        $model->setData('user', $user);
+        $model->setData('order', '');
+        $model->save();
+    }
+
+    /**
+     * @param   $observer
+     * @return  void
+     */
+    public function getOrderItemStatus($observer)
+    {
+        $getOrder = $observer->getOrder();
+        $isBackordered = 0;
+        foreach ($getOrder->getAllItems() as $items) {
+            if ($items->getStatus() != "Ordered") {
+                $isBackordered = 1;
+            }
+        }
+        if ($isBackordered == 1) {
+            $orderModel = $this->_orderModel;
+            $orderModel->setBcBackordered(1)->setId($getOrder->getEntityId());
+            $orderModel->save();
+        }
+    }
+
+    /**
+     * @param   $observer
+     * @return  void
+     */
+    public function updateWarehoseQty($observer)
+    {
+        $getOrder = $observer->getOrder();
+        $connection = $this->_resource->getConnection();
+        foreach ($getOrder->getAllItems() as $items) {
+            $getWarehouse = $this->getPriorityWarehouse($items->getProductId(), $connection);
+            if ($getWarehouse) {
+                // Set default store wise (Warehouse) for the update qty on that storeview (Warehouse)
+                
+                $defaultWarehouseID = $this->scopeConfig->getValue('inventorysystem/inventorysystemadvance/default_warehouse_select', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $getOrder->getStoreId());
+
+                // Code coplete here for multiwebsite.
+
+                $qtyOrdered = $items->getQtyOrdered();
+                /* Decrease all orderd product quantity from default warehouse */
+                for ($i = 0; $i < count($getWarehouse); $i++) {
+                    $wareProdModel = $this->_warehouseproductModel->create();
+                    if ($getWarehouse[$i]['warehouse_id'] == $defaultWarehouseID) {
+                        $defRelID = $getWarehouse[$i]['rel_id'];
+                    }
+                    if ($defaultWarehouseID == $getWarehouse[$i]['warehouse_id']) {
+                        $updQty = (int) $getWarehouse[$i]['quantity'] - $qtyOrdered;
+                        $wareProdModel->setId($getWarehouse[$i]['rel_id']);
+                        $wareProdModel->setQuantity($updQty);
+                        $wareProdModel->save();
+                        $qtyOrdered = $qtyOrdered - $getWarehouse[$i]['quantity'];
+                    }
+                }
+            }
+            $prodQty = $this->_StockRegistryInterface->getStockItem($items->getProductId())->getQty();
+            $min_warehouse_qty = $this->scopeConfig->getValue('inventorysystem/inventorysystemadvance/warehouse_level_quantity', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+            if ($prodQty < $min_warehouse_qty) {
+                $isBackordered = 1;
+            }
+        }
+    }
+
+    /**
+     * @param   $productID
+     * @param   $readCon
+     * @return  bool
+     */
+    public function getPriorityWarehouse($productID, $readCon)
+    {
+        $resource = $this->_resourceConnection;
+        $tblName = $resource->getTableName('bc_warehouse_product_is');
+        
+        $getWarehousesql = $readCon->select()
+            ->from($tblName, ['*'])
+            ->where('product_id = ' . $productID);
+        //->order(array('priority'));
+        $getWarehouse = $readCon->fetchAll($getWarehousesql);
+        if (!empty($getWarehouse[0])) {
+            return $getWarehouse;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * @param   $prodID
+     * @param   $wareID
+     * @param   $sku
+     * @param   $processedQty
+     * @param   $interface
+     * @param   $user
+     * @param   $sysActionArr
+     * @param   $actionArr
+     * @return  object
+     */
+    protected function updateDefaultWarehouse($prodID, $wareID, $sku, $processedQty, $interface, $user, $sysActionArr, $actionArr)
+    {
+        $readCon = $this->_resource->getConnection();
+        $tblName = $this->_resource->getTableName('bc_warehouse_product_is');
+        
+        $getWarehousesql = $readCon->select()
+            ->from($tblName, ['rel_id', 'quantity'])
+            ->where('product_id = ' . $prodID . ' AND warehouse_id=' . $wareID);
+        $getWarehouse = $readCon->fetchAll($getWarehousesql);
+
+        $checkWarehouseAssgnSql = $readCon->select()
+            ->from($tblName, ['rel_id', 'quantity'])
+            ->where('product_id = ' . $prodID);
+        $checkWarehouseAssgn = $readCon->fetchAll($checkWarehouseAssgnSql);
+
+        if (empty($getWarehouse)) {
+            $getDefWarehouseQty = 0;
+        } else {
+            $getDefWarehouseQty = $this->getDefWareQty($getWarehouse[0]['rel_id'], $readCon);
+        }
+        $wareProdModel = $this->_warehouseproductModel->create();
+        $beforeWareQty = 0;
+        if (!empty($getWarehouse[0]) && count($getWarehouse) == 1) {
+            $beforeWareQty = $getWarehouse[0]['quantity'];
+            $assignWareQty = $getWarehouse[0]['quantity'] + $processedQty;
+            $wareProdModel->setId($getWarehouse[0]['rel_id']);
+            $wareProdModel->setQuantity($assignWareQty);
+            $wareProdModel->save();
+        } else {
+            $defaultWarehouseID = $this->_bizInvHelper->getConfig('inventorysystem/inventorysystemadvance/default_warehouse_select');
+            if ($wareID == $defaultWarehouseID && empty($checkWarehouseAssgn)) {
+                //$stock = $this->_catalogStock->get($prodID);
+                $stock = $this->_StockRegistryInterface->getStockItem($prodID);
+                $wareProdModel->setWarehouseId($defaultWarehouseID);
+                $wareProdModel->setProductId($prodID);
+                $wareProdModel->setQuantity($stock->getQty());
+                $wareProdModel->setPosition(0);
+                //$wareProdModel->setPriority(1);
+                $wareProdModel->save();
+            } else {
+                $beforeWareQty = 0;
+                $assignWareQty = $processedQty;
+                $wareProdModel->setWarehouseId($wareID);
+                $wareProdModel->setProductId($prodID);
+                $wareProdModel->setQuantity($assignWareQty);
+                $wareProdModel->setPosition(0);
+                // $wareProdModel->setPriority(1);
+                $wareProdModel->save();
+            }
+        }
+        $this->warehouseInventoryLog($wareID, $beforeWareQty, $assignWareQty, '', $sku, $interface, $user, $sysActionArr, $actionArr);
+    }
+
+    /**
+     * @param   $defRelID
+     * @param   $readCon
+     * @return int
+     */
+    protected function getDefWareQty($defRelID, $readCon)
+    {
+        $tblName = $this->_resource->getTableName('bc_warehouse_product_is');
+        $getDefWareQtysql = $readCon->select()
+            ->from($tblName, ['quantity'])
+            ->where('rel_id = ' . $defRelID);
+        $getDefWareQty = $readCon->fetchAll($getDefWareQtysql);
+        return (int) $getDefWareQty[0]['quantity'];
+    }
+}

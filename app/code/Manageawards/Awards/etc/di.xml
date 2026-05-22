@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<!--
+/** Manageawards_Awards di xml
+ * @category  Manageawards_Awards 
+ * @package   Manageawards_Awards
+ * @author    Lalita Rajput
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Manageawards\Awards\Api\Data\GridInterface" type="Manageawards\Awards\Model\Grid" />
+
+    <virtualType name="Manageawards\Awards\Model\ResourceModel\Grid\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">rptech_awardsContentManage</argument>
+            <argument name="resourceModel" xsi:type="string">Manageawards\Awards\Model\ResourceModel\Grid</argument>
+        </arguments>
+    </virtualType>
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="awards_record_grid_list_data_source" xsi:type="string">Manageawards\Awards\Model\ResourceModel\Grid\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Manageawards\Awards\Logger\Handler">
+        <arguments>
+            <argument name="filesystem" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>
+        </arguments>
+    </type>
+    <type name="Manageawards\Awards\Logger\Logger">
+        <arguments>
+            <argument name="name" xsi:type="string">customLogHandler</argument>
+            <argument name="handlers"  xsi:type="array">
+                <item name="system" xsi:type="object">Manageawards\Awards\Logger\Handler</item>
+            </argument>
+        </arguments>
+    </type>
+</config>

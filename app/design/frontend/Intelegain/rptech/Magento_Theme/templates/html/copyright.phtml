@@ -1,0 +1,28 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+?>
+<!--<small class="copyright">
+        <span><?= /* @escapeNotVerified */ $block->getCopyright() ?></span>
+</small>-->
+<div class="container">
+	<div class="row">
+		<div class="col-sm-5 col-sm-push-1">
+
+			<ul>
+				<li><span class="list-inline">Policies: </span><a href="<?php echo $this->getUrl('terms-of-use');?>">Terms of Use </a></li>
+				<li><a href="<?php echo $this->getUrl('privacy');?>">Privacy </a></li>
+				<!-- <li><a href="<?php //echo $this->getUrl('shipping');?>">Shipping </a></li> -->
+			</ul>
+		</div>
+		<div class="col-sm-7 col-sm-pull-1">
+			<p class="text-right"><?= /* @escapeNotVerified */ $block->getCopyright() ?>
+			</p>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+require(['jquery','jRespond','slimscrollCustom']);
+</script>

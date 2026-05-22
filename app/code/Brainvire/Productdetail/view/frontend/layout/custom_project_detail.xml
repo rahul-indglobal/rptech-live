@@ -1,0 +1,41 @@
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">  
+	<head>
+        <css src="mage/gallery/gallery.css"/>
+    </head>
+    <update handle="catalog_product_opengraph" />
+    <update handle="page_calendar"/>
+    <body>   
+		<attribute name="itemtype" value="http://schema.org/Product" />
+        <attribute name="class" value="product-detail" />
+        <attribute name="itemscope" value="itemscope"/>
+        <referenceBlock name="head.components">
+            <block class="Magento\Framework\View\Element\Js\Components" name="checkout_page_head_components" template="Magento_Catalog::js/components.phtml"/>
+        </referenceBlock>
+    
+        <referenceBlock name="root">
+            <arguments>
+                <argument name="add_attribute" xsi:type="string">itemscope itemtype="http://schema.org/Product"</argument>
+            </arguments>
+        </referenceBlock>
+		<referenceContainer name="header.container">
+		 <referenceBlock name="top.search" remove="true"/>
+		 <referenceBlock name="store.menu" remove="true"/>
+			<referenceBlock name="minicart" remove="true"/>
+		 </referenceContainer>
+        <referenceContainer name="content">   
+            <block class="Magento\Catalog\Block\Product\View" name="project-detail" template="Brainvire_Productdetail::project_detail_page.phtml" />   
+        </referenceContainer>  
+	<referenceBlock name="view.addto.compare" remove="true"/>
+    <referenceBlock name="product.info.media.image" remove="true"/>
+	<referenceBlock name="my-product" remove="true"/>
+    
+    <referenceBlock name="product.price.tier" remove="true"/>
+    <referenceBlock name="product.info" remove="true"/>
+    <referenceBlock name="product.info.addtocart" remove="true"/>
+	<referenceBlock name="product.info.details" remove="true"/>
+    <referenceBlock name="my-product-attr" remove="true"/>
+	<referenceBlock name="catalog.product.related" remove="true"/>
+	<referenceBlock name="recently-viewed-products" remove="true"/>
+    </body>   
+</page>  

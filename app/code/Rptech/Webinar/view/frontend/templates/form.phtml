@@ -1,0 +1,165 @@
+<?php
+/**
+ * @var \Rptech\Webinar\Block\Form $block
+ */
+?>
+<style>
+    .loading-mask {
+        position: fixed;
+        z-index: 9999;
+        background-color: rgba(255, 255, 255, 0.8);
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+</style>
+<div class="loading-mask" data-role="loader" style="display: none;">
+    <div class="loader">
+        <img src="<?= $block->getViewFileUrl('images/loader-1.gif') ?>" alt="Loading..." />
+    </div>
+</div>
+<form action="<?= $block->getActionUrl(); ?>" method="post" class="form" id="webinar-form" data-mage-init='{"validation":{}}'>
+    <?= $block->getBlockHtml('formkey') ?>
+    <?php
+        echo $this->getLayout()->createBlock('Magento\Cms\Block\Block')
+            ->setBlockId('webinar_from')
+            ->toHtml();
+    ?>
+</form>
+
+<script>
+    require(['jquery', 'mage/validation'], function($) {
+        let countdownTimer;
+
+        $('#validate-email-btn').on('click', function () {
+            var form = $('#webinar-form');
+
+            if (form.validation('isValid')) {
+                //Form is valid – proceed to send OTP
+                console.log("Form valid. Proceed to send OTP.");
+                $('#email').blur(); // fix for autofill
+
+                const email = $('#email').val();
+                const name = $('#person_name').val();
+                if (!email) {
+                    alert('Please enter an email address.');
+                    return;
+                }
+                $(".loading-mask").show();
+                $.ajax({
+                    url: '<?= $block->getUrl("nvidia-webinar/otp/send") ?>',
+                    method: 'POST',
+                    process: true,
+                    data: {
+                        "email": email,
+                        "name": name,
+                    },
+                    success: function (res) {
+                        $(".loading-mask").hide();
+                        if (res.success) {
+                            $('#validate-email-btn').hide(); // hide send btn
+                            $('#otp-section').html(`
+                                <div>
+                                <label>Enter OTP</label>
+                                <div id="otp-input-group" style="display: flex; gap: 5px;">
+                                    <input type="text" maxlength="1" class="otp-digit" />
+                                    <input type="text" maxlength="1" class="otp-digit" />
+                                    <input type="text" maxlength="1" class="otp-digit" />
+                                    <input type="text" maxlength="1" class="otp-digit" />
+                                    <input type="text" maxlength="1" class="otp-digit" />
+                                    <input type="text" maxlength="1" class="otp-digit" />
+                                </div>
+                                <input type="hidden" name="otp" id="otp" />
+                                </div>
+                                <div><button type="button" style="margin-top: 10px;" class="btn btn-primary action primary" id="validate-otp-btn" >Validate OTP</button></div>
+                                <div id="otp-timer"></div>
+                                <a href="#" id="resend-otp" style="display:none;">Resend OTP</a>
+                                <div id="otp-status-msg"></div>
+                            `).show();
+                            startOtpTimer(120);
+                        } else {
+                            alert(res.message);
+                        }
+                    }
+                });
+            } else {
+                console.log("Form has errors.");
+            }
+        });
+
+        function startOtpTimer(seconds) {
+            let time = seconds;
+            $('#resend-otp').hide();
+            clearInterval(countdownTimer);
+            countdownTimer = setInterval(function () {
+                if (time <= 0) {
+                    clearInterval(countdownTimer);
+                    $('#otp-timer').text('OTP expired.');
+                    $('#resend-otp').show();
+                } else {
+                    $('#otp-timer').text('OTP expires in ' + time + ' seconds');
+                    time--;
+                }
+            }, 1000);
+        }
+        // Auto tab and collect OTP
+        $(document).on('input', '.otp-digit', function () {
+            const $this = $(this);
+            if ($this.val().length === 1) {
+                $this.next('.otp-digit').focus();
+            }
+
+            // Combine digits into hidden input
+            let otp = '';
+            $('.otp-digit').each(function () {
+                otp += $(this).val();
+            });
+            $('#otp').val(otp);
+        });
+
+        // Validate OTP
+        $(document).on('click', '#validate-otp-btn', function () {
+            const email = $('#email').val();
+            const otp = $('#otp').val();
+
+            if (!otp) {
+                alert('Please enter the OTP.');
+                return;
+            }
+            $(".loading-mask").show();
+            $.ajax({
+                url: '<?= $block->getUrl("nvidia-webinar/otp/verify") ?>',
+                method: 'POST',
+                process: true,
+                data: { email, otp },
+                success: function (res) {
+                    $(".loading-mask").hide();
+                    if (res.success) {
+                        $('#otp-section').hide();
+                        $('#otp-status-msg').html('<span style="color:green;">OTP Validated ✅</span>');
+                        $('#validate-otp-btn, #resend-otp').hide();
+                        $('#otp').prop('readonly', true);
+                        //$('#submit-btn').show();
+                        $("#webinar-form").submit();
+                    } else {
+                        $('#otp-status-msg').html('<span style="color:red;">Invalid OTP. Try again.</span>');
+                        $('#resend-otp').show();
+                    }
+                }
+            });
+        });
+
+        // Resend OTP
+        $(document).on('click', '#resend-otp', function (e) {
+            e.preventDefault();
+            $('#validate-email-btn').show().click(); // resend triggers send again
+        });
+    });
+</script>
+
+

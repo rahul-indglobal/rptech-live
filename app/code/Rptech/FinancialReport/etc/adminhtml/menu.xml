@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add
+                id="Rptech_FinancialReport::financial_report"
+                title="Financial Reports"
+                module="Rptech_FinancialReport"
+                sortOrder="10"
+                action="financial/admin/edit"
+                resource="Rptech_FinancialReport::financial_report"
+                parent="Rptech_ServiceAddress::main"
+        />
+    </menu>
+</config>

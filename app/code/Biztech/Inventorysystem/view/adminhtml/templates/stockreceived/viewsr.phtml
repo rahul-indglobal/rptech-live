@@ -1,0 +1,157 @@
+<?php
+
+$srIncrID      = $this->getRequest()->getParam('sr_incr_id');
+$srCollection = $block->loadStockReceived($srIncrID);
+$srData        = $srCollection->getData();
+$sriData = $block->getSRModel()->getProducts($srCollection);
+
+$priceHelper = $block->getPricingHelper();
+$currencyCode = $block->getCurrencyCode()->getCurrentCurrencyCode();
+$_localeCurrency = $block->getLocaleCurrency();
+$currencySymbol = $_localeCurrency->getCurrency($currencyCode)->getSymbol();
+
+$_bizHelper = $block->getBiztechHelper();
+$supName = $block->getSupplierFullName($srData['supplier_id']);
+$isInvAdvEnbl = $_bizHelper->isModuleEnabled('Biztech_Inventorysystemadvance');
+
+$poID = $_bizHelper->getPOModel()->load($srData['purchaseorder_id'], 'purchase_order_id')->getId();
+
+?>
+<?php if ($_bizHelper->isEnable()) : ?>
+<section class="admin__page-section">
+    <div class="admin__page-section-content">
+        <div class="admin__page-section-title">
+            <span class="title"> <?php echo __('Stock Received of Items') ?> </span>
+        </div>
+        <div class="admin__control-table-wrapper">
+            <table cellspacing="0" class="admin__control-table data-table" width="100%">
+                <thead>
+                <tr class="headings">
+                    <th width="25%"><?php echo __('Name'); ?></th>
+                    <th width="25%"><?php echo __('SKU'); ?></th>
+                    <th width="25%"><?php echo __('Supplier'); ?></th>
+                    <?php if ($_bizHelper->isModuleEnabled('Biztech_Inventorysystemadvance')): ?>
+                        <th width="10%"><?php echo __('Warehouse'); ?></th>
+                    <?php endif; ?>
+                    <th width="10%"><?php echo __('Unit Cost'); ?></th>
+                    <th width="10%"><?php echo __('Quantity Purchased'); ?></th>
+                    <th width="10%"><?php echo __('Quantity Received'); ?></th>
+                    <th width="10%"><?php echo __('Row Total'); ?></th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php
+                foreach ($sriData as $key => $data) { ?>
+                    <tr>
+                        <td><?php echo $data['product_name'] ?></td>
+                        <td><?php echo $data['product_sku'] ?></td>
+                        <td><?php echo $supName ?></td>
+                        <?php if ($_bizHelper->isModuleEnabled('Biztech_Inventorysystemadvance')):
+
+                                $warehouseModel = $block->getWarehouse($data['warehouse_id']);
+                                $warehouseName = $warehouseModel->getWarehouseName();
+
+                                if ($warehouseName == '') {
+
+                                    $defaultWarehouseID = $_bizHelper->getConfig('inventorysystem/inventorysystemadvance/default_warehouse_select');
+                                    $warehouseModel = $block->getWarehouse($defaultWarehouseID);
+                                    $warehouseName = $warehouseModel->getWarehouseName();
+
+                                }
+                            ?>
+                            <td><?php echo $warehouseName ?></td>
+                         <?php endif; ?>
+                        <td><?php echo $priceHelper->currency($data['cost'], true, true);?></td>
+                        <td><?php echo $data['qty_purchased'] ?></td>
+                        <td><?php echo !is_null($data['qty_received']) ? $data['qty_received'] : 0 ?></td>
+                        <td><?php echo $priceHelper->currency($data['row_total'], true, true); ?></td>
+                    </tr>
+                <?php }
+                ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<section class="admin__page-section order-summary">
+    <div class="admin__page-section-content">
+        <div class="admin__page-section-item order-comments-history">
+            <div class="admin__page-section-item-title">
+                <span class="title"><?php echo __('Additional Details') ?></span>
+            </div>
+            <table cellspacing="0" class="admin__table-primary dashboard-data">
+                <tbody>
+                <tr class="admin__field">
+                    <td>
+                        <strong> <?php echo __('Stock Received') ?></strong>
+                        <span><?php echo $srData['status'] == 'processing' ? __('Partial') : __('Complete') ?></span>
+                    </td>
+                </tr>
+                <tr class="admin__field">
+                    <td>
+                        <strong> <?php echo __('Comment') ?></strong>
+                        <span><?php echo $srData['comment'] == '' ? __('N/A') : $srData['comment'] ?></span>
+                    </td>
+                </tr>
+
+                <tr class="admin__field">
+                    <td>
+                        <strong> <?php echo __('Received By') ?></strong>
+                        <span> <?php echo $srData['received_by']  ?> </span>
+                    </td>
+                </tr>
+
+                <tr class="admin__field">
+                    <td>
+                        <strong> <?php echo __('Purchase Order ID') ?></strong>
+                        <span><a target="_blank" href="<?php echo $this->getUrl('inventorysystem/purchaseorders/view', ['id' => $poID]) ?>"> <?php echo $srData['purchaseorder_id']; ?></a> </span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="admin__page-section-item order-totals">
+            <div class="admin__page-section-item-title">
+                <span class="title"><?php echo __('Stock Received Totals') ?></span>
+            </div>
+
+            <div class="admin__page-section-item-content">
+                <fieldset id="order-totals" class="admin__fieldset">
+                    <table class="admin__table-secondary data-table">
+                        <tbody>
+                        <tr class="row-totals">
+                            <td style="" class="admin__total-mark" colspan="1">
+                                <?php echo __('Subtotal') ?>
+                            </td>
+                            <td style="" class="admin__total-amount">
+                                <span class="price"
+                                      id="sub_total"><?php echo $priceHelper->currency($srData['sub_total'], true, true);  ?></span>
+                            </td>
+                        </tr>
+                        <tr class="row-totals">
+                            <td style="" class="admin__total-mark" colspan="1">
+                                <?php echo __('Shipping Cost') ?>
+                            </td>
+                            <td style="" class="admin__total-amount">
+                                <span class="price"
+                                      id="shipping_cost"><?php echo $priceHelper->currency($srData['shipping_cost'], true, true); ?></span>
+                            </td>
+                        </tr>
+                        <tr class="row-totals">
+                            <td style="" class="admin__total-mark" colspan="1">
+                                <strong><?php echo __('Grand Total') ?></strong>
+                            </td>
+                            <td style="" class="admin__total-amount">
+                                <strong><span class="price"
+                                              id="grand_total"><?php echo $priceHelper->currency($srData['total'], true, true); ?></span></strong>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </fieldset>
+            </div>
+        </div>
+    </div>
+</section>
+<?php endif; ?>

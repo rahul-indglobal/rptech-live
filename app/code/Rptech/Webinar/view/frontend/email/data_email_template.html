@@ -1,0 +1,86 @@
+<!--@subject {{trans "Rptech Webinar customer data"}} @-->
+{{template config_path="design/email/header_template"}}
+<table style="float:left; margin-right: 10px" class="fue-abc-items">
+    <tr>
+        <td>
+            <p class="greeting">{{trans "Hi Please check the webinar data submit by customer"}}</p>
+            <p>
+                <table style="float:left; margin-right: 10px" class="fue-abc-items">
+                    <tr>
+                        <th>
+                            <p>{{trans "Type of Customer"}}</p>
+                        </th>
+                        <td>
+                            <p>{{trans "%customer_type" customer_type=$model.customer_type}}</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            <p>{{trans "Name of the Person"}}</p>
+                        </th>
+                        <td>
+                            <p>{{trans "%person_name" person_name=$model.person_name}}</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            <p>{{trans "Email ID"}}</p>
+                        </th>
+                        <td>
+                            <p>{{trans "%email" email=$model.email}}</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            <p>{{trans "Contact"}}</p>
+                        </th>
+                        <td>
+                            <p>{{trans "%contact" contact=$model.contact}}</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            <p>{{trans "Location"}}</p>
+                        </th>
+                        <td>
+                            <p>{{trans "%location" location=$model.location}}</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            <p>{{trans "Name of Institute / Company"}}</p>
+                        </th>
+                        <td>
+                            <p>{{trans "%company" company=$model.company}}</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            <p>{{trans "Website Address"}}</p>
+                        </th>
+                        <td>
+                            <p>{{trans "%website" website=$model.website}}</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            <p>{{trans "Areas"}}</p>
+                        </th>
+                        <td>
+                            <p>{{trans "%area" area=$model.area}}</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            <p>{{trans "Topic(s) of Interest"}}</p>
+                        </th>
+                        <td>
+                            <p>{{trans "%topics" topics=$model.topics|raw}}</p>
+                        </td>
+                    </tr>
+                </table>
+            </p>
+        </td>
+    </tr>
+</table>
+{{template config_path="design/email/footer_template"}}

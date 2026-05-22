@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!-- 
+/** Setubridge Technolabs
+* http://www.setubridge.com/
+* @author SetuBridge
+* @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+**/
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <setubridge_holidaytheme>
+            <general>
+                <generalactive>1</generalactive>
+                <cmspages>all</cmspages>
+            </general> 
+            <snowfallsconfig>
+                <snowfallsactive>1</snowfallsactive>
+                <snowfallsdesignpattern><![CDATA[&#127877;|#3D6611,&#x266b;|#3D6611]]></snowfallsdesignpattern>
+                <snowfallsduplicatecount>10</snowfallsduplicatecount>
+                <snowfallsfallanimatespeed>2</snowfallsfallanimatespeed>
+                <snowfallselementmaxspeed>10</snowfallselementmaxspeed>
+                <snowfallselementminspeed>50</snowfallselementminspeed>
+            </snowfallsconfig>
+             <headerimageconfiguration>
+                <headerimageactive>1</headerimageactive>
+                <headerimageselect><![CDATA[pattern5.png]]></headerimageselect>
+            </headerimageconfiguration>
+            
+            <contentimageconfiguration>
+                <contentimageactive>1</contentimageactive>
+                <contentimagemovingeffect>1</contentimagemovingeffect>
+                <contentimageanimatespeed>8000</contentimageanimatespeed>
+                <contentimageselect><![CDATA[pattern3.gif]]></contentimageselect>
+            </contentimageconfiguration>
+        </setubridge_holidaytheme>
+    </default>
+</config>

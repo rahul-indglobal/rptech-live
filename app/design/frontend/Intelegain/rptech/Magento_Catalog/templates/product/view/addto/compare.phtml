@@ -1,0 +1,31 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+// @codingStandardsIgnoreFile
+
+/** @var $block \Magento\Catalog\Block\Product\View\Addto\Compare */
+?>
+<?php 
+ $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+ $product = $objectManager->get('Magento\Framework\Registry')->registry('current_product');//get current product
+
+?>
+<?php if($product->getTypeId()!="bundle") { ?>
+<div class="form-inline pull-right">
+	<div class="form-group">
+<!--		<input name="checkboxG1" id="checkboxs16" class="css-checkbox" type="checkbox">
+		<label for="checkboxs16" class="css-label2 radGroup1">-->
+                    <a href="#" data-post='<?= /* @escapeNotVerified */ $block->getPostDataParams() ?>'
+		   data-role="add-to-links"
+		   class="action tocompare detailsPage">Compare</a>
+<!--                </label>-->
+	</div>  
+	<div class="form-group share"> 
+		<a href="#">
+			<i class="fa fa-share" aria-hidden="true"></i> Share</a>
+	</div>
+
+</div>
+<?php } ?>

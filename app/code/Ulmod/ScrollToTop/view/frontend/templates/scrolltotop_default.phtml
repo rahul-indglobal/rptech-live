@@ -1,0 +1,35 @@
+<?php
+/**
+ * Copyright © Ulmod. All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+?>
+<?php
+$modelConfig = $block->getConfig();
+$imgUrl = $modelConfig->getImgUrl();
+?>
+<?php if ($modelConfig->isEnabled()) : ?>  
+<div id="um-scrolltotop" class="um-scrolltotop <?php /* @noEscape */ echo $block->getHideCssClass(); ?> 
+	um-scrolltotop-<?php /* @noEscape */ echo $modelConfig->getPosition(); ?>">	
+    <a href="#" id="um-stotop" 
+        class="um-stotop type-<?php /* @noEscape */ echo $modelConfig->getScrollType(); ?>"
+        title="<?php /* @noEscape */ echo $modelConfig->getScrollLabel(); ?>">
+		<?php if ($modelConfig->getScrollType() == 'text') : ?>		
+			<?php /* @noEscape */ echo $modelConfig->getScrollText(); ?>  	
+		<?php elseif ($modelConfig->getScrollType() == 'arrow') : ?>		
+			<i class="fa <?php /* @noEscape */ echo $modelConfig->getScrollArrow(); ?>"
+				aria-hidden="true"></i>  
+		<?php else: ?>		
+        <img src="<?php /* @noEscape */ echo $imgUrl; ?>" class="scroltotop-img"
+           alt="<?php /* @noEscape */ echo $modelConfig->getScrollLabel(); ?>" />  
+		<?php endif; ?>		   
+    </a>	
+</div>
+<script type="text/x-magento-init">
+    {
+        "*": {
+            "Ulmod_ScrollToTop/js/um-scrolltotop":{}
+        }
+    }
+</script>
+<?php  endif; ?>

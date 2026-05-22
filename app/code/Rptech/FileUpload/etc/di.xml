@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <!-- PDF Uploader -->
+    <type name="Rptech\FileUpload\Model\ImageUploader">
+        <arguments>
+            <argument name="baseTmpPath" xsi:type="string">fileupload</argument>
+            <argument name="basePath" xsi:type="string">fileupload</argument>
+            <argument name="allowedExtensions" xsi:type="array">
+                <item name="jpg" xsi:type="string">jpg</item>
+                <item name="jpeg" xsi:type="string">jpeg</item>
+                <item name="gif" xsi:type="string">gif</item>
+                <item name="png" xsi:type="string">png</item>
+                <item name="pdf" xsi:type="string">pdf</item>
+                <item name="doc" xsi:type="string">doc</item>
+                <item name="docx" xsi:type="string">docx</item>
+                <item name="mp3" xsi:type="string">mp3</item>
+                <item name="mp4" xsi:type="string">mp4</item>
+                <item name="mov" xsi:type="string">mov</item>
+                <item name="wmv" xsi:type="string">wmv</item>
+                <item name="rm" xsi:type="string">rm</item>
+                <item name="avi" xsi:type="string">avi</item>
+                <item name="swf" xsi:type="string">swf</item>
+                <item name="flv" xsi:type="string">flv</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Rptech\fileupload\Controller\Adminhtml\Admin\Upload">
+        <arguments>
+            <argument name="imageUploader" xsi:type="object">fileuploadImage</argument>
+        </arguments>
+    </type>
+    <!-- End PDF Uploader -->
+
+    <!--Admin GRID -->
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="fileupload_grid_listing_data_source" xsi:type="string">
+                    Rptech\FileUpload\Model\ResourceModel\FileUpload\Grid\Collection
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <virtualType name="Rptech\FileUpload\Model\ResourceModel\FileUpload\Grid\Collection"
+                 type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">fileupload</argument>
+            <argument name="resourceModel" xsi:type="string">Rptech\FileUpload\Model\ResourceModel\FileUpload</argument>
+        </arguments>
+    </virtualType>
+    <!--End Admin GRID -->
+</config>

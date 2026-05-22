@@ -1,0 +1,9 @@
+<?php
+$blockObj= $block->getLayout()->createBlock('Rptech\General\Block\Product\FullBreadcrumbs');
+$fullbreadcrumbs = $blockObj->getProductBreadcrumbs();
+?>
+<div class="breadcrumbs">
+    <ul class="items">
+        <?= /* @escapeNotVerified */ $fullbreadcrumbs ?>
+    </ul>
+</div>

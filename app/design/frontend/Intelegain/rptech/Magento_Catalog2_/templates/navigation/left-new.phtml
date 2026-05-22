@@ -1,0 +1,48 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+// @codingStandardsIgnoreFile
+
+/**
+ * Category left navigation
+ *
+ * @var $block \Magento\Catalog\Block\Navigation
+ */
+?>
+<?php
+if (!$block->getCategory()) {
+	return;
+}
+?>
+<?php $_categories = $block->getCurrentChildCategories(); ?>
+<?php $_count = is_array($_categories) ? count($_categories) : $_categories->count(); ?>
+<?php if ($_count): ?>
+	<div class="col-lg-3 col-md-3 filters-wrapper">
+		<div class="filter-options">
+			<?php /** @var \Magento\Catalog\Model\Category $_category */ ?>
+			<div class="filter-option-list">
+				<a href="javascript:void(0)" class="brand-function toggle-filter">
+					<div class="product-brand">
+						<span>Category</span>
+						<i class="fa fa-chevron-down"></i>
+					</div>
+				</a>
+				<div class="mydiv">
+					<?php foreach ($_categories as $_category): ?>
+						<?php if ($_category->getIsActive()): ?>
+
+							<li class="item">
+								<a href="<?= /* @escapeNotVerified */ $block->getCategoryUrl($_category) ?>"<?php if ($block->isCategoryActive($_category)): ?> class="current"<?php endif; ?>><?= $block->escapeHtml($_category->getName()) ?></a>
+								<span class="count"><?= /* @escapeNotVerified */ $_category->getProductCount() ?></span>
+							</li>
+
+
+						<?php endif; ?>
+					<?php endforeach ?>
+				</div>
+			</div>
+		</div>
+	</div>
+<?php endif; ?>

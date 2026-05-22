@@ -1,0 +1,170 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+?>
+<?php
+/**
+ * Shopping cart template
+ *
+ * @var $block \Magento\Checkout\Block\Cart
+ */
+//if ($block->getItemsCount()) {
+//    echo $block->getChildHtml('with-items');
+//} else {
+//    echo $block->getChildHtml('no-items');
+//}
+$block1 = $this->getLayout()->createBlock('Magento\Checkout\Block\Cart\Grid');
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$cart = $objectManager->get('\Magento\Checkout\Model\Cart');
+
+
+// get quote items collection
+$itemsCollection = $cart->getQuote()->getItemsCollection();
+
+// get array of all items what can be display directly
+$itemsVisible = $cart->getQuote()->getAllVisibleItems();
+
+// get quote items array
+$items = $cart->getQuote()->getAllItems();
+
+$currencysymbol = $objectManager->get('Magento\Store\Model\StoreManagerInterface');
+$currency = $currencysymbol->getStore()->getCurrentCurrencyCode();
+
+foreach ($items as $item) {
+
+$helperImport = $objectManager->get('\Magento\Catalog\Helper\Image');
+
+
+//echo $imageUrl;
+    //echo $thumbnailImageUrl = $this->productHelper->getThumbnailUrl($item);
+    //echo "<pre>";print_r($item);echo "</pre>";
+    echo 'ID: ' . $item->getProductId() . '<br />';
+    echo 'Name: ' . $item->getName() . '<br />';
+    echo 'Sku: ' . $item->getSku() . '<br />';
+    echo 'Quantity: ' . $item->getQty() . '<br />';
+    echo 'Price: ' . $item->getPrice() . '<br />';
+    echo "image: " . $item->getImage();
+   echo "url---". $item->getProductUrl();
+    //echo $this->helper('catalog/image')->init($item, 'small_image')->resize(50,50);
+    echo "<br />";
+}
+
+
+?>
+<div class="cart-section container-fluid">
+    <div class="row">
+        <div class="col-left col-md-8">
+            <div class="cart-wrapper">
+
+                <div class="cart-items-wrapper">
+                    <?php
+                    foreach ($items as $item) {
+                        $imageUrl = $helperImport->init($item, 'product_page_image_small')
+                                ->setImageFile($item->getSmallImage()) // image,small_image,thumbnail
+                                ->resize(380)
+                                ->getUrl();
+                        ?>
+                        <div class="cart-item">
+                            <div class="cart-row">
+                                <div class="item-left col-sm-3 col-xs-4">
+                                    <a href="#" class="cart-img">
+                                        <img src="<?=$imageUrl;?>" alt="product image" class="img-responsive">
+                                    </a>
+                                </div>
+                                <div class="item-right col-sm-9 col-xs-8">
+                                    <div class="item-header clearfix">
+                                        <div class="col-sm-8 heading">
+                                            <h4 class="product-title"><a href="<?=$item->getProductUrl();?>"><?=$item->getName();?></a></h4>
+<!--                                            <p class="description txt-small">White, Over the Ear</p>-->
+                                        </div>
+                                        <div class="col-sm-4 delivery-info">
+<!--                                            <h5 class="">Delivery by Fri Jul 13</h5>-->
+                                        </div>
+                                    </div>
+                                    <div class="item-info clearfix">
+                                        <p class="price-tag"><span class="price"><?=$currency ." " .$item->getPrice() ?></span><strike>&#x20B9;2,899</strike> <strong class="txt-red"><span class="offers">41% Off</span> <span class="offers-detail"> Offers No Cost EMI & 1 More</span></strong></p>
+                                        <p class="txt txt-green">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="cart-row">
+                                <div class="item-left col-sm-3 col-xs-4">
+                                    <div class="quantity">
+                                        <button class="btn btn-minus">-</button>
+                                        <input class="form-control" type="text" name="quantity" value="1" readonly>
+                                        <button class="btn btn-plus">+</button>
+                                    </div>
+                                </div>
+                                <div class="item-right col-sm-9 col-xs-8">
+                                    <div class="btns-wrapper clearfix">
+                                        <button class="btn btn-save-later">save for later</button>
+                                        <button class="btn btn-remove">remove</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <?php } ?>
+
+
+
+                </div>
+            </div>
+            <div class="saved-items-wrapper">
+                <div class="title-wrapper">
+                    <h4 class="title">Saved for Later (1)</h4>
+                </div>
+                <div class="cart-item">
+                    <div class="cart-row">
+                        <div class="item-left col-sm-3 col-xs-4">
+                            <a href="#" class="cart-img">
+                                <img src="images/products/17.png" alt="product image" class="img-responsive">
+                            </a>
+                        </div>
+                        <div class="item-right col-sm-9 col-xs-8">
+                            <div class="item-header clearfix">
+                                <div class="col-sm-8 heading">
+                                    <h4 class="product-title"><a href="">Sony MDR-ZX310AP Wired Headset with Mic</a></h4>
+                                    <p class="description txt-small">White, Over the Ear</p>
+                                </div>
+                            </div>
+                            <div class="item-info clearfix">
+                                <p class="price-tag"><span class="price">&#x20B9; 1699</span><strike>&#x20B9;2,899</strike> </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="cart-row">
+                        <div class="item-left col-sm-3 col-xs-4">
+                            <div class="quantity">
+                                <button class="btn btn-minus">-</button>
+                                <input class="form-control" type="text" name="quantity" value="1" readonly>
+                                <button class="btn btn-plus">+</button>
+                            </div>
+                        </div>
+                        <div class="item-right col-sm-9 col-xs-8">
+                            <div class="btns-wrapper clearfix">
+                                <button class="btn btn-save-later">save for later</button>
+                                <button class="btn btn-remove">remove</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-right col-md-4">
+            <div class="price-detail">
+                <h4>Price Details</h4>
+                <hr>
+                <p class="p-1">Price (7 items)<span class="price">₹51, 985</span></p>
+                <p class="p-2">Delivery Charges<span class="price">FREE</span></p>
+                <hr class="border-line ">
+                <p>Amount Payable <span class="price">₹51, 985</span></p>
+                <hr class="border-line ">
+                <p class="total">Your Total Saving on this order ₹2,161</p>
+                <!-- <button class="btn btn-checkout">Proceed to checkout</button> -->
+                <a href="proceed-checkout.html" class="btn btn-checkout">Proceed to checkout</a>
+            </div>
+        </div>
+    </div>   
+</div>

@@ -1,0 +1,43 @@
+@color0: #bfbebe;
+@color1: #0088cc;
+#um-stotop {
+	background: @color0;
+	border: 1px @color0 solid;
+	color: #FFFFFF;
+	&:hover {
+		background: @color1;
+		border: 1px @color1 solid;
+	}
+}
+.um-st-hide-home, .um-st-hide-cms, .um-st-hide-category, .um-st-hide-product, .um-st-hide-additional  {
+	display: none;
+}
+#um-scrolltotop {
+	bottom: 100px;
+	cursor: pointer;
+	position: fixed;
+	z-index: 100020;
+	.um-stotop {
+		padding: 12px 6px;
+		i {
+			font-size: 40px;
+			vertical-align: middle;
+		}
+	}
+	.type-text {
+		font-weight: 700;
+		text-decoration: none;
+	}
+	.type-image {
+		img {
+			vertical-align: middle;
+			width: 35px;
+		}
+	}
+}
+.um-scrolltotop-left {
+	left: 10px;
+}
+.um-scrolltotop-right {
+	right: 10px;
+}

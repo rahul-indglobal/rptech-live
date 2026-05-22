@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <rptech>
+            <general>
+                <watxt_neworder>Your order placed successfully.</watxt_neworder>
+                <watxt_shipment>Shipment for your order generated.</watxt_shipment>
+            </general>
+        </rptech>
+    </default>
+</config>

@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!--
+/** Manageawards_Awards menu xml
+ * @category  Manageawards_Awards 
+ * @package   Manageawards_Awards
+ * @author    Lalita Rajput
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+<!--        <add id="Manageawards_Awards::manager" title="Awards Content Management" module="Manageawards_Awards" sortOrder="10" resource="Manageawards_Awards::manager" />
+        <add id="Manageawards_Awards::add_row" title="Awards Content Management" module="Manageawards_Awards" sortOrder="20" parent="Manageawards_Awards::manager" action="awards/grid" resource="Manageawards_Awards::add_row"/>-->
+    </menu>
+</config>

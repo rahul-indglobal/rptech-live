@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!--
+/** Leadership module xml
+ * @category  Leaders 
+ * @package   Manageleaders_Leaders
+ * @author    Lalita Rajput
+ */
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
+    <module name="Manageewastecontent_Ewastecontent" setup_version="1.0.0">
+    </module>
+</config>

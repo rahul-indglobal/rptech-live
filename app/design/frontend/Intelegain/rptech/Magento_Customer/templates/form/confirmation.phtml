@@ -1,0 +1,33 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+/** @var \Magento\Framework\View\Element\Template $block */
+?>
+<div class="forgot-password-section">
+    <div class="fp-wrapper">
+        <div class="form-wrapper">
+            <form action="" method="post" id="form-validate" class="form send confirmation" data-mage-init='{"validation":{}}'>
+                <fieldset class="fieldset" data-hasrequired="<?= $block->escapeHtmlAttr(__('* Required Fields')) ?>">
+                    <p class="field note"><?= $block->escapeHtml(__('Please enter your email below and we will send you the confirmation link.')) ?></p>
+                    <div class="field email required">
+                        <div class="form-group">
+                            <input type="email" name="email" id="email_address" class="input-text form-control" value="<?= $block->escapeHtmlAttr($block->getEmail()) ?>" data-validate="{required:true, 'validate-email':true}" data-mage-init='{"mage/trim-input":{}}'>
+                            <label for="email_address" class="input_label"><span><?= $block->escapeHtml(__('Email')) ?></span></label>
+                        </div>
+                    </div>
+                </fieldset>
+                <div class="actions-toolbar">
+                    <div class="primary btn-row">
+                        <button type="submit" class="btn action send primary"><span><?= $block->escapeHtml(__('Send confirmation link')) ?></span></button>
+                        <a href="<?= $block->escapeUrl($block->getLoginUrl()) ?>" class="action back"><span><?= $block->escapeHtml(__('Back to Sign In')) ?></span></a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

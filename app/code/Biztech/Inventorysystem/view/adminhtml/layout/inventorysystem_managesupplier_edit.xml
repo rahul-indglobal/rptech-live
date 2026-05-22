@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Copyright © Biztech, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="admin-2columns-left" xsi:noNamespaceSchemaLocation="../../../../../../../lib/internal/Magento/Framework/View/Layout/etc/page_configuration.xsd">
+    <update handle="editor"/>
+    <body>
+        <referenceContainer name="content">
+            <block class="Biztech\Inventorysystem\Block\Adminhtml\Managesupplier\Edit" name="inventorysystem_managesupplier_edit"/>
+        </referenceContainer>
+        <referenceContainer name="left">
+            <block class="Biztech\Inventorysystem\Block\Adminhtml\Managesupplier\Edit\Tabs" name="inventorysystem_managesupplier_edit_tabs">
+                <block class="Biztech\Inventorysystem\Block\Adminhtml\Managesupplier\Edit\Tab\SupplierInformation" name="inventorysystem_managesupplier_edit_tab_supplierinformation"/>
+                <action method="addTab">
+                    <argument name="name" xsi:type="string">supplierinformation_section</argument>
+                    <argument name="block" xsi:type="string">inventorysystem_managesupplier_edit_tab_supplierinformation</argument>
+                </action>
+                <block class="Biztech\Inventorysystem\Block\Adminhtml\Managesupplier\Edit\Tab\SupplierAddressInformation" name="inventorysystem_managesupplier_edit_tab_supplieraddressinformation"/>
+                <action method="addTab">
+                    <argument name="name" xsi:type="string">supplieraddressinformation_section</argument>
+                    <argument name="block" xsi:type="string">inventorysystem_managesupplier_edit_tab_supplieraddressinformation</argument>
+                </action>
+                <!-- <uiComponent name="supplier_form"/> -->
+                <block class="Biztech\Inventorysystem\Block\Adminhtml\Managesupplier\Edit\Tab\AssociatedProducts" name="inventorysystem_managesupplier_edit_tab_associatedproducts"/>
+                <action method="addTab">
+                    <argument name="name" xsi:type="string">associatedproducts_section</argument>
+                    <!-- <argument name="block" xsi:type="string">inventorysystem_managesupplier_edit_tab_associatedproducts</argument> -->
+                    <argument name="block" xsi:type="array">
+                        <item name="label" xsi:type="string">Associated Products</item>
+                        <item name="title" xsi:type="string">Associated Products</item>
+                        <item name="url" xsi:type="helper" helper="Biztech\Inventorysystem\Helper\Data::getProductsGridUrl"></item>
+                        <item name="class" xsi:type="string">ajax</item>
+                    </argument>
+                </action>
+                <!--CedAddTab-->
+            </block>
+        </referenceContainer>
+    </body>
+</page>

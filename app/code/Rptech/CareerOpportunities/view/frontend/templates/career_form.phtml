@@ -1,0 +1,135 @@
+<?php
+/**
+ * @var \Rptech\CareerOpportunities\Block\CareerOpportunities $block
+ */
+?>
+<div id="opportunities">
+    <form action="<?= $block->getUrl("career/index/save") ?>" enctype="multipart/form-data" method="post" name="careerfrm" data-mage-init='{"validation":{}}'>
+        <input type="hidden" name="form_key" value="<?php echo $block->getFormKey() ?>" />
+        <div class="enquiry_wrap">
+            <h3 class="text-center heading">
+                <?= __("Career Opportunities") ?>
+            </h3>
+            <div class="row form-group">
+                <div class="col-sm-6">
+                    <div class="input">
+                        <input type="text" name="name" id="name" class="form-control" data-validate='{"required":true, "validate-no-specialchar":true}' required="required">
+                        <label class="input__label"><?= __("Name") ?> <span class="required_field">*</span></label>
+                        <svg preserveAspectRatio="none" viewBox="0 0 1200 60" height="100%" width="300%" class="graphic">
+                            <path d="M0,56.5c0,0,298.666,0,399.333,0C448.336,56.5,513.994,46,597,46c77.327,0,135,10.5,200.999,10.5c95.996,0,402.001,0,402.001,0"></path>
+                        </svg>
+                    </div>
+                    <span id="error_name"></span>
+                </div>
+                <div class="col-sm-6">
+                    <div class="sel sel--black-panther">
+                        <select name="post" id="post" class="form-control" >
+                            <option value=""><?= __("Post Applied For") ?></option>
+                            <option value="Marketing"><?= __("Marketing") ?></option>
+                            <option value="Sales"><?= __("Sales") ?></option>
+                            <option value="Finance"><?= __("Finance") ?></option>
+                            <option value="Other"><?= __("Other") ?></option>
+                        </select>
+                    </div>
+                    <span id="error_post"></span>
+                </div>
+            </div>
+            <div class="row form-group">
+                <div class="col-sm-6">
+                    <div class="input">
+                        <input type="text" name="city" class="form-control" data-validate='{"required":true, "validate-no-specialchar":true}'>
+                        <label class="input__label"><?= __("Location/City") ?> <span class="required_field">*</span></label>
+                        <svg preserveAspectRatio="none" viewBox="0 0 1200 60" height="100%" width="300%" class="graphic">
+                            <path d="M0,56.5c0,0,298.666,0,399.333,0C448.336,56.5,513.994,46,597,46c77.327,0,135,10.5,200.999,10.5c95.996,0,402.001,0,402.001,0"></path>
+                        </svg>
+                    </div>
+                    <span id="error_city"></span>
+                </div>
+                <div class="col-sm-6">
+                    <div class="input">
+                        <input type="text" name="age" id="age" class="form-control" data-validate='{"required":true, "validate-number":true, "max_text_length":2, "validate-digits":true}'>
+                        <label class="input__label"><?= __("Age(In Years)") ?><span class="required_field">*</span></label>
+                        <svg preserveAspectRatio="none" viewBox="0 0 1200 60" height="100%" width="300%" class="graphic">
+                            <path d="M0,56.5c0,0,298.666,0,399.333,0C448.336,56.5,513.994,46,597,46c77.327,0,135,10.5,200.999,10.5c95.996,0,402.001,0,402.001,0"></path>
+                        </svg>
+
+                    </div>
+                    <span id="error_age"></span>
+                </div>
+            </div>
+            <div class="row form-group">
+                <div class="col-sm-6">
+                    <div class="input">
+                            <input type="text" name="qualification" id="qualification" class="form-control" data-validate='{"required":true, "validate-no-specialchar":true}'>
+                        <label class="input__label"><?= __("Qualification") ?><span class="required_field">*</span></label>
+                        <svg preserveAspectRatio="none" viewBox="0 0 1200 60" height="100%" width="300%" class="graphic">
+                            <path d="M0,56.5c0,0,298.666,0,399.333,0C448.336,56.5,513.994,46,597,46c77.327,0,135,10.5,200.999,10.5c95.996,0,402.001,0,402.001,0"></path>
+                        </svg>
+                    </div>
+                    <span id="error_qualification"></span>
+                </div>
+                <div class="col-sm-6">
+                    <div class="input">
+                        <input type="text" name="experience" class="form-control" maxlength="2" data-validate='{""validate-number":true}'>
+                        <label class="input__label"><?= __("Experience(In Years)") ?></label>
+                        <svg preserveAspectRatio="none" viewBox="0 0 1200 60" height="100%" width="300%" class="graphic">
+                            <path d="M0,56.5c0,0,298.666,0,399.333,0C448.336,56.5,513.994,46,597,46c77.327,0,135,10.5,200.999,10.5c95.996,0,402.001,0,402.001,0"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            <div class="row form-group">
+                <div class="col-sm-6">
+                    <div class="input">
+                        <input type="email" name="email" id="email" class="form-control" data-validate='{"validate-email":true}'>
+                        <label class="input__label">Email</label>
+                        <svg preserveAspectRatio="none" viewBox="0 0 1200 60" height="100%" width="300%" class="graphic">
+                            <path d="M0,56.5c0,0,298.666,0,399.333,0C448.336,56.5,513.994,46,597,46c77.327,0,135,10.5,200.999,10.5c95.996,0,402.001,0,402.001,0"></path>
+                        </svg>
+                    </div>
+                    <span id="error_email"></span>
+                </div>
+                <div class="col-sm-6">
+                    <div class="input">
+                        <input type="text" name="mobile" id="mobile" class="form-control" maxlength="10" data-validate='{""validate-phone-10digit":true}'>
+                        <label class="input__label">Mobile Number</label>
+                        <svg preserveAspectRatio="none" viewBox="0 0 1200 60" height="100%" width="300%" class="graphic">
+                            <path d="M0,56.5c0,0,298.666,0,399.333,0C448.336,56.5,513.994,46,597,46c77.327,0,135,10.5,200.999,10.5c95.996,0,402.001,0,402.001,0"></path>
+                        </svg>
+                    </div>
+                    <span id="error_mobile"></span>
+                </div>
+            </div>
+            <div class="row form-group">
+                <div class="col-sm-6">
+                    <div class="custom-file">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <label class="">Upload your CV</label>
+                                <div class="file">
+                                    <label class="browse_btn" for="cv_file">
+                                        <div>Browse</div>
+                                        <input type="file" name="cv_file" id="cv_file" accept=".doc,.docx, .pdf">
+                                    </label>
+                                    <span class="file_path" id="filename"></span>
+                                </div>
+                                <span id="error_cv_file"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="input">
+                        <textarea id="remark" class="form-control" name="remark"></textarea>
+                        <label class="input__label">Remark</label>
+                        <svg preserveAspectRatio="none" viewBox="0 0 1200 60" height="100%" width="300%" class="graphic">
+                            <path d="M0,56.5c0,0,298.666,0,399.333,0C448.336,56.5,513.994,46,597,46c77.327,0,135,10.5,200.999,10.5c95.996,0,402.001,0,402.001,0"></path>
+                        </svg>
+                    </div>
+                    <span id="error_remark"></span>
+                </div>
+            </div>
+            <button  type="submit" class="btn view-btn text-center">Submit Query</button>
+        </div>
+    </form>
+</div>

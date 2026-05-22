@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!--
+/** Manageaboutus_Aboutus module xml
+ * @category  Manageaboutus_Aboutus 
+ * @package   Manageaboutus_Aboutus
+ * @author    Lalita Rajput
+ */
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
+    <module name="Manageaboutus_Aboutus" setup_version="1.0.0">
+    </module>
+</config>

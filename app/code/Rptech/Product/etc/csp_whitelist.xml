@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+
+<csp_whitelist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Csp:etc/csp_whitelist.xsd">
+    <policies>
+        <!-- Allow connections to Google Analytics -->
+        <policy id="connect-src">
+            <values>
+                <value id="google-analytics" type="host">google-analytics.com</value>
+                <value id="googletagmanager" type="host">googletagmanager.com</value>
+                <value id="doubleclick" type="host">googleads.g.doubleclick.net</value>
+                <value id="translate" type="host">translate.googleapis.com</value>
+            </values>
+        </policy>
+
+        <!-- (Optional) Allow GA scripts if needed -->
+        <policy id="script-src">
+            <values>
+                <value id="googletagmanager" type="host">googletagmanager.com</value>
+                <value id="google-analytics" type="host">google-analytics.com</value>
+                <value id="doubleclick" type="host">googleads.g.doubleclick.net</value>
+                <value id="translate" type="host">translate.googleapis.com</value>
+            </values>
+        </policy>
+
+        <!-- (Optional) Allow GA scripts if needed -->
+        <policy id="frame-src">
+            <values>
+                <value id="googletagmanager" type="host">googletagmanager.com</value>
+                <value id="google-analytics" type="host">google-analytics.com</value>
+                <value id="doubleclick" type="host">googleads.g.doubleclick.net</value>
+                <value id="translate" type="host">translate.googleapis.com</value>
+            </values>
+        </policy>
+
+        <!-- (Optional) Allow GA images/beacons -->
+        <policy id="img-src">
+            <values>
+                <value id="google-analytics" type="host">https://www.google-analytics.com</value>
+            </values>
+        </policy>
+    </policies>
+</csp_whitelist>

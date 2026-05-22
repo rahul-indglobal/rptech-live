@@ -1,0 +1,44 @@
+<?php
+$blockObj = $block->getLayout()->createBlock('Managehomeslider\Homepageslider\Block\Widget\Homepageslider');
+$Collection = $blockObj->getSliderCollection();
+//echo "<pre>";
+//print_r($Collection);
+//echo "</pre>";
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$mediaURL = $objectManager->get('Magento\Store\Model\StoreManagerInterface')
+        ->getStore()
+        ->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
+?>
+<div class="banner-left">
+    <div class="banner-slider"> 
+        <?php
+        foreach ($Collection as $key => $val) {
+
+            if ($key > 1) {
+                ?>
+                <div class="item">
+                    <div class="banner-img">
+                        <a href="<?=$val['slider_link'];?>"> <img src="<?php echo $mediaURL.$val['slider_path'] ?>"></a>
+                    </div>
+                    <div class="banner-text">
+                        <h2 class="heading text-uppercase"><?= $val['title'] ?>
+                            <span class="text-capitalize"><?=  strip_tags($val['content']); ?></span></h2>
+                    </div>
+                </div>
+
+    <?php }
+}
+?>
+    </div>
+</div>
+<!-- <div class="banner-right">
+    <div class="product">
+        <div class="product-slider">
+            <a href="<?=$Collection[0]['slider_link'];?>"><img src="<?php echo $mediaURL.$Collection[0]['slider_path']; ?>"></a>
+        </div>
+        <div class="product-slider">
+            <a href="<?=$Collection[1]['slider_link'];?>"><img src="<?php echo $mediaURL.$Collection[1]['slider_path']; ?>"></a>
+        </div>
+    </div>
+</div> -->
+<div class="clearfix"></div>

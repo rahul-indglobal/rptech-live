@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<!--
+/** Grid di xml
+ * @category  faq 
+ * @package   Managefaq_Faq
+ * @author    Lalita Rajput
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Managefaq\Faq\Api\Data\GridInterface" type="Managefaq\Faq\Model\Grid" />
+
+    <virtualType name="Managefaq\Faq\Model\ResourceModel\Grid\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">rptech_ManageFAQ</argument>
+            <argument name="resourceModel" xsi:type="string">Managefaq\Faq\Model\ResourceModel\Grid</argument>
+        </arguments>
+    </virtualType>
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="faq_record_grid_list_data_source" xsi:type="string">Managefaq\Faq\Model\ResourceModel\Grid\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Managefaq\Faq\Logger\Handler">
+        <arguments>
+            <argument name="filesystem" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>
+        </arguments>
+    </type>
+    <type name="Managefaq\Faq\Logger\Logger">
+        <arguments>
+            <argument name="name" xsi:type="string">customLogHandler</argument>
+            <argument name="handlers"  xsi:type="array">
+                <item name="system" xsi:type="object">Managefaq\Faq\Logger\Handler</item>
+            </argument>
+        </arguments>
+    </type>
+</config>

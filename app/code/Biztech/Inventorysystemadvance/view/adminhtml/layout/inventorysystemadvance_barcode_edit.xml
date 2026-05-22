@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Copyright © Biztech, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="admin-2columns-left" xsi:noNamespaceSchemaLocation="../../../../../../../lib/internal/Magento/Framework/View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Biztech_Inventorysystemadvance::css/barcodeprint/printbarcode.css" />
+    </head> 
+    <update handle="editor"/>
+    <body>
+        <referenceContainer name="content">
+            <block class="Biztech\Inventorysystemadvance\Block\Adminhtml\Barcode\Edit\Tab\Barcode" name="inventorysystemadvance_barcode_edit_tab" template="Biztech_Inventorysystemadvance::inventorysystemadvance/barcode/viewbarcode.phtml" />
+        </referenceContainer>
+        <referenceContainer name="left">
+            <block class="Biztech\Inventorysystemadvance\Block\Adminhtml\Barcode\Edit\Tabs" name="inventorysystemadvance_barcode_edit_tabs">
+                <block class="Biztech\Inventorysystemadvance\Block\Adminhtml\Barcode\Edit\Tab\Barcode" name="inventorysystemadvance_barcode_edit_tab_barcode"/>
+                <action method="addTab">
+                    <argument name="name" xsi:type="string">barcode_section</argument>
+                    <argument name="block" xsi:type="string">inventorysystemadvance_barcode_edit_tab_barcode</argument>
+                </action>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

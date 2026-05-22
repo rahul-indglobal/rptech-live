@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!--
+    /**
+     * Webkul Grid DI
+     *
+     * @category    Webkul
+     * @package     Webkul_Grid
+     * @author      Webkul Software Private Limited
+     *
+     */
+ -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <!-- here we remove virtualType and defile collection as follow-->
+	<type name="LalitaRajput\B2B\Model\ResourceModel\Grid\Grid\Collection">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">sales_order_grid</argument>
+            <argument name="eventPrefix" xsi:type="string">salesorder_records_grid_collection</argument>
+            <argument name="eventObject" xsi:type="string">salesorder_grid_records_collection</argument>
+            <argument name="resourceModel" xsi:type="string">LalitaRajput\B2B\Model\ResourceModel\Grid</argument>
+        </arguments>
+    </type>
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <!--data provider name which used in grid ui component file -->
+                <item name="b2b_order_grid_list_data_source" xsi:type="string">LalitaRajput\B2B\Model\ResourceModel\Grid\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+</config>

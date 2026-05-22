@@ -1,0 +1,25 @@
+<table cellspacing="1" cellpadding="5" border="0" width="100%" style="border:1px solid rgb(190, 188, 183);" class="email-items">
+  <thead>
+    <tr>
+    <th bgcolor="#d9e5ee" align="left" style="padding:3px 9px" class="item-info"><?php echo __('Name') ?></th>
+      <th bgcolor="#d9e5ee" align="left" style="padding:3px 9px" class="item-info"><?php echo __('SKU') ?></th>
+      <th bgcolor="#d9e5ee" align="center" style="padding:3px 9px" class="item-qty"><?php echo __('Quantity Purchased') ?></th>
+      <th bgcolor="#d9e5ee" align="right" style="padding:3px 9px" class="item-price"><?php echo __('Unit Cost') ?></th>
+      <th bgcolor="#d9e5ee" align="right" style="padding:3px 9px" class="item-price"><?php echo __('Row Total')?></th>
+    </tr>
+  </thead>
+  <tbody bgcolor="#F6F6F6">
+    <?php
+    foreach($this->getPoitemsmodel() as $poItem) {
+      ?>
+      <tr>
+        <td align="left"><?php echo $poItem['product_name']; ?></td>
+        <td align="left"><?php echo $poItem['product_sku']; ?></td>
+        <td align="center"><?php echo $poItem['qty_purchased']; ?></td>
+        <td align="right"><?php echo $poItem['cost']; ?></td>
+        <td align="right"><?php echo $poItem['row_total']; ?></td>
+      </tr>
+      <?php
+    }
+    ?>
+  </tbody>

@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add
+                id="Rptech_Awards::grid"
+                title="Awards"
+                module="Rptech_Awards"
+                sortOrder="80"
+                action="award/admin/index"
+                resource="Rptech_Awards::grid"
+                parent="Rptech_ServiceAddress::main"
+        />
+    </menu>
+</config>

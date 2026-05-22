@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Copyright © Biztech, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="admin-2columns-left" xsi:noNamespaceSchemaLocation="../../../../../../../lib/internal/Magento/Framework/View/Layout/etc/page_configuration.xsd">
+    <update handle="editor"/>
+    <body>
+        <referenceContainer name="content">
+            <block class="Biztech\Inventorysystem\Block\Adminhtml\Inventorysystem\Edit" name="inventorysystem_inventorysystem_edit"/>
+        </referenceContainer>
+        <referenceContainer name="left">
+            <block class="Biztech\Inventorysystem\Block\Adminhtml\Inventorysystem\Edit\Tabs" name="inventorysystem_inventorysystem_edit_tabs">
+                <block class="Biztech\Inventorysystem\Block\Adminhtml\Inventorysystem\Edit\Tab\Form" name="inventorysystem_inventorysystem_edit_tab_form"/>
+                <action method="addTab">
+                    <argument name="name" xsi:type="string">form_section</argument>
+                    <argument name="block" xsi:type="string">inventorysystem_inventorysystem_edit_tab_form</argument>
+                </action>
+                <!--CedAddTab-->
+            </block>
+        </referenceContainer>
+    </body>
+</page>

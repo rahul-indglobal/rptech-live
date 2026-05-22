@@ -1,0 +1,50 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+// @codingStandardsIgnoreFile
+
+/**
+ * @var $block \Magento\Theme\Block\Html\Title
+ */
+$blockObj= $block->getLayout()->createBlock('Ves\Brand\Block\Widget\Brandlist');
+$_brandCollection = $blockObj->getBrandCollectionNew();
+//echo '<pre>';
+//print_r($result);
+?>
+
+<div class="product-sec brands-sec">
+	<div class="heading_border">
+		<div class="product-after">
+		</div>
+		<h2 class="heading">
+			<strong>Brands</strong>
+                        <a href="javascript:void(0)" class="btn-va">View All</a>
+		</h2>
+	</div>
+	<div class="brand">
+		
+		<?php foreach ($_brandCollection as $_brand) { ?>
+			<?php if($_brand->getCustomLink() == "" || $_brand->getCustomLink() == null)
+				{
+					$brandUrl = $_brand->getUrl();
+				}else{
+					$brandUrl = $_brand->getCustomLink();
+				}
+			?>
+			<div class="brand-logo">
+				<a style="cursor:default" href="<?php echo $brandUrl; ?>"><img src="<?php echo $_brand->getImageUrl(); ?>"></a>
+			</div>
+		<?php } ?>
+	</div>
+    <div class="brand-view-all hidden">
+        <ul class="clearfix brand-ul">
+            <?php foreach ($_brandCollection as $_brand) { ?>
+                    <li class="brand-li">
+                            <a style="cursor:default" href="<?php echo $_brand->getUrl(); ?>"><img src="<?php echo $_brand->getImageUrl(); ?>"></a>
+                    </li>
+            <?php } ?>
+        </ul>
+    </div>
+</div>

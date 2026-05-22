@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!--
+/** Grid menu xml
+ * @category  Manageewastecontent_Ewastecontent 
+ * @package   Manageewastecontent_Ewastecontent
+ * @author    Lalita Rajput
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+<!--        <add id="Manageewastecontent_Ewastecontent::manager" title="E-Waste Content Management" module="Manageewastecontent_Ewastecontent" sortOrder="10" resource="Manageewastecontent_Ewastecontent::manager" />
+        <add id="Manageewastecontent_Ewastecontent::add_row" title="E-Waste Content" module="Manageewastecontent_Ewastecontent" sortOrder="20" parent="Manageewastecontent_Ewastecontent::manager" action="ewaste/grid" resource="Manageewastecontent_Ewastecontent::add_row"/>-->
+    </menu>
+</config>

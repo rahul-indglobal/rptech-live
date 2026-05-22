@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!--
+/** Grid menu xml
+ * @category  Managebranchheads\Branchheads 
+ * @package   Managebranchheads\Branchheads
+ * @author    Lalita Rajput
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+<!--        <add id="Managebranchheads_Branchheads::manager" title="Branch Head Management" module="Managebranchheads_Branchheads" sortOrder="10" resource="Managebranchheads_Branchheads::manager" />
+        <add id="Managebranchheads_Branchheads::add_row" title="Branch Head List" module="Managebranchheads_Branchheads" sortOrder="20" parent="Managebranchheads_Branchheads::manager" action="branchheads/grid" resource="Managebranchheads_Branchheads::add_row"/>-->
+    </menu>
+</config>

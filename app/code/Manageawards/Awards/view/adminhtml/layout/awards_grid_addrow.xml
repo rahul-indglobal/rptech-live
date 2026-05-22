@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!--
+/**
+ /**
+ * Manageawards_Awards record list UI Component
+ * @category  Manageawards_Awards 
+ * @package   Manageawards_Awards
+ * @author    Lalita Rajput
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="content">
+           <block class="Manageawards\Awards\Block\Adminhtml\Grid\AddRow" name="add_row_awards" />
+        </referenceContainer>
+    </body>
+</page>

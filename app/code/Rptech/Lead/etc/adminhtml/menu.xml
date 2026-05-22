@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+
+    <menu>
+        <!-- Top-level menu -->
+        <add id="Rptech_Lead::dell_leads"
+             title="Dell Leads"
+             module="Rptech_Lead"
+             sortOrder="200"
+             parent="Rptech_ServiceAddress::main"
+             action="delllead/index/index"
+             resource="Rptech_Lead::dell_leads" />
+    </menu>
+</config>

@@ -1,0 +1,143 @@
+<?php
+
+$invoiceID = $this->getRequest()->getParam('id');
+$piCollection = $block->getpoInvoice()->load($invoiceID);
+$piiCollection = $block->getPoItem()->getCollection()->addFieldToFilter('invoice_id', $invoiceID);
+$piData = $piCollection->getData();
+$piiData = $piiCollection->getData();
+$currencyCode = $block->getCurrentStore()->getCurrentCurrencyCode();
+$_localeCurrency = $block->getCurrencyInterface();
+$currencySymbol = $_localeCurrency->getCurrency($currencyCode)->getSymbol();
+$supCollection = $block->getSupplier()->load($piData['supplier_id']);
+$supName = $supCollection->getFirstName() . " " . $supCollection->getLastName();
+?>
+
+<form enctype="multipart/form-data" method="post" action="<?php echo $this->getUrl('inventorysystem/adminhtml_purchaseorders/saveInvoice'); ?>" id="view_invoice">
+    <?php echo $this->getBlockHtml('formkey') ?>
+    <div class="content-header">
+        <h3 class="icon-head head-adminhtml-purchaseorders"><?php echo $piData['invoice_incr_id'] . " | " . date("M d, Y h:i:s A", strtotime(__($piData['created_at']))); ?></h3>
+    </div>
+
+    <div class='entry-edit'>
+        <div class='entry-edit-head'><h4 class='icon-head head-products'><?php echo __('Items Invoiced'); ?> </h4></div>
+        <div class="grid np">
+
+            <div class="hor-scroll">
+                <table cellspacing="0" class="data order-tables" width="100%" style="border: 0.1rem solid #8a837f;">
+                    <?php
+                    if ($piiData && is_array($piiData) && !empty($piiData)) {
+                        ?>
+                        <tr class="headings" style="background: #514943;color: #FFF;">
+                            <th width="25%" style="padding: 10px 5px;"><?php echo __('Name'); ?></th>
+                            <th width="25%" style="padding: 10px 5px;"><?php echo __('SKU'); ?></th>
+                            <th width="10%" style="padding: 10px 5px;"><?php echo __('Qty Pur.'); ?></th>
+                            <th width="10%" style="padding: 10px 5px;"><?php echo __('Qty Rec.'); ?></th>
+                            <th width="10%" style="padding: 10px 5px;"><?php echo __('Unit Cost'); ?></th>
+                            <th width="10%" style="padding: 10px 5px;"><?php echo __('Row Total'); ?></th>
+                        </tr>
+
+                        <?php
+                        foreach ($piiData as $key => $data) {
+                            ?>
+                            <tr>
+                                <td width="25%" style="padding: 10px 5px;"><?php echo $data['product_name']; ?></td>
+                                <td width="25%" style="padding: 10px 5px;"><?php echo $data['product_sku']; ?></td>
+                                <td align="justify" width="10%" style="padding: 10px 5px;"><?php echo $data['qty_purchased']; ?></td>
+                                <td align="justify" width="10%" style="padding: 10px 5px;"><?php echo $data['qty_received']; ?></td>
+                                <td align="justify" width="10%" style="padding: 10px 5px;"><?php echo $currencySymbol . $data['cost']; ?></td>
+                                <td align="justify" width="10%" style="padding: 10px 5px;"><?php echo $currencySymbol . $data['row_total']; ?></td>
+                            </tr>
+                            <?php
+                        }
+                    }
+                    ?>
+                </table>
+            </div>
+
+        </div>
+        <br>
+        <br>
+        <div class="box-left entry-edit" style="float: left; width: 50%;">
+            <div class="entry-edit-head">
+                <h4>Invoice History</h4>
+            </div>
+            <fieldset>
+                <table>
+                    <tr>
+                        <td><strong><?php echo __('Supplier: '); ?></strong>&nbsp;&nbsp;</td>
+                        <td><?php echo $supName; ?></td>
+                    </tr>
+                    <tr>
+                        <td><strong><?php echo __('Invoice Comments: '); ?></strong>&nbsp;&nbsp;</td>
+                        <td><?php
+                        if ($piData['comments'] == '') {
+                            echo "N/A";
+                        } else {
+                            $piData['comments'];
+                        }
+                            ?></td>
+                    </tr>
+                    <tr>
+                        <td><strong><?php echo __('Purchase Order ID: '); ?></strong></td>
+                        <td><?php echo $piData['purchase_order_id']; ?></td>
+                    </tr>
+                    <tr>
+                        <td><strong><?php echo __('Invoice Status '); ?></strong></td>
+                        <?php
+                        $poInvStatuses = $block->getInoiceStatus()->toOptionArray();
+                        ?>
+                        <td><?php echo $poInvStatuses[$piData['invoice_status']]; ?></td>
+                    </tr>
+                </table>
+                <div class="clear"></div>
+            </fieldset>
+        </div>
+        <div class="box-right entry-edit" style="float: right; width: 50%;" >
+            <div class="entry-edit-head" style="text-align: right;">
+                <h4>Invoice Totals</h4>
+            </div>
+            <div class="order-totals"  float="right" >
+                <table width="100%" cellspacing="0">
+                    <tbody>
+                        <tr class="0">
+                            <td class="label" align="right" width="90%"> Subtotal </td>
+                            <td width="10%">
+                                <span class="price" id="sub_total"><?php echo $currencySymbol . number_format($piData['sub_total'], 2); ?></span>
+                            </td>
+                        </tr>
+                        <tr class="0">
+                            <td class="label" align="right" width="90%"> Shipping Cost </td>
+                            <td width="10%">
+                                <span class="price"><?php echo $currencySymbol . number_format($piData['ship_cost'], 2); ?></span>
+                            </td>
+                        </tr>
+                        <tr class="0">
+                            <td class="label" align="right" width="90%"> Tax Amount </td>
+                            <td width="10%">
+                                <span class="price"><?php echo $currencySymbol . number_format($piData['tax_amount'], 2); ?></span>
+                            </td>
+                        </tr>
+                        <tr class="0">
+                            <td class="label" align="right" width="90%"> Discount </td>
+                            <td width="10%">
+                                <span class="price"><?php echo $currencySymbol . number_format($piData['discount'], 2); ?></span>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr class="0">
+                            <td class="label" align="right">
+                                <strong>Grand Total</strong>
+                            </td>
+                            <td class="emph">
+                                <strong>
+                                    <span class="price" id="grand_total"><?php echo $currencySymbol . number_format($piData['grand_total'], 2); ?></span>
+                                </strong>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</form>

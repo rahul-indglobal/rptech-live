@@ -1,0 +1,129 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+// @codingStandardsIgnoreFile
+?>
+<?php /** @var $block \Magento\Catalog\Block\Product\AbstractProduct */ ?>
+<?php
+$product = $block->getProduct();
+$attributeSetId = $product->getAttributeSetId();
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+/** @var  $coll \Magento\Eav\Model\ResourceModel\Entity\Attribute\Collection */
+$groupCollection = $objectManager->create('Magento\Eav\Model\ResourceModel\Entity\Attribute\Group\Collection');
+$groupCollection->addFieldToFilter('attribute_set_id', $attributeSetId);
+$groupCollection->addFieldToFilter('tab_group_code', array('null' => true));
+
+$groupCollection->setOrder('sort_order', 'ASC');
+
+
+$priceHelper = $objectManager->create('Magento\Framework\Pricing\Helper\Data'); // Instance of Pricing Helper
+?>
+<?php if($product->getTypeId()!="bundle") { ?>
+<div class="avail-check">
+        <input type="text" name="pincode_check" id="pincode_check" class=""/><button type="submit" id="checkpincode" class="btn">check</button>
+        <!--<input type="submit" id="checkpincode" value="check" class="btn"/>-->
+</div>
+
+<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+    <div class="panel panel-default">
+        <a class="collapsed" role="button" data-toggle="collapse"  style="text-decoration: none;">
+            <div class="panel-heading" role="tab" id="headingTwo" style="color: black;">
+                <h4 class="panel-title heading">
+                    Specification
+                </h4>
+            </div>
+        </a>
+    </div>
+    <?php
+    $i = 0;
+    $productAttributes = $product->getAttributes();
+    foreach ($groupCollection as $gp) {
+        $group = $gp->getData();
+        $group_id = $group['attribute_group_id'];
+        ?>
+        <?php
+        $attrs = array();
+        foreach ($productAttributes as $attribute) {
+            if ($attribute->isInGroup($attributeSetId, $group_id)) {
+                $attrs[] = $attribute->getFrontend();
+            }
+        }
+        ?>
+        <div class="panel panel-default abc2">
+            <a class="ext" role="button" data-toggle="collapse" data-parent="#accordion" href="#<?php echo $group['attribute_group_code']; ?>" aria-expanded="true" aria-controls="<?php echo $group['attribute_group_name']; ?>" style="text-decoration: none;">
+                <div class="panel-heading" role="tab" id="heading<?php echo $group_id; ?>" style="color: black;">
+                    <h4 class="panel-title">
+                        <?php echo $group['attribute_group_name']; ?>
+                    </h4>
+                </div>
+            </a>
+            <div id="<?php echo $group['attribute_group_code']; ?>" class="panel-collapse collapse <?php echo($i == 0) ? 'in' : ''; ?> " role="tabpanel" aria-labelledby="heading<?php echo $group_id; ?>">
+                <div class="panel-body">
+                    <?php if (count($attrs) > 1) { ?>
+                        <table>
+                            <?php
+                            foreach ($attrs as $single) {
+                                ?>
+                                <tr>
+                                    <td width="200px">
+                                        <?php
+                                        echo $single->getLabel();
+                                        ?>
+                                    </td>
+                                    <th><?php
+                                        $val = $single->getValue($product);
+                                        echo $val;
+//											if (is_array($val)) {
+//												echo 'ssdfsdfg';
+//												echo $val;
+//											} else {
+//												echo $val;
+//											}
+                                        ?></th>
+                                </tr>
+                                <?php
+                            }
+                            ?>
+                        </table>
+
+                        <?php
+                    } else {
+                        foreach ($attrs as $single) {
+                            $val = $single->getValue($product);
+                            echo $val;
+//								if (is_array($val)) {
+//									echo 'sg';
+//									print_r($val);
+//								} else {
+//									echo $val;
+//								}
+                        }
+                    }
+                    ?>
+
+                </div>
+            </div>
+        </div>
+        <?php
+        $i++;
+    }
+    ?>
+</div>
+<script type="text/javascript">
+    require(['jquery'], function ($) {
+        $(document).ready(function () {
+            $("#checkpincode").click(function () {
+                var pincode = $("#pincode_check").val();
+                if (pincode) {
+                    alert(pincode + "==>not empty")
+                } else {
+                    alert(pincode + '==> empty');
+                }
+            });
+
+        });
+    });
+</script>
+<?php } ?>

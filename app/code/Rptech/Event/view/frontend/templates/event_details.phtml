@@ -1,0 +1,103 @@
+<?php
+/**
+ * @var \Rptech\Event\Block\Event\DetailsBlock $block
+ */
+$event = $block->getCurrentEvent();
+$eventImages = $block->getEventImageCollection($event->getEntityId());
+?>
+<div class="news-wapper inner-wrapper">
+<?php if ($event->getId()) :?>
+    <div class="row">
+        <div class="col-sm-12 news-events">
+            <div class="row">
+                <div class="col-sm-12">
+                    <h3>Events</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 media-menu">
+            <div class="media-sub-menu">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h4 class="event-dt-title">
+                            <span class="more"><?= __($event->getTitle()) ?></span>
+                            <br>
+                            <small class="date"><?= __(date('F Y', strtotime($event->getPublishDate()))) ?></small>
+                        </h4>
+                        <p class="event-desc">
+                            <?= __($event->getDescription()) ?>
+                        </p>
+                    </div>
+                </div>
+                <hr>
+                <?php if ($eventImages->getSize()): ?>
+                    <div class="row">
+                        <?php foreach ($eventImages as $eventImage) :?>
+                            <div class="col-md-3 mb-2">
+                                <img src="<?= $block->getEventMediaUrl().$eventImage->getImage(); ?>"
+                                     class="img-thumbnail"
+                                     alt="<?= $eventImage->getImage() ?>"
+                                >
+                            </div>
+                        <?php endforeach;?>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+<?php else : ?>
+    <div class="message info empty"><span><?php echo __('No any record.'); ?></span></div>
+<?php endif; ?>
+</div>
+
+<style>
+    .events-details-index main#maincontent{
+        width: 76%;
+    }
+    .news-events h3 {
+        font-family: roboto;
+        font-size: 24px;
+        margin: 0;
+    }
+    .news-wapper .media-sub-menu .event-dt-title, .news-wapper .media-sub-menu .news-title {
+        font-size: 22px;
+        text-transform: capitalize;
+    }
+    .news-wapper .media-sub-menu .date {
+        color: #337ab7;
+        font-size: 13px;
+    }
+    .news-wapper .media-sub-menu .event-desc, .news-wapper .media-sub-menu .news-txt {
+        color: #959595;
+    }
+    .media-sub-menu p {
+        font-size: 16px;
+        margin-bottom: 0;
+    }
+    .col-sm-12.news-events {
+        margin-bottom: 60px;
+    }
+    .news-wapper .media-sub-menu .mb-2 {
+        margin-bottom: 1em;
+    }
+    .img-thumbnail {
+        display: inline-block;
+        max-width: 287px;
+        height: 240px;
+        padding: 10px;
+        line-height: 1.42857143;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        -webkit-transition: all .2s ease-in-out;
+        -o-transition: all .2s ease-in-out;
+        transition: all .2s ease-in-out;
+    }
+    .news-wapper {
+        padding: 0px 30px 100px;
+        background-color: #fff;
+    }
+</style>
+

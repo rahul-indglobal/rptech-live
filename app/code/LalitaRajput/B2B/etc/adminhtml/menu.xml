@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+      <add id="LalitaRajput_B2B::orders" title="Orders" translate="title" module="LalitaRajput_B2B" parent="Magento_Sales::sales" sortOrder="10" dependsOnModule="LalitaRajput_B2B" resource="LalitaRajput_B2B::orders"/>
+      <add id="LalitaRajput_B2B::orders_b2borders" title="B2B orders" translate="title" module="LalitaRajput_B2B" parent="LalitaRajput_B2B::orders" sortOrder="20" dependsOnModule="LalitaRajput_B2B" action="b2b/grid" resource="LalitaRajput_B2B::orders"/>
+    </menu>
+</config>
+  

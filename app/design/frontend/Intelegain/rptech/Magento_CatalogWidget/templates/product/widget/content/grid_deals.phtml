@@ -1,0 +1,165 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+// @codingStandardsIgnoreFile
+
+/** @var \Magento\CatalogWidget\Block\Product\ProductsList $block */
+?>
+<?php if ($exist = ($block->getProductCollection() && $block->getProductCollection()->getSize())): ?>
+	<?php
+	$type = 'widget-product-grid';
+
+	$mode = 'grid';
+
+	$image = 'new_products_content_widget_grid';
+	$items = $block->getProductCollection()->getItems();
+	$showWishlist = true;
+	$showCompare = true;
+	$showCart = true;
+	$templateType = \Magento\Catalog\Block\Product\ReviewRendererInterface::DEFAULT_VIEW;
+	$description = false;
+	$priceHelper = $this->helper('Magento\Framework\Pricing\Helper\Data'); // Instance of Pricing Helper
+	$label_new_status = $this->helper('Rptech\General\Helper\Data')->getLabelNewStatus();
+	$label_sale_status = $this->helper('Rptech\General\Helper\Data')->getLabelSaleStatus();
+	$label_sold_status = $this->helper('Rptech\General\Helper\Data')->getLabelSoldStatus();
+	$label_new = $this->helper('Rptech\General\Helper\Data')->getLabelNewImage();
+	$label_sale = $this->helper('Rptech\General\Helper\Data')->getLabelSaleImage();
+	$label_sold = $this->helper('Rptech\General\Helper\Data')->getLabelSoldImage();
+	?>
+	<div class="featured_product">
+		<div class="heading_border">
+			<div class="product-after">
+			</div>
+			<h2 class="heading">
+				Weekly <strong>Offers</strong>  <a href="https://rptechindia.in/offers-zone" class="btn-va">View All</a> 
+			</h2>
+
+		</div>
+
+		<div class="product-row equalheight_wrapper">
+			<div class="item">
+				<?php $i = 1; ?>
+				<?php
+				foreach ($items as $_item):
+					//echo '<pre>'; print_r($_item);die; 
+					?>
+					<div class="product-box equalheight">
+						<div class="product-left">
+                            <?php
+							$class = '';
+                            $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+                            $media_url = $objectManager->get('Magento\Store\Model\StoreManagerInterface')->getStore()
+                                                        ->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
+                            $stock_item = $objectManager->get('Magento\CatalogInventory\Api\StockRegistryInterface')->getStockItemBySku($_item->getSku());
+                            if(!$stock_item->getIsInStock()==1) {
+                                $class = "product-sold";
+                            }
+                            else if ($_item->getSpecialPrice() && $_item->getFinalPrice() == $_item->getSpecialPrice() && $_item->getIsSalable()) {
+                                $class = "product-sale";
+                            }
+                            else if($_item->getNewsFromDate() || $_item->getNewsToDate()) {
+                                $from_date = date('d/m/Y',strtotime($_item->getNewsFromDate()));
+                                $to_date = date('d/m/Y',strtotime($_item->getNewsToDate()));
+                                $today = date('d/m/Y');
+                                if($from_date<$today || $to_date>$today || ($from_date<$today && $today<$to_date)) {
+                                    $class = "product-new";
+                                }
+                            }
+                            ?>
+                            <div class="product-tag <?= $class; ?>">
+								<?php
+								if($label_sold_status && !$stock_item->getIsInStock()==1) {
+									echo "<img class='tag-sold' src='".$media_url.'catalog/product/label/'.$label_sold."' />";
+								}
+								else if ($label_sale_status && $_item->getSpecialPrice() && $_item->getFinalPrice() == $_item->getSpecialPrice() && $_item->getIsSalable()) {
+									echo "<img class='tag-sale' src='".$media_url.'catalog/product/label/'.$label_sale."' />";
+								}
+								else if($_item->getNewsFromDate() || $_item->getNewsToDate()) {
+									$from_date = date('d/m/Y',strtotime($_item->getNewsFromDate()));
+									$to_date = date('d/m/Y',strtotime($_item->getNewsToDate()));
+									$today = date('d/m/Y');
+									if($label_new_status && ($from_date<$today || $to_date>$today || ($from_date<$today && $today<$to_date))) {
+										echo "<img class='tag-new' src='".$media_url.'catalog/product/label/'.$label_new."' />";
+									}
+								}
+								?>
+							</div>
+							<a href="<?= $block->escapeUrl($block->getProductUrl($_item)) ?>" class="productImg">
+								<img src="<?= $block->getImage($_item, $image)->getImageUrl(); ?>" />
+							</a>
+						</div>
+						<div class="product-right product<?= $block->escapeHtml($_item->getId()) ?>">
+							<a title="<?= $block->escapeHtml($_item->getName()) ?>"
+							   href="<?= $block->escapeUrl($block->getProductUrl($_item)) ?>"
+							   class="product-title">
+								<?php 
+									$_productNameStripped = $block->escapeHtml($_item->getName(), null, true);
+									if(strlen($_productNameStripped) > 40){
+										echo substr($_productNameStripped, 0, 40).'...';
+									}else{
+										echo $_productNameStripped;
+									}
+									?>
+							</a>
+							<p class="product-txt"><?php 
+									$_productDescStripped = $_item->getShortDescription();
+									if(strlen($_productDescStripped) > 50){
+										echo substr($_productDescStripped, 0, 50).'...';
+									}else{
+										echo $_productDescStripped;
+									}
+									?> </p>
+							<p class="product-price">
+								<?php
+//								echo $priceHelper->currency($_item->getFinalPrice(), true, false); 
+								echo $block->getProductPriceHtml($_item, $type);
+								?>
+							</p>
+							<div class="actionWrap">
+								<?php
+								$postDataHelper = $this->helper('Magento\Framework\Data\Helper\PostHelper');
+								$postData = $postDataHelper->getPostData($block->getAddToCartUrl($_item), ['product' => $_item->getEntityId()]);
+								$sell_status = $_item->getResource()->getAttribute('sell_status')->getFrontend()->getValue($_item);
+								if ($sell_status == 'Yes' && $_item->getFinalPrice() > 0 && $_item->getIsSalable()) {
+									?>
+									<a href="javascript:void(0)" class="btn btn-cart action tocart" title="Add to Cart" data-post='<?= /* @noEscape */ $postData ?>' tabindex="0"><i class="fa fa-shopping-cart"></i> Add To Cart</a>
+								<?php }else{ ?>
+									<span style="display: none" class="prosku"><?php echo $_item->getSku(); ?></span>
+									<button class="btn btn-enq btn-cart" id="product<?= $block->escapeHtml($_item->getId()) ?>">Send Enquiry</button>
+								<?php } ?>
+								<button  data-role="add-to-links" data-post='<?= /* @noEscape */ $block->getAddToWishlistParams($_item) ?>' class="btn btn-wishlist action towishlist" data-action="add-to-wishlist" title="<?= $block->escapeHtmlAttr(__('Add to Wish List')) ?>"><i class="fa fa-heart"></i></button>
+								<?php $compareHelper = $this->helper('Magento\Catalog\Helper\Product\Compare'); ?>
+								<button class="action tocompare btn btn-compare" data-post='<?= /* @noEscape */ $compareHelper->getPostDataParams($_item) ?>' title="<?= $block->escapeHtmlAttr(__('Add to Compare')) ?>"><span class="icon-compare"></span></button>
+							</div>
+						</div>
+					</div>
+					<?= ($i % 2 == 0 && $i != count($items)) ? '</div><div class="item">' : '' ?>
+					<?php
+					$i++;
+				endforeach
+				?>
+			</div>
+		</div>
+	</div>
+<?php endif; ?>
+<script type="text/javascript">
+    require(['jquery','Magento_Customer/js/customer-data'],function($,customerData){
+    	$('.towishlist')
+        //.removeAttr('data-post')
+        .click(function(){
+        	var customerInfo = customerData.get('customer')();
+        	if(customerInfo.firstname && customerInfo.fullname) {
+        		/*console.log("In");
+        		console.log(customerInfo.firstname);
+        		console.log(customerInfo.fullname);*/
+        	} else {
+        		/*console.log("Out");
+        		console.log(customerInfo.fullname);*/
+        		$(this).removeAttr('data-post');
+            	doLogin();
+        	}
+        });
+    });
+</script>

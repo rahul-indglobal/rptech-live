@@ -1,0 +1,101 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+// @codingStandardsIgnoreFile
+
+/** @var \Magento\CatalogWidget\Block\Product\ProductsList $block */
+?>
+<?php if ($exist = ($block->getProductCollection() && $block->getProductCollection()->getSize())): ?>
+    <?php
+    $type = 'widget-product-grid';
+
+    $mode = 'grid';
+
+    $image = 'new_products_content_widget_grid';
+    $items = $block->getProductCollection()->getItems();
+
+    $showWishlist = true;
+    $showCompare = true;
+    $showCart = true;
+    $templateType = \Magento\Catalog\Block\Product\ReviewRendererInterface::DEFAULT_VIEW;
+    $description = false;
+    ?>
+    <div class="featured_product">
+        <div class="heading_border">
+            <div class="product-after">
+            </div>
+            <h2 class="heading">
+                Today’s <strong>Deals</strong>
+            </h2>
+        </div>
+        <div class="product-row equalheight_wrapper">
+            <div class="item">
+				<?php $i = 1; ?>
+				<?php
+				foreach ($items as $_item):
+					//echo '<pre>'; print_r($_item);die; 
+					?>
+					<div class="product-box equalheight">
+						<div class="product-left">
+							<a href="<?= $block->escapeUrl($block->getProductUrl($_item)) ?>" class="productImg">
+								<img src="<?= $block->getImage($_item, $image)->getImageUrl(); ?>" />
+							</a>
+						</div>
+						<div class="product-right">
+							<a title="<?= $block->escapeHtml($_item->getName()) ?>"
+							   href="<?= $block->escapeUrl($block->getProductUrl($_item)) ?>"
+							   class="product-title">
+								   <?php 
+									$_productNameStripped = $block->escapeHtml($_item->getName(), null, true);
+									if(strlen($_productNameStripped) > 15){
+										echo substr($_productNameStripped, 0, 15).'...';
+									}else{
+										echo $_productNameStripped;
+									}
+									?>
+							</a>
+							<p class="product-txt"><?php 
+									$_productDescStripped = $_item->getShortDescription();
+									if(strlen($_productDescStripped) > 50){
+										echo substr($_productDescStripped, 0, 50).'...';
+									}else{
+										echo $_productDescStripped;
+									}
+									?> </p>
+							<p class="product-price">
+								<?php
+								//echo $priceHelper->currency($_item->getFinalPrice(), true, false); 
+								echo $block->getProductPriceHtml($_item, $type);
+								?>
+							</p>
+							<div class="actionWrap">
+								<?php
+								$postDataHelper = $this->helper('Magento\Framework\Data\Helper\PostHelper');
+								$postData = $postDataHelper->getPostData($block->getAddToCartUrl($_item), ['product' => $_item->getEntityId()]);
+								$sell_status = $_item->getResource()->getAttribute('sell_status')->getFrontend()->getValue($_item);
+								if ($sell_status == 'Yes' && $_item->getFinalPrice() > 0) {
+									?>
+									<a href="javascript:void(0)" class="btn btn-cart action tocart" title="Add to Cart" data-post='<?= /* @noEscape */ $postData ?>' tabindex="0"><i class="fa fa-shopping-cart"></i> Add To Cart</a>
+								<?php }else{ ?>
+									<button class="btn btn-enq btn-cart">Send Enquiry</button>
+								<?php } ?>
+								<button  data-role="add-to-links" data-post='<?= /* @noEscape */ $block->getAddToWishlistParams($_item) ?>' class="btn btn-wishlist action towishlist" data-action="add-to-wishlist" title="<?= $block->escapeHtmlAttr(__('Add to Wish List')) ?>"><i class="fa fa-heart"></i></button>
+								<?php $compareHelper = $this->helper('Magento\Catalog\Helper\Product\Compare'); ?>
+								<button class="action tocompare btn btn-compare" data-post='<?= /* @noEscape */ $compareHelper->getPostDataParams($_item) ?>' title="<?= $block->escapeHtmlAttr(__('Add to Compare')) ?>"><span class="icon-compare"></span></button>
+							</div>
+						</div>
+					</div>
+					<?= ($i % 2 == 0 && $i != count($items)) ? '</div><div class="item">' : '' ?>
+					<?php
+					$i++;
+				endforeach
+				?>
+			</div>
+        </div>
+    </div>
+
+    
+
+<?php endif; ?>

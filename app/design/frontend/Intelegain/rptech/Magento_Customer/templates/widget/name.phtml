@@ -1,0 +1,76 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+// @codingStandardsIgnoreFile
+
+/** @var \Magento\Customer\Block\Widget\Name $block */
+/*
+  <?= $block->getLayout()->createBlock('Magento\Customer\Block\Widget\Name')
+  ->setObject($block->getAddress())
+  ->toHtml() ?>
+
+  For checkout/onepage/shipping.phtml:
+
+  <?= $block->getLayout()->createBlock('Magento\Customer\Block\Widget\Name')
+  ->setObject($block->getAddress())
+  ->setFieldIdFormat('shipping:%s')
+  ->setFieldNameFormat('shipping[%s]')
+  ->toHtml() ?>
+ */
+
+
+//echo "<pre>";print_r($_SESSION['customer_base']['customer_id']);die;
+
+?>
+
+    <?php if(isset($_SESSION['customer_base']['customer_id'])) { ?>
+        
+         <div class="field required fullname <?= $block->escapeHtmlAttr($block->getContainerClassName()) ?>">
+
+        <div class="form-group">
+              <label class="input_label">First Name</label>
+            <input type="text" id="<?= $block->escapeHtmlAttr($block->getFieldId('firstname')) ?>"
+                   name="<?= $block->escapeHtmlAttr($block->getFieldName('firstname')) ?>"
+                   value="<?= $block->escapeHtmlAttr($block->getObject()->getFirstname()) ?>"
+                   title="<?= $block->escapeHtmlAttr($block->getStoreLabel('firstname')) ?>"
+                   class="form-control <?= $block->escapeHtmlAttr($block->getAttributeValidationClass('firstname')) ?>" <?php if ($block->getAttributeValidationClass('firstname') == 'required-entry') echo ' data-validate="{required:true}"' ?>>
+          
+        </div>
+        <div class="form-group">
+             <label class="input_label">Last Name</label>
+            <input type="text" id="<?= $block->escapeHtmlAttr($block->getFieldId('lastname')) ?>"
+                   name="<?= $block->escapeHtmlAttr($block->getFieldName('lastname')) ?>"
+                   value="<?= $block->escapeHtmlAttr($block->getObject()->getLastname()) ?>"
+                   title="<?= $block->escapeHtmlAttr($block->getStoreLabel('lastname')) ?>"
+                   class="form-control <?= $block->escapeHtmlAttr($block->getAttributeValidationClass('lastname')) ?>" <?php if ($block->getAttributeValidationClass('lastname') == 'required-entry') echo ' data-validate="{required:true}"' ?>>
+           
+        </div>
+
+    </div>
+        
+    <?php }else { ?>
+
+    <div class="field required fullname <?= $block->escapeHtmlAttr($block->getContainerClassName()) ?>">
+
+        <div class="form-group">
+            <input type="text" id="<?= $block->escapeHtmlAttr($block->getFieldId('firstname')) ?>"
+                   name="<?= $block->escapeHtmlAttr($block->getFieldName('firstname')) ?>"
+                   value="<?= $block->escapeHtmlAttr($block->getObject()->getFirstname()) ?>"
+                   title="<?= $block->escapeHtmlAttr($block->getStoreLabel('firstname')) ?>"
+                   class="form-control <?= $block->escapeHtmlAttr($block->getAttributeValidationClass('firstname')) ?>" <?php if ($block->getAttributeValidationClass('firstname') == 'required-entry') echo ' data-validate="{required:true}"' ?>>
+            <label class="input_label">First Name</label>
+        </div>
+        <div class="form-group">
+            <input type="text" id="<?= $block->escapeHtmlAttr($block->getFieldId('lastname')) ?>"
+                   name="<?= $block->escapeHtmlAttr($block->getFieldName('lastname')) ?>"
+                   value="<?= $block->escapeHtmlAttr($block->getObject()->getLastname()) ?>"
+                   title="<?= $block->escapeHtmlAttr($block->getStoreLabel('lastname')) ?>"
+                   class="form-control <?= $block->escapeHtmlAttr($block->getAttributeValidationClass('lastname')) ?>" <?php if ($block->getAttributeValidationClass('lastname') == 'required-entry') echo ' data-validate="{required:true}"' ?>>
+            <label class="input_label">Last Name</label>
+        </div>
+
+    </div>
+
+<?php } ?>

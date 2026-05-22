@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Manageevents_Events Grid routes xml
+ * @category  Manageevents_Events
+ * @package   Manageevents_Events
+ * @author    Manageevents_Events
+ * @copyright Copyright (c) 2010-2017 Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:App/etc/routes.xsd">
+    <router id="standard">
+        <route id="events" frontName="events">
+            <module name="Manageevents_Events" />
+        </route>
+    </router>
+</config>

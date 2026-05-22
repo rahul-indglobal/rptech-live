@@ -1,0 +1,31 @@
+<?php
+
+/**
+ * @var \Rptech\HomepageSlider\Block\Slider $block
+ */
+
+$sliders = $block->getSliderCollection();
+?>
+<?php if (!empty($sliders) && $sliders->getSize()) : ?>
+    <div class="banner">
+        <a style="float: right; margin: 10px 50px 0px 0px;" href="https://in.linkedin.com/company/rptechindia" target="_blank"> <img style="width: 150px;" src="<?php echo $block->getUrl() ?>media/assets/images/home/follow-linked-in.png" /></a>
+        <div class="container">
+            <div class="banner-slider">
+                <?php foreach ($sliders as $slider) :?>
+                    <div class="item">
+                        <div class="banner-img">
+                            <a tabindex="0" <?php if(!empty($slider->getLink())) { echo 'href="'.$slider->getLink().'"'; } ?> <?php if(!empty($slider->getLink())) { echo 'target="_blank"'; } ?>>
+                                <img src="<?php echo $block->getSliderMediaPath().$slider->getImage() ?>" data-animation="fadeInLeftBig" data-delay="0.5s" />
+                            </a>
+                        </div>
+                        <div class="banner-text">
+                            <h1 class="banner-heading">
+                                <a style="color: white;" <?php if(!empty($slider->getLink())) { echo 'target="_blank"'; } ?> <?php if(!empty($slider->getLink())) { echo 'href="'.$slider->getLink().'"'; } ?> tabindex="0"><?php echo __($slider->getTitle()) ?></a>
+                            </h1>
+                        </div>
+                    </div>
+                <?php endforeach;?>
+            </div>
+        </div>
+    </div>
+<?php endif; ?>

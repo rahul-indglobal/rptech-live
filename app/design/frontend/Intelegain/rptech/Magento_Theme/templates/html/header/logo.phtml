@@ -1,0 +1,43 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+// @codingStandardsIgnoreFile
+
+/**
+ * @var \Magento\Theme\Block\Html\Header\Logo $block
+ */
+?>
+
+<?php $storeName = $block->getThemeName() ? $block->getThemeName() : $block->getLogoAlt(); ?>
+<!--<span data-action="toggle-nav" class="action nav-toggle"><span><?= /* @escapeNotVerified */ __('Toggle Nav') ?></span></span>-->
+<?php
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$customerSession = $objectManager->create('Magento\Customer\Model\Session');
+$storeManager = $objectManager->get('\Magento\Store\Model\StoreManagerInterface');
+$store = $storeManager->getStore();
+if ($customerSession->isLoggedIn() && $customerSession->getCustomer()->getGroupId()==4 ) { ?>
+
+<div class="logo">
+	<a href="<?=$store->getBaseUrl()?>b2b-products" title="<?= /* @escapeNotVerified */ $storeName ?>"><img src="<?= /* @escapeNotVerified */ $block->getLogoSrc() ?>"
+		     title="<?= /* @escapeNotVerified */ $block->getLogoAlt() ?>"
+		     alt="<?= /* @escapeNotVerified */ $block->getLogoAlt() ?>"
+		     <?= $block->getLogoWidth() ? 'width="' . $block->getLogoWidth() . '"' : '' ?>
+		     <?= $block->getLogoHeight() ? 'height="' . $block->getLogoHeight() . '"' : '' ?>
+		     /></a>
+</div>
+
+
+<?php }else{ ?>
+
+
+<div class="logo">
+	<a href="<?= $block->getUrl('') ?>" title="<?= /* @escapeNotVerified */ $storeName ?>"><img src="<?= /* @escapeNotVerified */ $block->getLogoSrc() ?>"
+		     title="<?= /* @escapeNotVerified */ $block->getLogoAlt() ?>"
+		     alt="<?= /* @escapeNotVerified */ $block->getLogoAlt() ?>"
+		     <?= $block->getLogoWidth() ? 'width="' . $block->getLogoWidth() . '"' : '' ?>
+		     <?= $block->getLogoHeight() ? 'height="' . $block->getLogoHeight() . '"' : '' ?>
+		     /></a>
+</div>
+<?php } ?>

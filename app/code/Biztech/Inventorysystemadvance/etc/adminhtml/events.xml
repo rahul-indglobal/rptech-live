@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Biztech, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="catalog_product_save_after">
+        <observer name="biztech_product_warehouse_save" instance="Biztech\Inventorysystemadvance\Observer\ManageafterSave" />
+    </event>
+    <event name="admin_system_config_changed_section_inventorysystem">
+        <observer name="changePrimaryWarehouse" instance="Biztech\Inventorysystemadvance\Observer\ChangePrimaryWarehouse" />
+    </event>
+
+    <event name="update_product_stock_after_stock_received" >
+    	<observer name="updateproductstock" instance="Biztech\Inventorysystemadvance\Observer\ManageafterSave" />
+    </event>
+</config>

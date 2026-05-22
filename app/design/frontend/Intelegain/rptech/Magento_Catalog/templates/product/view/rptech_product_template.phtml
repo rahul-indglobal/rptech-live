@@ -1,0 +1,568 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+// @codingStandardsIgnoreFile
+?>
+<?php /** @var $block \Magento\Catalog\Block\Product\AbstractProduct */ ?>
+<style type="text/css">
+    .swatch-option.image {
+        min-width: 20px;
+    }
+    .infoBTN {
+        width: 20px;
+        height: 20px;
+        border: #696969 1px solid;
+        text-align: center;
+        border-radius: 360px;
+        font-size: 15px;
+        line-height: 18px;
+        color: #696969;
+        position: relative;
+    }
+    .infoContent { box-shadow:0 4px 16px 0 rgba(0,0,0,.2); background:#fff; padding: 12px 16px 0;
+                    font-weight: 500; position:absolute; top:0; }
+    /* Popup container */
+    .popup {
+        position: relative;
+        display: inline-block;
+        cursor: pointer;
+    }
+
+    /* The actual popup (appears on top) */
+    .popup .popuptext {
+        display: none;
+        width: 290px;
+        background-color: #fffafa;
+        color: #424242;
+        text-align: center;
+        border-radius: 6px;
+        padding: 12px 0;
+        position: absolute;
+        z-index: 1;
+        top: 25px;
+        left: -138px;
+        margin-left: 0;
+        margin: 0 auto;
+    }
+
+    /* Popup arrow */
+    .popup .popuptext::after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        margin-left: -5px;
+        border-width: 5px;
+        border-style: solid;
+        border-color: #555 transparent transparent transparent;
+    }
+
+    /* Toggle this class when clicking on the popup container (hide and show the popup) */
+    .popup .show {
+        visibility: visible;
+        -webkit-animation: fadeIn 1s;
+        animation: fadeIn 1s
+    }
+    .detailsWrap {
+        display: inline-block;
+        position: relative;;
+        top: 2px;
+        left: 2px;
+    }
+    /* Add animation (fade in the popup) */
+    @-webkit-keyframes fadeIn {
+        from {opacity: 0;}
+        to {opacity: 1;}
+    }
+
+    @keyframes fadeIn {
+        from {opacity: 0;}
+        to {opacity:1 ;}
+    }
+
+    .headInfo           { padding: 0.575em 1.2em 1em; text-align: left; font-weight: 600; font-size: 1.2em; }
+    .details            { padding: 0 18px; }
+    .details ul         { list-style: none; margin: 0; padding: 0; }
+    .details ul li      { display:block; overflow:hidden; margin-bottom: 0.575em; color:#9a9898; }
+    .details ul li .retail      { FONT-WEIGHT: 600; text-align: left; }
+    .details ul li .retail span     { display:block; font-weight: 500; font-size: 0.875em; }
+    .details ul li .amtBox      {text-decoration: line-through;  text-align: right; }
+    .lastTotal      { border-top: dotted 1px #969696; margin-top: 0.875em !important;  padding-top: 1em;  font-weight: 600; color: #424242 !important; }
+    .details ul li.lastTotal .amtBox    { text-decoration:inherit; }
+    button.btn.action.primary.tocart { background-color: #522663; margin-right: 8px; }
+    /*div.zoomWrapper { height:450px; }*/
+</style>
+<?php
+$product = $block->getProduct();
+$prd_typ = $product->getTypeId();
+$attributeSetId = $product->getAttributeSetId();
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+/** @var  $coll \Magento\Eav\Model\ResourceModel\Entity\Attribute\Collection */
+$groupCollection = $objectManager->create('Magento\Eav\Model\ResourceModel\Entity\Attribute\Group\Collection');
+$groupCollection->addFieldToFilter('attribute_set_id', $attributeSetId);
+$groupCollection->addFieldToFilter('tab_group_code', array('null' => true));
+$groupCollection->setOrder('sort_order', 'ASC');
+$priceHelper = $objectManager->create('Magento\Framework\Pricing\Helper\Data'); // Instance of Pricing Helper
+$customerSession = $objectManager->create('Magento\Customer\Model\Session');
+?>
+
+<?php if ($prd_typ != "bundle") { ?>
+    <span style="display: none" id="prosku"><?php echo $product->getSku(); ?></span>
+    <h1 class="product-title">
+        <?= $block->escapeHtml($product->getName()) ?>
+    </h1>
+    <?php
+    if ($prd_typ == 'configurable') {
+        $_configChild = $product->getTypeInstance()->getUsedProducts($product);
+        foreach ($_configChild as $child) {
+            // echo "<pre>";
+            // print_r($child->getId());
+            // echo "</pre>";
+            $cp_id = $child->getId();
+            $childProduct = $objectManager->create('Magento\Catalog\Model\Product')->load($cp_id);
+            echo "<h1 class='product-title config_child_".$cp_id."' style='display:none;'>".$block->escapeHtml($childProduct->getName())."</h1>";
+        }
+    }
+    ?>
+    <!-- <span id="prosku">Model No : <?php echo $product->getSku(); ?></span>  -->
+    <div class="custom-rating-review">
+        <?php
+        echo $this->getLayout()
+                ->createBlock('Magento\Catalog\Block\Product\View')
+                ->setTemplate('Magento_Catalog::product/view/review.phtml')
+                ->toHtml();
+        ?>
+    </div>
+    <?php if ($product->getData('final_price') > 0): ?>
+        <div class="price">
+            <span class="rs"> <?php
+                if ($prd_typ == 'configurable') {
+                    //$_configChild = $product->getTypeInstance()->getUsedProducts($product);
+                    $getChildId = array();
+                    $i = 0;
+                    foreach ($_configChild as $child) {
+                        $getChildId[] = $child->getSku();
+                        if ($i > 0) {
+                            $style = 'style="display:none;"';
+                        } else {
+                            $style = '';
+                        }
+                        ?>
+                        <span class="<?php echo $child->getSku(); ?> price<?php echo $child->getId(); ?> configPrice" <?php echo $style; ?>>
+                            <?php
+                            if ($customerSession->isLoggedIn() && $customerSession->getCustomer()->getGroupId() == 4) {
+                                echo $priceHelper->currency($child->getData('b2bproductprice'), true, false);
+                            } else {
+                                echo $block->getProductPriceHtml(
+                                        $child,
+                                        \Magento\Catalog\Pricing\Price\FinalPrice::PRICE_CODE,
+                                        \Magento\Framework\Pricing\Render::ZONE_ITEM_VIEW,
+                                        ['price_id_suffix' => '_clone']
+                                );
+                            }
+                            ?>
+                        </span>
+                        <?php
+                        $i++;
+                    }
+                } else { ?>
+                    <span class="configPrice" >
+                        <?php
+                        echo $block->getProductPriceHtml(
+                            $product,
+                            \Magento\Catalog\Pricing\Price\FinalPrice::PRICE_CODE,
+                            \Magento\Framework\Pricing\Render::ZONE_ITEM_VIEW,
+                            ['price_id_suffix' => '_clone']
+                        );
+                        ?>
+                    </span>
+                <?php } ?>
+            </span>
+
+            <!-- <span class="rs2">
+                <?php if ($product->getIsSalable()): ?>
+                    <?= /* @escapeNotVerified */ __('In stock') ?>
+                <?php else: ?>
+                    <strike><?= /* @escapeNotVerified */ __('Out of stock') ?></strike>
+                <?php endif; ?>
+            </span> -->
+            <?php
+            // if ($prd_typ == 'configurable') {
+            //     foreach ($_configChild as $child) {
+            //         $cp_id = $child->getId();
+            //         echo "<span class='rs2 config_rs2_child_".$cp_id."' style='display:none;'>";
+            //         if ($child->getIsSalable()){
+            //             echo /* @escapeNotVerified */ __('In stock');
+            //         } else {
+            //             echo "<strike>"./* @escapeNotVerified */ __('Out of stock')."</strike>";
+            //         }
+            //         echo "</span>";
+            //     }
+            // }
+            ?>
+            <div class="detailsWrap">
+                <!-- start infoBTN -->
+                <!-- <div class="popup" onmouseenter="myFunction()" onmouseleave="myFunction()"><div class="infoBTN"><i class="fa fa-info-circle"></i></div>
+                    <div class="popuptext infoContent" id="myPopup">
+                        <div class="headInfo">Price details</div>
+                        <div class="details">
+                            <ul>
+                                <li>
+                                    <div class="pull-left retail">Maximum Retail Price<span>(incl. of all taxes)</span></div>
+                                    <div class="pull-right <?php if($product->getSpecialPrice()) { echo 'amtBox'; } ?>">
+                                        <?= $priceHelper->currency($product->getPrice(), true, false); ?>
+                                    </div>
+                                    <?php
+                                    if ($prd_typ == 'configurable') {
+                                        foreach ($_configChild as $child) {
+                                            $cp_id = $child->getId();
+                                            echo "<div style='display:none;' class='pull-right config_mrp_child_".$cp_id;
+                                            echo ($child->getSpecialPrice()) ? " amtBox'>" : "'>";
+                                            echo $priceHelper->currency($child->getPrice(), true, false);
+                                            echo "</div>";
+                                        }
+                                    }
+                                    $sapQty = $this->getLayout()->createBlock('\Brainvire\Customization\Block\UpdateQty')->sapQty();
+                                    $stockItem = $product->getExtensionAttributes()->getStockItem();
+                                    $qty = $stockItem->getQty();
+                                    if ($prd_typ != 'configurable') {
+                                        if ($sapQty) {
+                                            ?>
+                                            <div class="pull-left retail">Available Qty : <?= $qty . ' / ' . $sapQty ?></div>
+                                        <?php } else {
+                                            ?>
+                                            <div class="pull-left retail">Available Quantity : <?= $qty ?></div>
+                                        <?php }
+                                    } if ($prd_typ == 'configurable') {
+                                        //$_configChild = $product->getTypeInstance()->getUsedProducts($product);
+                                        foreach ($_configChild as $child) {
+                                            $childProductSku = $child->getSku();
+                                            $stockItem = $objectManager->get("\Magento\CatalogInventory\Api\StockRegistryInterface")->getStockItemBySku($childProductSku);
+                                            $qty = ($sapQty) ?: $stockItem->getQty();
+                                            echo "<div class='pull-left retail config_qty_child_".$child->getId()."' style='display:none;'>Available Quantity : ".$qty."</div>";
+                                        }
+                                    }
+                                    ?>
+                                </li>
+                                <li class="lastTotal">
+                                    <div class="pull-left retail">
+                                        <?php
+                                        if($product->getSpecialPrice()) { echo 'Special Price'; }
+                                        else { echo 'Selling Price'; }
+                                        ?>
+                                    </div>
+                                    <div class="pull-right amtBox">
+                                        <?= $priceHelper->currency($product->getFinalPrice(), true, false); ?>
+                                    </div>
+                                </li>
+                                <?php
+                                if ($prd_typ == 'configurable') {
+                                    foreach ($_configChild as $child) {
+                                        $cp_id = $child->getId();
+                                        echo "<li class='lastTotal config_total_child_".$cp_id."' style='display:none;'>";
+                                        echo "<div class='pull-left retail'>";
+                                        if($child->getSpecialPrice()) { echo 'Special Price'; }
+                                        else { echo 'Selling Price'; }
+                                        echo "</div>";
+                                        echo "<div class='pull-right amtBox'>";
+                                        echo $priceHelper->currency($child->getFinalPrice(), true, false);
+                                        echo "</div>";
+                                        echo "</li>";
+                                    }
+                                }
+                                ?>
+                            </ul>
+                        </div>
+                    </div>
+                </div> -->
+                <!-- end infoBTN -->
+            </div>
+        </div>
+    <?php endif; ?>
+    <!-- <span id="prosku">Model No : <?php echo $product->getSku(); ?></span>  -->
+    <div class="para"><?= $product->getShortDescription(); ?></div>
+    <?php
+        if ($prd_typ == 'configurable') {
+            //$_configChild = $product->getTypeInstance()->getUsedProducts($product);
+            foreach ($_configChild as $child) {
+                $cp_id = $child->getId();
+                $childProduct = $objectManager->create('Magento\Catalog\Model\Product')->load($cp_id);
+                echo "<div class='para config_para_child_".$cp_id."' style='display:none;'>".$childProduct->getDescription()."</div>";
+            }
+        }
+} ?>
+<script>
+// When the user clicks on div, open the popup
+    function myFunction() {
+        var popup = document.getElementById("myPopup");
+        popup.classList.toggle("show");
+    }
+</script>
+<!--<p class="mar-bot">  <b>Pay on Delivery(Cash/Card) </b> eligible <a href="#"> What is this?</a></p>-->
+
+<script type="text/javascript">
+    require(['jquery'],function($){
+        var slick_track_item_width = slick_track_item_width_outer = "";
+        $(document).ready(function(){
+            console.log('Clicked 309');
+            $(document).on("click","div.swatch-attribute > div.swatch-attribute-options > div.swatch-option", function(){
+                console.log('Clicked 311');
+                select_product();
+            });
+            $(document).on("change","div.swatch-attribute > div.swatch-attribute-options > select.swatch-select", function(){
+                select_product();
+            });
+            setTimeout(function (){
+                slick_track_item_width = $("#gallery_01 .slick-track .elevatezoom-gallery.item.slick-slide").first().width();
+                slick_track_item_width_outer = $("#gallery_01 .slick-track .elevatezoom-gallery.item.slick-slide").first().outerWidth();
+                update_zoom();
+            }, 1000);
+
+            var flg_fb = flg_option = 0;
+            var load_interval = setInterval(function(){
+                if($("body").hasClass("page-product-configurable")) {
+                    //console.log("configurable product");
+                    if($("#product-options-wrapper .fieldset .configurable").length) {
+                        //console.log("with simple options");
+                        flg_option = 1;
+                    } else {
+                        //console.log("with swatch options");
+                        if($("#product-options-wrapper .fieldset .swatch-opt .swatch-attribute").length) {
+                            //console.log("Exists now");
+                            flg_option = 1;
+                        } else {
+                            //console.log("Does not exist");
+                        }
+                    }
+                    setTimeout(function() {
+                        flg_fb = 1;
+                    }, 4500);
+                } else {
+                    //console.log("other product");
+                    flg_option = 1;
+                    setTimeout(function() {
+                        flg_fb = 1;
+                    }, 500);
+                }
+
+                    /*if($('.fb_custom_class iframe').contents().find("button#icon-button").first()) {
+                        console.log("Found");
+                        flg_fb = 1;
+                    } else {
+                        console.log("Not Found");
+                    }*/
+
+                if(flg_fb==1 && flg_option==1) {
+                    $('.catalog-product-view .main-content').addClass('content-loaded');
+                    clearInterval(load_interval);
+                }
+            }, 1000);
+
+            var link_signin = $("#review-form a:contains('Sign in')");
+            $(link_signin).click(function(e){
+                e.preventDefault();
+                doLogin();
+            });
+        });
+
+        function select_product()
+        {
+            var selected_options = {};
+            jQuery('div.swatch-attribute').each(function(k,v){
+                var attribute_id    = jQuery(v).attr('attribute-id');
+                var option_selected = jQuery(v).attr('option-selected');
+                // console.log(attribute_id, option_selected);
+                if(!attribute_id || !option_selected){ return; }
+                selected_options[attribute_id] = option_selected;
+            });
+
+            //var product_id_index = jQuery('[data-role=swatch-options]').data('mageSwatchRenderer').options.jsonConfig.index;
+            var found_ids = [];
+            //console.log(product_id_index);
+            // jQuery.each(product_id_index, function(product_id,attributes){
+            //     //console.log(product_id);
+            //     var productIsSelected = function(attributes, selected_options){
+            //         return _.isEqual(attributes, selected_options);
+            //     }
+            //     if(productIsSelected(attributes, selected_options)){
+            //         found_ids.push(product_id);
+            //     }
+            // });
+            if (found_ids.length) {
+                //console.log(found_ids);
+                if(found_ids[0]!=simpleId_old)
+                {
+                    update_product_values(found_ids[0]);
+                }
+            }
+        }
+
+        function update_product_values(simpleId)
+        {
+            var cur_prd = $("input[name='product']").val();
+            /*console.log("old = "+simpleId_old+" and new = "+simpleId);*/
+            if(simpleId && simpleId!=simpleId_old) {
+                /*console.log("processing for "+simpleId);*/
+                //if(val) {
+                //var simpleId=jQuery("input[name=selected_configurable_option]").val();
+                /* PRODUCT NAME/TITLE */
+                $("h1.product-title").hide();
+                $("h1.product-title.config_child_"+simpleId).show();
+
+                /* PRODUCT LABEL */
+                $("div.col-right > div.product-tag").hide();
+                $("div.col-right > div.product-tag.config_label_child_"+simpleId).show();
+
+                /* GALLERY IMAGES */
+                $(".main-slider.mainslide").hide();
+                $(".main-slider.mainslide.images"+simpleId).show();
+                $(".slider-nav").hide();
+                $(".slider-nav.gallery"+simpleId).show();
+                var img_src = $(".main-slider.mainslide.images"+simpleId+" img").attr("src");
+                $("div.zoomContainer").hide();
+                var zoom_cont = $("div.zoomContainer").find("div[style*='"+img_src+"']");
+                $(zoom_cont).parents("div.zoomContainer").show();
+                //$(".main-slider-wrap").hide();
+                //$(".main-slider-"+simpleId).show();
+                //$(".main-slider-"+simpleId).css("visibility", "visible");
+                //$(".main-slider-"+simpleId+".slick-initialized").css("visibility", "visible");
+                //$(".slider-nav-wrap").hide();
+                //$(".slider-nav-"+simpleId).show();
+                //$(".slider-nav-"+simpleId).css("visibility", "visible");
+                //$(".slider-nav-"+simpleId+".slick-initialized").css("visibility", "visible");
+                //$("div.zoomContainer").css({"height":423});
+                //$("div.zoomWrapper").css({"height":423});
+                update_zoom();
+                $(".slick-initialized").slick("refresh");
+
+                /* PRICE */
+                $("div.price > span.rs .configPrice").hide();
+                $("div.price > span.rs .configPrice.price"+simpleId).show();
+
+                /* STOCK STATUS */
+                $("div.price > span.rs2").hide();
+                $("div.price > span.rs2.config_rs2_child_"+simpleId).show();
+
+                /* POPUP PRICE-1 */
+                $("div.details > ul > li:first-child > .pull-right").hide();
+                $("div.details > ul > li:first-child > .pull-right.config_mrp_child_"+simpleId).show();
+
+                /* POPUP QUANTITY */
+                $("div[class*='config_qty_child']").hide();
+                $(".config_qty_child_"+simpleId).show();
+
+                /* POPUP PRICE-2 */
+                $("div.details > ul > li.lastTotal").hide();
+                $("div.details > ul > li.lastTotal.config_total_child_"+simpleId).show();
+
+                /* ADD TO CART/SEND ENQUIRY */
+                $("button.btn.action.primary.tocart").hide();
+                $("a.btn.btn-enq").hide();
+                if($("button#product-addtocart-button-"+simpleId).length>0) {
+                    $("button#product-addtocart-button-"+simpleId).show();
+                    $("div.buynow-button").show();
+                    $("div.field.qty").show();
+                } else if($("a#product"+simpleId).length>0) {
+                    $("a#product"+simpleId).show();
+                    $("div.buynow-button").hide();
+                    $("div.field.qty").hide();
+                }
+
+                /* DESCRIPTION */
+                $("div.para").hide();
+                $("div.config_para_child_"+simpleId).show();
+
+                /* SPECIFICATION */
+                $("div#Specification > table.configurable").hide();
+                $("div#Specification > table#config_specs_child_"+simpleId).show();
+                simpleId_old = simpleId;
+            } else {
+                /* PRODUCT NAME/TITLE */
+                $("h1.product-title").hide();
+                $("h1.product-title").first().show();
+
+                /* PRODUCT LABEL */
+                $("div.col-right > div.product-tag").hide();
+                $("div.col-right > div.product-tag").first().show();
+
+                /* GALLERY IMAGES */
+                $(".main-slider.mainslide").hide();
+                $(".main-slider.mainslide").first().show();
+                $(".slider-nav").hide();
+                $(".slider-nav").first().show();
+                var img_src = $(".main-slider.mainslide img").first().attr("src");
+                $("div.zoomContainer").hide();
+                var zoom_cont = $("div.zoomContainer").find("div[style*='"+img_src+"']");
+                $(zoom_cont).parents("div.zoomContainer").show();
+                $(".slick-initialized").slick("refresh");
+
+                /* STOCK STATUS */
+                $("div.price > span.rs2").hide();
+                $("div.price > span.rs2").first().show();
+
+                /* POPUP PRICE-1 */
+                $("div.details > ul > li > .pull-right").hide();
+                $("div.details > ul > li > .pull-right").first().show();
+
+                /* POPUP QUANTITY */
+                $("div[class*='config_qty_child']").hide();
+
+                /* POPUP PRICE-2 */
+                $("div.details > ul > li.lastTotal").hide();
+                $("div.details > ul > li.lastTotal").first().show();
+
+                /* ADD TO CART/SEND ENQUIRY */
+                $("button.btn.action.primary.tocart").hide();
+                $("div.actions.product-btn > a.btn.btn-enq").hide();
+                if($("button#product-addtocart-button").length>0) {
+                    $("button#product-addtocart-button").show();
+                }
+                else if($("a#product"+cur_prd).length>0) {
+                    $("a#product"+cur_prd).show();
+                }
+                if($("div.buynow-button").length>0) {
+                    $("div.buynow-button").show();
+                }
+                $("div.field.qty").show();
+
+                /* DESCRIPTION */
+                $("div.para").hide();
+                $("div.para").first().show();
+
+                /* SPECIFICATION */
+                $("div#Specification > table.configurable").hide();
+                $("div#Specification > table.configurable").first().show();
+            }
+        }
+
+        function update_zoom()
+        {
+            var img_src = $(".main-slider.mainslide img").first().attr("src");
+            var zoom_cont = $("div.zoomContainer").find("div[style*='"+img_src+"']");
+            var zoom_cont_width = $(zoom_cont).parents("div.zoomContainer").width();
+            var zoom_cont_height = $(zoom_cont).parents("div.zoomContainer").height();
+            /*console.log(zoom_cont_height + " x " +zoom_cont_width);*/
+            $("div.zoomContainer").width(zoom_cont_width).height(zoom_cont_height);
+            $("div.zoomWrapper").width(zoom_cont_width).height(zoom_cont_height);
+            setTimeout(function (){
+                $(".slider-nav .slick-track a.elevatezoom-gallery.item.slick-slide").width(slick_track_item_width);
+                $(".slider-nav .slick-track").width(slick_track_item_width_outer*4);
+            }, 100);
+        }
+
+        var simpleId_old = "";
+        $(".product-options-wrapper select[id^='attribute']").on('change', function() {
+            var val = $(this).val();
+            setTimeout(function (){
+                var simpleId = $("input[name=selected_configurable_option]").val();
+                /*console.log("old = "+simpleId_old+" and new = "+simpleId);*/
+                if(val && simpleId && simpleId!=simpleId_old)
+                {
+                    update_product_values(simpleId);
+                }
+            }, 300);
+        });
+    });
+</script>

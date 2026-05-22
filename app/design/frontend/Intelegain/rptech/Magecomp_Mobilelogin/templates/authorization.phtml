@@ -1,0 +1,43 @@
+<?php
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$customerSession = $objectManager->create('Magento\Customer\Model\Session');
+/** @var $block \Magento\Customer\Block\Account\AuthorizationLink */
+$dataPostParam = '';
+$customClass = "ajaxlogin-login";
+if ($block->isLoggedIn()) {
+    $dataPostParam = sprintf(" data-post='%s'", $block->getPostParams());
+    $customClass = "logoutajax";
+}
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$category = $objectManager->get('Magento\Framework\Registry')->registry('current_category');
+if(!isset($category) || (isset($category) && $category->getName()!="Startups")) {
+?>
+<li class="authorization-link" data-label="<?php echo $block->escapeHtml(__('or')); ?>">
+    <?php
+    if ($customerSession->getStockUpdateAdmin() && $customerSession->getStockUpdateAdmin()==true) {
+        echo "<a class='admin-sign-out'>Sign Out</a>";
+    } else {
+    ?>
+        <a <?php /* @escapeNotVerified */ /*echo $block->getLinkAttributes();*/ ?><?php /* @escapeNotVerified */ /*echo $dataPostParam;*/ ?> class="<?php echo $customClass ?>">
+            <?php echo $block->escapeHtml($block->getLabel()); ?>
+        </a>
+    <?php } if ($block->isLoggedIn()) { ?>
+    <script type="text/javascript">
+        require(['jquery'], function($) {
+            $(document.body).addClass('mobile-loggedin');
+        });    
+    </script>
+    <div class="userProfileDrop">
+        <div class="userProfileDropInner">
+            <div class="userProfiledp">
+                <div class="userName"><i class="fa fa-user-circle"></i><?= $customerSession->getCustomer()->getName(); ?></div>
+                <ul>
+                    <li><a href="<?= $block->getUrl('customer/account') ?>" title="">Dashboard</a></li>
+                    <li><a href="<?= $block->getUrl('customer/account/logout') ?>" title="">Sign Out</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <?php } ?>
+</li>
+<?php } ?>

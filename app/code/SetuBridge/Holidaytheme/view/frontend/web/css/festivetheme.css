@@ -1,0 +1,14 @@
+/** Setubridge Technolabs
+* http://www.setubridge.com/
+* @author SetuBridge
+* @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+**/
+* /* Header Section Light */
+.lights-head { background-image: url(""); background-repeat: repeat-x;  z-index:999;  position: fixed; top: 0; left: 0;}
+.moving-santa{position: absolute;  z-index: 99;}
+.col2-set{position: relative; z-index: 2;}
+/* Footer christmas-tree*/
+.christmas-tree { background-repeat: no-repeat;    position: fixed; bottom: 0px; left:10px;  z-index: 999;}
+.christmas-tree-right { background-repeat: no-repeat;  position: fixed; bottom: 0px;   right:10px; z-index: 999;}
+.xmas_bgimage{ background-repeat: repeat-x; background-position: bottom left;  position:fixed; bottom: 0; left: 0;  z-index:999; }
+

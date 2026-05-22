@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Copyright © Ulmod. All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+	<head>
+         <css src="Ulmod_ScrollToTop::css/um-scrolltotop.css"/>
+		 <css src="Ulmod_ScrollToTop::css/font-awesome.css"/>
+	</head>
+</page>

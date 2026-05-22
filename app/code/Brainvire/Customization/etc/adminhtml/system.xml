@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+   <system>
+      <tab id="brv" translate="label" sortOrder="50">
+         <label>SAP</label>
+      </tab>
+      <section id="brv_customization" showInDefault="1">
+         <tab>brv</tab>
+         <label>SAP Integration</label>
+         <resource>Brainvire_Customization::config_extension</resource>
+         <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Plant And Storage Location Details</label>
+            <field id="api_url" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+               <label>API Url</label>
+            </field>
+            <field id="plant_loc" translate="label" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+               <label>Plant And Storage Loc.</label>
+               <backend_model>Brainvire\Customization\Block\Adminhtml\Config\Backend\ArraySerialized</backend_model>
+               <frontend_model>Brainvire\Customization\Block\Adminhtml\DynamicFieldData</frontend_model>
+            </field>
+         </group>
+      </section>
+   </system>
+</config>

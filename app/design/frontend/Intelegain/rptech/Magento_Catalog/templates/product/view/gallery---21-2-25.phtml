@@ -1,0 +1,168 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+// @codingStandardsIgnoreFile
+
+/**
+ * Product media data template
+ *
+ * @var $block \Magento\Catalog\Block\Product\View\Gallery
+ */
+?>
+<?php
+$product = $block->getProduct();
+$images = $product->getMediaGalleryImages();
+$label_new_status = $this->helper('Rptech\General\Helper\Data')->getLabelNewStatus();
+$label_sale_status = $this->helper('Rptech\General\Helper\Data')->getLabelSaleStatus();
+$label_sold_status = $this->helper('Rptech\General\Helper\Data')->getLabelSoldStatus();
+$label_new = $this->helper('Rptech\General\Helper\Data')->getLabelNewImage();
+$label_sale = $this->helper('Rptech\General\Helper\Data')->getLabelSaleImage();
+$label_sold = $this->helper('Rptech\General\Helper\Data')->getLabelSoldImage();
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$media_url = $objectManager->get('Magento\Store\Model\StoreManagerInterface')->getStore()
+                            ->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
+?>
+<?php if($product->getTypeId()!="bundle") { ?>
+<div class="col-right">
+    <?php
+    $class = '';
+    $stock_item = $objectManager->get('Magento\CatalogInventory\Api\StockRegistryInterface')->getStockItemBySku($product->getSku());
+    if(!$stock_item->getIsInStock()==1) {
+        $class = "product-sold";
+    }
+    else if ($product->getSpecialPrice() && $product->getFinalPrice() == $product->getSpecialPrice() && $product->getIsSalable()) {
+        $class = "product-sale";
+    }
+    else if($product->getNewsFromDate() || $product->getNewsToDate()) {
+        $from_date = date('d/m/Y',strtotime($product->getNewsFromDate()));
+        $to_date = date('d/m/Y',strtotime($product->getNewsToDate()));
+        $today = date('d/m/Y');
+        if($from_date<$today || $to_date>$today || ($from_date<$today && $today<$to_date)) {
+            $class = "product-new";
+        }
+    }
+    ?>
+    <div class="product-tag <?= $class; ?>">
+        <?php
+            if($label_sold_status && !$stock_item->getIsInStock()==1) {
+                echo "<img class='tag-sold' src='".$media_url.'catalog/product/label/'.$label_sold."' />";
+            }
+            else if ($label_sale_status && $product->getSpecialPrice() && $product->getFinalPrice() == $product->getSpecialPrice() && $product->getIsSalable()) {
+                echo "<img class='tag-sale' src='".$media_url.'catalog/product/label/'.$label_sale."' />";
+            }
+            else if($product->getNewsFromDate() || $product->getNewsToDate()) {
+                $from_date = date('d/m/Y',strtotime($product->getNewsFromDate()));
+                $to_date = date('d/m/Y',strtotime($product->getNewsToDate()));
+                $today = date('d/m/Y');
+                if($label_new_status && ($from_date<$today || $to_date>$today || ($from_date<$today && $today<$to_date))) {
+                    echo "<img class='tag-new' src='".$media_url.'catalog/product/label/'.$label_new."' />";
+                }
+            }
+        ?>
+    </div>
+	<div class="main-slider mainslide">
+		<?php foreach ($images as $image) { ?>
+			<a href="<?php echo $image->getUrl() ?>" data-fancybox="gallery" id="fancybox">
+				<img style="border:1px solid #e8e8e6;" id="zoom_03" src="<?php echo $image->getUrl() ?>" data-zoom-image="<?php echo $image->getUrl() ?>" width="500px" />
+			</a>
+			<?php
+			break;
+			}
+		?>
+	</div>
+	<div id="gallery_01" class="slider-nav mainslide">
+		<?php
+		$i = 0;
+		foreach ($images as $image) {
+			?>
+			<a href="<?php echo $image->getUrl() ?>" data-fancybox="gallery" class="elevatezoom-gallery fancybox item <?php echo($i == 0) ? 'active' : ''; ?>" data-update="" data-image="<?php echo $image->getUrl() ?>"
+			    data-zoom-image="<?php echo $image->getUrl() ?>">
+				<img src="<?php echo $image->getUrl() ?>"  />
+			</a>
+			<?php
+			$i++;
+		}
+		?>
+	</div>
+
+	<?php
+	if ($product->getTypeId() == 'configurable-x') {
+		$_configChild = $product->getTypeInstance()->getUsedProducts($product);
+		//$helper = $this->helper('Rptech\Product\Helper\Data');
+		foreach ($_configChild as $key=>$child) {
+			//echo $key."__".$child->getId()."__".$child->getSku();
+			$cp_id = $child->getId();
+            $childProduct = $objectManager->create('Magento\Catalog\Model\Product')->load($cp_id);
+			$images = $childProduct->getMediaGalleryImages();
+			?>
+			<?php
+		    $class = '';
+		    $stock_item = $objectManager->get('Magento\CatalogInventory\Api\StockRegistryInterface')->getStockItemBySku($childProduct->getSku());
+		    if(!$stock_item->getIsInStock()==1) {
+		        $class = "product-sold";
+		    }
+		    else if ($childProduct->getSpecialPrice() && $childProduct->getFinalPrice() == $childProduct->getSpecialPrice() && $childProduct->getIsSalable()) {
+		        $class = "product-sale";
+		    }
+		    else if($childProduct->getNewsFromDate() || $childProduct->getNewsToDate()) {
+		        $from_date = date('d/m/Y',strtotime($childProduct->getNewsFromDate()));
+		        $to_date = date('d/m/Y',strtotime($childProduct->getNewsToDate()));
+		        $today = date('d/m/Y');
+		        if($from_date<$today || $to_date>$today || ($from_date<$today && $today<$to_date)) {
+		            $class = "product-new";
+		        }
+		    }
+		    ?>
+			<div class="product-tag config_label_child_<?= $cp_id; ?> <?= $class; ?>" style="display:none;">
+		        <?php
+		            if($label_sold_status && !$stock_item->getIsInStock()==1) {
+		                echo "<img class='tag-sold' src='".$media_url.'catalog/product/label/'.$label_sold."' />";
+		            }
+		            else if ($label_sale_status && $childProduct->getSpecialPrice() && $childProduct->getFinalPrice() == $childProduct->getSpecialPrice() && $childProduct->getIsSalable()) {
+		                echo "<img class='tag-sale' src='".$media_url.'catalog/product/label/'.$label_sale."' />";
+		            }
+		            else if($childProduct->getNewsFromDate() || $childProduct->getNewsToDate()) {
+		                $from_date = date('d/m/Y',strtotime($childProduct->getNewsFromDate()));
+		                $to_date = date('d/m/Y',strtotime($childProduct->getNewsToDate()));
+		                $today = date('d/m/Y');
+		                if($label_new_status && ($from_date<$today || $to_date>$today || ($from_date<$today && $today<$to_date))) {
+		                    echo "<img class='tag-new' src='".$media_url.'catalog/product/label/'.$label_new."' />";
+		                }
+		            }
+		        ?>
+		    </div>
+			<div class="main-slider mainslide <?php echo $child->getSku(); ?>  <?php echo 'images' . $child->getId(); ?>" style="display: block;">
+				<?php
+				foreach ($images as $image) {
+					?>
+					<a href="<?php echo $image->getUrl() ?>" class="fancybox" data-fancybox="gallery<?php echo $child->getId(); ?>" id="fancybox-<?php echo $child->getId(); ?>">
+						<img style="border:1px solid #e8e8e6;" id="zoom_ccp_<?php echo $key; //$child->getId(); ?>" src="<?php echo $image->getUrl() ?>" data-zoom-image="<?php echo $image->getUrl() ?>" width="500px" />
+					</a>
+					<?php
+					break;
+					}
+					?>
+			</div>
+			<div id="gallery_ccp_<?php echo $key; //$child->getId(); ?>" class="slider-nav mainslide <?php echo $child->getSku(); ?>  <?php echo 'gallery' . $child->getId(); ?>" style="display: none;">
+				<?php
+				$k = 0;
+				foreach ($images as $image) {
+					?>
+					<a href="<?php echo $image->getUrl() ?>" data-fancybox="gallery<?php echo $child->getId(); ?>" class="elevatezoom-gallery fancybox item <?php echo($i == 0) ? 'active' : ''; ?>" data-update="" data-image="<?php echo $image->getUrl() ?>"
+					    data-zoom-image="<?php echo $image->getUrl() ?>">
+						<img src="<?php echo $image->getUrl() ?>"  />
+					</a>
+					<?php
+					$k++;
+				}
+				?>
+			</div>
+			<?php
+			$images = null;
+		}
+	}
+	?>
+</div>
+<?php } ?>

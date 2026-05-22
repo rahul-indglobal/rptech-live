@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!--
+/** Grid menu xml
+ * @category  Managemedia_Rpmedia 
+ * @package   Managemedia_Rpmedia
+ * @author    Lalita Rajput
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+<!--        <add id="Managemedia_Rpmedia::manager" title="Media Management" module="Managemedia_Rpmedia" sortOrder="10" resource="Managemedia_Rpmedia::manager" />
+        <add id="Managemedia_Rpmedia::add_row" title="Media List" module="Managemedia_Rpmedia" sortOrder="20" parent="Managemedia_Rpmedia::manager" action="rpmedia/grid" resource="Managemedia_Rpmedia::add_row"/>-->
+    </menu>
+</config>

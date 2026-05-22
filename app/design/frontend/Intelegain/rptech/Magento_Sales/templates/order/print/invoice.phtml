@@ -1,0 +1,406 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+// @codingStandardsIgnoreFile
+?>
+<?php $_order = $block->getOrder() ?>
+<?php $_invoice = $block->getInvoice() ?>
+<?php if ($_invoice): ?>
+    <?php $_invoices = [$_invoice]; ?>
+<?php else: ?>
+    <?php $_invoices = $_order->getInvoiceCollection() ?>
+<?php endif; ?>
+
+<?php $_items = $_invoice->getItemsCollection(); ?>
+
+<?php foreach ($_invoices as $_invoice): ?>
+    <!DOCTYPE html>
+    <html>
+        <head>
+            <title></title>
+            <style type="text/css">
+
+            </style>
+        </head>
+        <body>
+
+
+            <table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="white">
+                <tr>
+                    <td >
+                        <table width="100%" border="0" cellpadding="5" cellspacing="0">
+                            <tr>
+                                <td align="left" style="font-size: 12px; font-family:Tahoma;font-weight:bold;">Tax Invoice cum Delivery Challan</td>
+                                <td align="right" style="font-size: 12px; font-family:Tahoma;font-weight:normal;">(Original)</td>
+                            </tr>
+                        </table>
+                    </td>
+
+                </tr>
+                <tr>
+                    <td>
+                        <table width="100%" border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse;">
+                            <tr>
+                                <td>
+                                    <table width="100%" cellpadding="10" border="1" style="border-collapse: collapse;" border-color="#333">
+                                        <tr>
+                                            <td width="15%" valign="middle" rowspan="2">
+                                                <img width="150" src="http://magento-1139921-5320766.cloudwaysapps.com/images/logo.png">
+                                            </td>
+                                            <td width="25%" rowspan="2" style="font-size: 12px; font-family:Tahoma;font-weight:normal;padding: 4px;">
+                                                RP tech India <br><small>(A Division of Rashi Peripherals Pvt Ltd)</small><br>Regd Office : Ariisto House, 5th Floor, Telli Galli, Andheri (E), Mumbai-400069, INDIA - CIN: U30007MH1989PTC051039
+                                            </td>
+                                            <td width="30%" valign="top" style="padding:4px">
+                                                <table width="100%">
+                                                    <tr>
+                                                        <td width="50%" style="font-size: 12px; font-family:Tahoma;font-weight:bold;">Date:</td>
+                                                        <td width="50%" style="font-size: 12px; font-family:Tahoma;font-weight:normal;"><?= date('d.m.Y', strtotime($_invoice->getCreatedAt())) ?></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td width="50%" style="font-size: 12px; font-family:Tahoma;font-weight:bold;">Invoice Number:</td>
+                                                        <td width="50%" style="font-size: 12px; font-family:Tahoma;font-weight:normal;"> <?= /* @escapeNotVerified */ $_invoice->getIncrementId() ?></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td width="50%" style="font-size: 12px; font-family:Tahoma;font-weight:bold;">Reference Number:</td>
+                                                        <td width="50%" style="font-size: 12px; font-family:Tahoma;font-weight:normal;"> - </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td width="50%" style="font-size: 12px; font-family:Tahoma;font-weight:bold;">Delivery Number: </td>
+                                                        <td width="50%" style="font-size: 12px; font-family:Tahoma;font-weight:normal;"> - </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                            <td width="30%" valign="top" style="padding:4px">
+                                                <table width="100%">
+                                                    <tr>
+                                                        <td width="50%" style="font-size: 12px; font-family:Tahoma;font-weight:bold;">Customer Code:</td>
+                                                        <td width="50%" style="font-size: 12px; font-family:Tahoma;font-weight:normal;"> 8000000000</td>
+                                                    </tr>
+    <!--                                                <tr>
+                                                        <td width="50%" style="font-size: 12px; font-family:Tahoma;font-weight:bold;">Customer PO:</td>
+                                                        <td width="50%" style="font-size: 12px; font-family:Tahoma;font-weight:normal;">NVDLUC01031905886</td>
+                                                    </tr>-->
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td valign="top" style="padding:4px">
+                                                <table width="100%">
+                                                    <tr>
+                                                        <td width="50%" style="font-size: 12px; font-family:Tahoma;font-weight:bold;">Shipping Terms: </td>
+                                                        <td width="50%" style="font-size: 12px; font-family:Tahoma;font-weight:normal;"> - </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td width="50%" style="font-size: 12px; font-family:Tahoma;font-weight:bold;">Doc No:</td>
+                                                        <td width="50%" style="font-size: 12px; font-family:Tahoma;font-weight:normal;"> - </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td width="50%" style="font-size: 12px; font-family:Tahoma;font-weight:bold;">Carrier Name:</td>
+                                                        <td width="50%" style="font-size: 12px; font-family:Tahoma;font-weight:normal;"> - </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                            <td valign="top" style="padding:4px"> 
+                                                <table width="100%">
+                                                    <tr>
+                                                        <td width="50%" style="font-size: 12px; font-family:Tahoma;font-weight:bold;">Terms of Payment:</td>
+                                                        <td width="50%" style="font-size: 12px; font-family:Tahoma;font-weight:normal;">  <?= $block->getPaymentInfoHtml() ?></td>
+                                                    </tr>
+    <!--             B2B work flow                                   <tr>
+                                                        <td width="50%" style="font-size: 12px; font-family:Tahoma;font-weight:bold;">Due Date:</td>
+                                                        <td width="50%" style="font-size: 12px; font-family:Tahoma;font-weight:normal;"> 02.03.2019</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td width="50%" style="font-size: 12px; font-family:Tahoma;font-weight:bold;">Bank:</td>
+                                                        <td width="50%" style="font-size: 12px; font-family:Tahoma;font-weight:normal;"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td width="50%" style="font-size: 12px; font-family:Tahoma;font-weight:bold;">Cheque Number:</td>
+                                                        <td width="50%" style="font-size: 12px; font-family:Tahoma;font-weight:normal;">****</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td width="50%" style="font-size: 12px; font-family:Tahoma;font-weight:bold;"> Date:</td>
+                                                        <td width="50%" style="font-size: 12px; font-family:Tahoma;font-weight:normal;"></td>
+                                                    </tr>-->
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>							
+                            </tr>
+                            <tr>
+                                <td>
+                                    <table width="100%" cellpadding="10" border="1" style="border-collapse: collapse;" border-color="#333">
+                                        <tr>
+                                            <td width="40%">
+                                                <table width="100%">
+                                                    <tr>
+                                                        <td style="font-size: 12px; font-family:Tahoma;font-weight:normal;padding: 4px;">
+                                                            SUPPLIED FROM: <br>
+                                                            RP tech India- Rashi Complex, 'A' Building, Survey 186,Dongaripada,Poman Village,Vasai Bhiwandi Rd Thane - 401208 - Maharashtra<br/>
+                                                            Tel. No. : 0250-2450261.<br/>
+                                                            GSTIN : 27AAACR2162H1ZK
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                            <td width="30%">
+                                                <table width="100%">
+                                                    <tr>
+                                                        <td style="font-size: 12px; font-family:Tahoma;font-weight:normal;padding: 4px;">
+                                                            BILL TO (Place of Supply) : <br/>
+                                                            <?php $_billing = $_invoice->getbillingAddress() ?>
+                                                            <address style="margin-bottom:0;"><?= /* @escapeNotVerified */ $block->formatAddress($_order->getBillingAddress(), 'html') ?></address>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                            <td width="30%">
+                                                <table width="100%">
+                                                    <tr>
+                                                        <td style="font-size: 12px; font-family:Tahoma;font-weight:normal;padding: 4px;">
+                                                            SHIP TO : <br/>
+                                                            <?php if ($_order->getShippingDescription()): ?>
+                                                                <?= $block->escapeHtml($_order->getShippingDescription()) ?>
+                                                            <?php else: ?>
+                                                                <?= /* @escapeNotVerified */ __('No shipping information available') ?>
+                                                            <?php endif; ?>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <table width="100%" border="1" bordercolr="#333" cellpadding="5" bordercolor="#333" style="border-collapse: collapse;">
+                                        <tr>
+                                            <th width="10%" height="24px" style="font-size: 12px; font-family:Tahoma;font-weight:bold;padding: 4px;text-align: center;" rowspan="2" align="center">Product Code</th>
+                                            <th width="25%" height="24px" style="font-size: 12px; font-family:Tahoma;font-weight:bold;padding: 4px;text-align: center;" rowspan="2" align="center">Product Description</th>
+                                            <th width="5%" height="24px" style="font-size: 12px; font-family:Tahoma;font-weight:bold;padding: 4px;text-align: center;" rowspan="2" align="center">Qty</th>
+                                            <th width="7.5%" height="24px" style="font-size: 12px; font-family:Tahoma;font-weight:bold;padding: 4px;text-align: center;" rowspan="2" align="center">Unit</th>
+                                            <th width="7.5%" height="24px" style="font-size: 12px; font-family:Tahoma;font-weight:bold;padding: 4px;text-align: center;" rowspan="2" align="center">Total Value</th>
+                                            <th width="7.5%" height="24px" style="font-size: 12px; font-family:Tahoma;font-weight:bold;padding: 4px;text-align: center;" rowspan="2" align="center">Discount</th>
+                                            <th width="7.5%" height="24px" style="font-size: 12px; font-family:Tahoma;font-weight:bold;padding: 4px;text-align: center;" rowspan="2" align="center">Freight</th>
+                                            <th width="10%" height="24px" style="font-size: 12px; font-family:Tahoma;font-weight:bold;padding: 4px;text-align: center;" rowspan="2" align="center">Taxable Value</th>
+                                            <th width="20%" height="24px" style="font-size: 12px; font-family:Tahoma;font-weight:bold;padding: 4px;text-align: center;" colspan="3" align="center">Taxes</th>
+                                        </tr>
+                                        <tr>
+                                            <th height="22px" style="font-size: 12px; font-family:Tahoma;font-weight:bold;padding: 4px;text-align: center;" align="center">Type</th>
+                                            <th height="22px" style="font-size: 12px; font-family:Tahoma;font-weight:bold;padding: 4px;text-align: center;" align="center">Rate</th>
+                                            <th height="22px" style="font-size: 12px; font-family:Tahoma;font-weight:bold;padding: 4px;text-align: center;" align="center">Tax Amt.</th>
+                                        </tr>
+                                        <?php foreach ($_items as $_item):
+                                          // echo "<pre>"; print_r($_item->getData());die;
+                                            
+                                            ?>
+                                            <?php if (!$_item->getOrderItem()->getParentItem()): ?>
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="font-size: 12px; font-family:Tahoma;font-weight:normal;padding: 4px;" align="center"><?= $_item->getSku() ?></td>
+                                                        <td style="font-size: 12px; font-family:Tahoma;font-weight:normal;padding: 4px;" align="center"> <?= $_item->getName() ?></td>
+                                                        <td style="font-size: 12px; font-family:Tahoma;font-weight:normal;padding: 4px;" align="center"> <?= $_item->getQty() ?></td>
+                                                        <td style="font-size: 12px; font-family:Tahoma;font-weight:normal;padding: 4px;" align="center"><?= $_item->getPrice() ?></td>
+                                                        <td style="font-size: 12px; font-family:Tahoma;font-weight:normal;padding: 4px;" align="center"><?= $_item->getRowTotalInclTax() ?></td>
+                                                        <td style="font-size: 12px; font-family:Tahoma;font-weight:normal;padding: 4px;" align="center"><?= $_item->getDiscountAmount() ?></td>
+                                                        <td style="font-size: 12px; font-family:Tahoma;font-weight:normal;padding: 4px;" align="center">-</td>
+                                                        <td style="font-size: 12px; font-family:Tahoma;font-weight:normal;padding: 4px;" align="center"><?= $_item->getRowTotalInclTax() ?></td>
+                                                        <td style="font-size: 12px; font-family:Tahoma;font-weight:normal;padding: 4px;" align="center">-</td>
+                                                        <td style="font-size: 12px; font-family:Tahoma;font-weight:normal;padding: 4px;" align="center"><?= $_item->getTaxPercent() ?></td>
+                                                        <td style="font-size: 12px; font-family:Tahoma;font-weight:normal;padding: 4px;" align="center"><?= $_item->getTaxAmount() ?></td>
+                                                    </tr>
+
+                                                </tbody>
+                                            <?php endif; ?>
+                                        <?php endforeach; ?>
+                                        <tr>
+
+                                            <td colspan="2" style="font-size: 12px; font-family:Tahoma;font-weight:bold;padding: 4px;">Total</td>
+                                            <td align="center" style="font-size: 12px; font-family:Tahoma;font-weight:normal;padding: 4px;"><?=$_order->getData('total_qty_ordered');;?></td>
+                                            <td align="center" style="font-size: 12px; font-family:Tahoma;font-weight:normal;padding: 4px;"><?=$_order->getSubtotal()?></td>
+                                            <td align="center" style="font-size: 12px; font-family:Tahoma;font-weight:normal;padding: 4px;"><?=$_order->getSubtotal()?></td>
+                                            <td align="center" style="font-size: 12px; font-family:Tahoma;font-weight:normal;padding: 4px;"></td>
+                                            <td align="center" style="font-size: 12px; font-family:Tahoma;font-weight:normal;padding: 4px;"><?=$_order->getShippingAmount();?></td>
+                                            <td align="center" style="font-size: 12px; font-family:Tahoma;font-weight:normal;padding: 4px;">-</td>
+                                            <td align="center" style="font-size: 12px; font-family:Tahoma;font-weight:normal;padding: 4px;"></td>
+                                            <td align="center" style="font-size: 12px; font-family:Tahoma;font-weight:normal;padding: 4px;"></td>
+                                            <td align="center" style="font-size: 12px; font-family:Tahoma;font-weight:normal;padding: 4px;"></td>
+
+                                        </tr>
+
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <table width="100%" border="1" cellpadding="6" style="border-collapse: collapse;" bordercolor="#333">
+                                        <tr>
+                                            <td width="35%" style="font-size: 12px; font-family:Tahoma;font-weight:bold;padding: 4px;">Total Invoice Value</td>
+                                            <td width="35%" style="font-size: 12px; font-family:Tahoma;font-weight:bold;padding: 4px;" align="center"><?=createFullWordOrdinal(round($_order->getGrandTotal()));?> ONLY  </td>
+                                            <td width="30%" style="font-size: 12px; font-family:Tahoma;font-weight:bold;padding: 4px;" align="right"><?=$_order->getGrandTotal()?></td>
+                                        </tr>
+                                        <tr>
+                                            <td width="35%" style="font-size: 12px; font-family:Tahoma;font-weight:bold;padding: 4px;">Tax Amount subject to Reverse Charge</td>
+                                            <td width="65%" colspan="2"></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="3" style="font-size: 12px; font-family:Tahoma;font-weight:bold;padding: 4px;">Received in good condition with MRP sticker (Name/Signature/Date/Seal)</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <table width="100%" border="1" cellpadding="10" style="border-collapse: collapse;">
+                                        <tr>
+                                            <td width="70%" style="font-size: 12px; font-family:Tahoma;font-weight:normal;padding: 4px;">
+                                                Terms of Payment : (1) Interest @ 2% p.m.+GST will be payable on payment beyond due date. Penalty for cheque bounce will be Rs1000+GST & Penal interest will also be payable on bounced cheque amount from due date to the date of realization. (2) In case of non payment of invoice by buyer, RP tech India shall exercise the rights of Unpaid Seller w.r.t lien of goods.<br/>
+                                                Warranty : Carry in warranty against manufacturing defects only. Products under warranty will be either repaired or replaced at sole discretion of RP tech India and according to the standard warranty policy of the Manufacturer. Customers are required to approach the ASPs for those products for which manufacturers are Supporting Directly. More details on the warranty can be viewed at our website. magento-1139921-5320766.cloudwaysapps.com. RP tech India reserves the right to reject any material received for warranty without manufacturer's original packing. Goods sold will be accepted for warranty repair/replacement only if they are in good physical condition. Products received with broken/burnt pins, pen/pencil markings, cracks, missing/tampered components or tampered warranty stickers will be rejected and considered warranty void. Goods once sold cannot be returned without a valid RMA(Returned Materials Authorization) issued by RP tech India
+                                            </td>
+                                            <td width="30%" style="padding: 4px;">
+                                                <table width="100%" cellpadding="5">
+                                                    <tr>
+                                                        <td align="center" style="font-size: 12px; font-family:Tahoma;font-weight:normal;">For <strong>RP tech India</strong></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>&nbsp;</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>&nbsp;</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td align="center" style="font-size: 12px; font-family:Tahoma;font-weight:normal;">Authorised Signatory</td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <table cellpadding="5" cellspacing="0" width="100%">
+                            <tr>
+                            <table width="100%">
+                                <tr>
+                                    <td width="33.33%" align="left" style="font-size: 12px; font-family:Tahoma;font-weight:normal;">
+                                        E. & O. E
+                                    </td>
+                                    <td width="33.33%" align="center" style="font-size: 12px; font-family:Tahoma;font-weight:normal;">
+                                        Subject to Mumbai Jurisdiction
+                                    </td>
+                                    <td width="33.33%" align="right" style="font-size: 12px; font-family:Tahoma;font-weight:normal;">
+                                        Page 1 of 1
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3" style="font-size: 12px; font-family:Tahoma;font-weight:normal;">This is computer generated invoice & does not require any signature</td>
+                                </tr>
+                            </table>
+
+                </tr>
+            </table>
+        </td>
+    </tr>
+    </table>
+
+
+    </body>
+    </html>
+<?php endforeach; ?>
+
+    
+    <?php 
+    function createFullWordOrdinal($num)
+{
+    $ones = array(
+0 =>"ZERO", 
+1 => "ONE", 
+2 => "TWO", 
+3 => "THREE", 
+4 => "FOUR", 
+5 => "FIVE", 
+6 => "SIX", 
+7 => "SEVEN", 
+8 => "EIGHT", 
+9 => "NINE", 
+10 => "TEN", 
+11 => "ELEVEN", 
+12 => "TWELVE", 
+13 => "THIRTEEN", 
+14 => "FOURTEEN", 
+15 => "FIFTEEN", 
+16 => "SIXTEEN", 
+17 => "SEVENTEEN", 
+18 => "EIGHTEEN", 
+19 => "NINETEEN",
+"014" => "FOURTEEN" 
+); 
+$tens = array( 
+0 => "ZERO",
+1 => "TEN",
+2 => "TWENTY",
+3 => "THIRTY", 
+4 => "FORTY", 
+5 => "FIFTY", 
+6 => "SIXTY", 
+7 => "SEVENTY", 
+8 => "EIGHTY", 
+9 => "NINETY" 
+); 
+$hundreds = array( 
+"HUNDRED", 
+"THOUSAND", 
+"MILLION", 
+"BILLION", 
+"TRILLION", 
+"QUARDRILLION" 
+); /*limit t quadrillion */
+$num = number_format($num,2,".",","); 
+$num_arr = explode(".",$num); 
+$wholenum = $num_arr[0]; 
+$decnum = $num_arr[1]; 
+$whole_arr = array_reverse(explode(",",$wholenum)); 
+krsort($whole_arr,1); 
+$rettxt = ""; 
+foreach($whole_arr as $key => $i){
+	
+while(substr($i,0,1)=="0")
+		$i=substr($i,1,5);
+if($i < 20){ 
+/* echo "getting:".$i; */
+$rettxt .= $ones[$i]; 
+}elseif($i < 100){ 
+if(substr($i,0,1)!="0")  $rettxt .= $tens[substr($i,0,1)]; 
+if(substr($i,1,1)!="0") $rettxt .= " ".$ones[substr($i,1,1)]; 
+}else{ 
+if(substr($i,0,1)!="0") $rettxt .= $ones[substr($i,0,1)]." ".$hundreds[0]; 
+if(substr($i,1,1)!="0")$rettxt .= " ".$tens[substr($i,1,1)]; 
+if(substr($i,2,1)!="0")$rettxt .= " ".$ones[substr($i,2,1)]; 
+} 
+if($key > 0){ 
+$rettxt .= " ".$hundreds[$key]." "; 
+}
+} 
+if($decnum > 0){ 
+$rettxt .= " and "; 
+if($decnum < 20){ 
+$rettxt .= $ones[$decnum]; 
+}elseif($decnum < 100){ 
+$rettxt .= $tens[substr($decnum,0,1)]; 
+$rettxt .= " ".$ones[substr($decnum,1,1)]; 
+} 
+} 
+return $rettxt; 
+}
+    
+    
+    
+    ?>

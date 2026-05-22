@@ -1,0 +1,28 @@
+{{template config_path="design/email/header_template"}}
+<!--@subject {{trans "Business Opprotunities Enquiry mail received by %name" name=$name}}  @-->
+<p>{{trans "We have received a Business Opprotunities Enquiry from user. Following is the details."}}</p>
+<table>
+    <tr>
+        <th>Name</th>
+        <td>{{trans ": %name." name=$name}}</td>
+    </tr>
+    <tr>
+        <th>Email</th>
+        <td>{{trans ": %email." email=$email}}</td>
+    </tr>
+    <tr>
+        <th>Mobile No.</th>
+        <td>{{trans ": %mobile." mobile=$mobile}}</td>
+    </tr>
+    <tr>
+        <th>City</th>
+        <td>{{trans ": %city." city=$city}}</td>
+    </tr>
+    <tr>
+        <th>Message</th>
+        <td>{{trans ": %message." message=$message}}</td>
+    </tr>
+</table>
+<br>
+{{trans "The Enquiry is submitted successfully."}}
+{{template config_path="design/email/footer_template"}}

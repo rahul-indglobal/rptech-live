@@ -1,0 +1,296 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+// @codingStandardsIgnoreFile
+?>
+<?php
+/**
+ * Top menu for store
+ *
+ * @var $block \Magento\Theme\Block\Html\Topmenu
+ */
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$customerSession = $objectManager->create('Magento\Customer\Model\Session');
+
+
+$storeManager = $objectManager->get('\Magento\Store\Model\StoreManagerInterface');
+$store = $storeManager->getStore();
+
+$subcategory = $objectManager->create('Magento\Catalog\Model\Category')->load(2);           
+$subcats = $subcategory->getChildrenCategories();
+//$store->getBaseUrl();
+?>
+<style>
+/* width */
+::-webkit-scrollbar {
+  width: 5px; border-radius:10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}
+.sidebar-sm #sidebar, .sidebar-sm #navigation			{ width:280px;}
+#sidebar .panel-group .panel > .panel-heading,
+#sidebar .panel-group .panel .panel-title > a.collapsed { background-color: #a02a7e;}
+.sidebar-sm #navigation			{ background-color: #fff;}
+#sidebar .panel-group .panel > .panel-heading    			{ width:280px;}
+#sidebar .panel-group .panel > .panel-heading .panel-title > a { height: 40px;padding: 8px 12px 9px;}
+#sidebarNav.panel-collapse {
+	max-height: 500px;
+	overflow-y: scroll;
+	overflow-x: hidden;
+	direction: rtl;
+	margin-left: -5px;
+}
+
+
+.sidebar-sm .btn-menu {
+	color: #fff;
+	padding: 9px 12px;
+	display: block;
+	background-color: transparent;
+	border: none;
+}
+#sidebar #navigation > li{
+	float: left;
+	width: 100%;
+	text-align: left;
+	background-color: #fff;
+	margin-bottom: 0;
+	/*border-top: 1px solid transparent;
+	border-bottom: 1px solid transparent;*/
+}
+#sidebar #navigation > li a{
+	color: #1d1d1d;
+	position: relative;
+	font-size: 14px;
+	/*padding: 11px 25px 11px 16px;*/
+	text-transform: capitalize;
+	text-decoration: none;
+	/*transition: .3s;*/ width:80%; display: inline-block;
+}
+
+.sidebar-sm #sidebar #navigation > li:hover i:last-of-type,
+.sidebar-xs #sidebar #navigation > li:hover i:last-of-type {
+  /*display: none*/
+	cursor: pointer;
+	position: absolute;
+	top: 0;
+	right: 0;
+	padding:11px 21px 11px 20px;
+	z-index: 1;
+	font-size: 14px;
+	line-height: 2.42857143; /*background-color: rgba(0,0,0,.05);*/
+}
+.sidebar-sm #sidebar #navigation > li:hover a, 
+.sidebar-xs #sidebar #navigation > li:hover a,
+.sidebar-sm #sidebar #navigation > li:focus a, 
+.sidebar-xs #sidebar #navigation > li:focus a,
+.sidebar-sm #sidebar #navigation > li:active a, 
+.sidebar-xs #sidebar #navigation > li:active a,
+.sidebar-sm #sidebar #navigation > li.active a, 
+.sidebar-xs #sidebar #navigation > li.active a				{ background-color: #a02a7e;  color: #fff;  border-color: #a02a7e;}				
+															
+.sidebar-sm #sidebar #navigation > li:hover, 
+.sidebar-xs #sidebar #navigation > li:hover,
+.sidebar-sm #sidebar #navigation > li:focus, 
+.sidebar-xs #sidebar #navigation > li:focus,
+.sidebar-sm #sidebar #navigation > li:active, 
+.sidebar-xs #sidebar #navigation > li:active,
+.sidebar-sm #sidebar #navigation > li.active, 
+.sidebar-xs #sidebar #navigation > li.active			{ background-color: #a02a7e;  color: #fff;  border-color: #a02a7e;}
+
+#sidebar .panel-group .panel > .panel-heading, #sidebar .panel-group .panel .panel-title > a.collapsed {background-color: #a02a7e;padding-left: 1.6em;color: #fff;font-family: 'Roboto', sans-serif;text-transform: inherit; font-weight:400;}
+#sidebar .panel-group .panel > .panel-heading .panel-title > a > i { position: absolute;
+    font-size: 1.3em;
+    color: #fff;
+    /*left: -10px;*/
+    right: inherit;
+    text-align: center;
+    top: 8px; }
+
+#sidebar .panel-group .panel > .panel-heading .panel-title > a {
+	display: block;
+	position: relative;
+	padding: 15px 15px 15px 30px;
+	margin: 0 !important;
+	cursor: pointer;
+	height: 60px;
+	color: rgba(255, 255, 255, 0.9);
+	text-decoration: none;
+}
+.panel .panel-heading .panel-title > a span 		{  margin:2px 10px; font-size: 16px; color: rgba(255, 255, 255, 0.9);}
+
+.sidebar-sm #sidebar #navigation > li > ul,
+.sidebar-sm #sidebar #navigation > li li.submenu > ul				{ border-left:#f1ecec 1px solid; box-shadow:rgba(0,0,0,0.1) 0px 10px 10px}
+
+.sidebar-sm #sidebar #navigation > li li.submenu > ul			{ background-color:#fff;}
+.sidebar-sm #sidebar #navigation > li > ul,
+.sidebar-sm #sidebar #navigation > li > ul li,
+.sidebar-sm #sidebar #navigation > li > ul li a 		{ background-color:#fff !important;}
+.sidebar-sm #sidebar #navigation > li > ul li a 		{ color: #1d1d1d !important; position: relative; padding: 11px 25px 11px 16px;
+	text-transform: capitalize;  text-decoration: none; font-size: 14px;/* transition: .3s;*/}
+	
+	#navigation li > ul li i:last-of-type			{ font-size: 1em; color:#731257;  position: absolute;  right: 0px;}
+
+	
+.sidebar-sm #sidebar #navigation > li > ul li a { color: #1d1d1d; background-color:#fff; position: relative;  padding: 11px 25px 11px 16px;
+	text-transform: capitalize;  text-decoration: none; /*transition: .3s;*/ }
+	
+	.sidebar-sm #sidebar #navigation > li > ul li a:hover,
+	.sidebar-sm #sidebar #navigation > li > ul li a:focus 		{ color: #731257 !IMPORTANT;}	
+	#sidebar-wrap .panel .panel-heading .panel-title > a.collapsed span 	{ color: #fff;}
+
+	#sidebar .panel-group .panel > .panel-heading .panel-title > a {
+    height: 40px !important;
+    padding: 8px 12px 9px 30px !important;}
+
+    .sidebar-sm #sidebar #navigation > li.dropdown i.fa-plus:before, 
+     .sidebar-sm #sidebar #navigation > li.dropdown > ul.innermenu li i.fa-plus:before ,
+     .sidebar-sm #sidebar #navigation > li.dropdown > ul.innermenu li > ul li i.fa-plus:before   { content: "\f067"; }
+
+      .sidebar-sm #sidebar #navigation ul.innermenu li.dropdown.submenu i.fa-plus:before,
+      .sidebar-sm #sidebar #navigation ul.innermenu li.dropdown.submenu > ul li i.fa-plus:before { color:#a02a7e !important;}
+
+      .sidebar-sm #sidebar #navigation > li.dropdown:hover i.fa-plus:before, 
+     .sidebar-sm #sidebar #navigation > li.dropdown > ul.innermenu li:hover i.fa-plus:before,
+      .sidebar-sm #sidebar #navigation > li.dropdown > ul.innermenu li > ul li:hover i.fa-plus:before   { content: "\f068"; color: inherit; }
+
+       .sidebar-sm #sidebar #navigation > li.dropdown:hover i.fa-plus:before   { color: #fff; }
+        .sidebar-sm #sidebar #navigation ul.innermenu li.dropdown.submenu:hover i.fa-plus:before,
+      .sidebar-sm #sidebar #navigation ul.innermenu li.dropdown.submenu > ul li:hover i.fa-plus:before { color:#a02a7e;}
+
+.shop-by-mobile span {
+    font-size: 0.775em;
+    font-weight: 600;
+}
+    /*#sidebar .panel-group {
+    margin-bottom: 0;
+    max-height: 300px;
+    overflow-y: auto;
+    width: 100%;*/
+
+</style>
+<?php
+if ($customerSession->isLoggedIn() && $customerSession->getCustomer()->getGroupId()== 4 ) { ?>
+<a href="<?=$store->getBaseUrl()?>b2b-products" class="btn-menu" > Products</a>
+	
+<?php }else{
+//die;
+?>
+<?php $columnsLimit = $block->getColumnsLimit() ?: 0; ?>
+<?php $_menu = $block->getHtml('level-top', 'submenu', $columnsLimit) ?>
+<div id="controls" class="sidebar-sm">
+		   <!-- ========== SIDEBAR Content ================ -->
+		   <aside id="sidebar">
+			  <div id="sidebar-wrap">
+				 <div class="panel-group slim-scroll" role="tablist">
+					<div class="panel panel-default">
+					   <div class="panel-heading" role="tab">
+						  <h4 class="panel-title">
+							<!-- <a >
+							 <i class="icon-menu-button"></i>-->
+							 <a data-toggle="collapse" href="javascript:void(0);" class="btn-menu collapsed" aria-expanded="false">
+				<i class="fa fa-bars"></i><!-- <span class="ico-toggle fa fa-times"></span> -->
+				<span class="categories-text"> Shop by Categories </span>
+			   </a>
+							 <!--</a>-->
+						  </h4>
+					   </div>
+					   <div id="sidebarNav" class="panel-collapse collapse" role="tabpanel">
+						  <div class="panel-body">
+							<!-- ============== NAVIGATION Content ================ --> 
+							<div class="closeWrap"><div class="shop-by-mobile pull-left"><span>Shop By Categories</span></div> 
+							<i class="fa fa-times pull-right"></i>
+						</div>
+							<ul id="navigation">
+								<?php
+								foreach ($subcats as $subcat) {
+									if ($subcat->getIsActive()) {
+
+										$subcat_url = $subcat->getUrl();
+										?>
+										<li>
+											<a href="<?php echo $subcat_url; ?>">
+												<?php echo $subcat->getName(); ?>
+											</a>
+											<?php
+												$lvl2 = $objectManager->create('Magento\Catalog\Model\Category')->load($subcat->getID());           
+												$lvl2s = $lvl2->getChildrenCategories();  
+												if(count($lvl2s) > 0): ?>
+													<ul>
+														<?php
+														foreach ($lvl2s as $lvl2cat) {
+															if ($lvl2cat->getIsActive()) {
+
+																$lvl2cat_url = $lvl2cat->getUrl();
+															?>
+															<li>
+																<a href="<?php echo $lvl2cat_url; ?>">
+																	<?php echo $lvl2cat->getName(); ?>
+																</a>
+																<?php
+																	$lvl3 = $objectManager->create('Magento\Catalog\Model\Category')->load($lvl2cat->getID());           
+																	$lvl3s = $lvl3->getChildrenCategories();  
+																	if(count($lvl3s) > 0): ?>
+																		<ul>
+																			<?php
+																			foreach ($lvl3s as $lvl3cat) {
+																				if ($lvl3cat->getIsActive()) {
+
+																					$lvl3cat_url = $lvl3cat->getUrl();
+																				?>
+																				<li>
+																					<a href="<?php echo $lvl3cat_url; ?>">
+																						<?php echo $lvl3cat->getName(); ?>
+																					</a>
+																				</li>
+																				<?php
+																				}
+																			}
+																			?>
+																		</ul>
+																	<?php endif;?>
+															</li>
+															<?php
+															}
+														}
+														?>
+													</ul>
+												<?php endif;?>
+										</li>
+
+										<?php
+									}
+								}
+								?>
+							</ul>
+							<!--/ NAVIGATION Content -->
+						  </div>
+					   </div>
+					</div>
+				 </div>
+			  </div>
+		   </aside>
+		   <!--/ SIDEBAR Content -->
+
+		  
+		   
+		</div>
+		
+<?php
+
+}?>

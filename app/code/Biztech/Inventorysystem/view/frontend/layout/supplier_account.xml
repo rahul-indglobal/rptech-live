@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Biztech, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="2columns-left" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd" label="supplier My Account (All Pages)" design_abstraction="custom">
+    <body>
+        <attribute name="class" value="supplier-account"/>
+        <referenceContainer name="sidebar.main">
+            <block class="Magento\Framework\View\Element\Html\Links" name="supplier_account_navigation" before="-" template="Biztech_Inventorysystem::supplier/navigation.phtml">
+                <block class="Magento\Framework\View\Element\Html\Link\Current" name="supplier-account-navigation-account-link">
+                    <arguments>
+                        <argument name="label" xsi:type="string" translate="true">Supplier Account Dashboard</argument>
+                        <argument name="path" xsi:type="string">supplier/account</argument>
+                    </arguments>
+                </block>
+                <block class="Magento\Framework\View\Element\Html\Link\Current" name="supplier-account-navigation-account-edit-link">
+                    <arguments>
+                        <argument name="label" xsi:type="string" translate="true">Account Information</argument>
+                        <argument name="path" xsi:type="string">supplier/account/edit</argument>
+                    </arguments>
+                </block>
+                <block class="Magento\Framework\View\Element\Html\Link\Current" name="supplier-account-navigation-address-link">
+                    <arguments>
+                        <argument name="label" xsi:type="string" translate="true">Address Book</argument>
+                        <argument name="path" xsi:type="string">supplier/address</argument>
+                    </arguments>
+                </block>
+            </block>
+        </referenceContainer>
+
+        
+        
+    </body>
+</page>

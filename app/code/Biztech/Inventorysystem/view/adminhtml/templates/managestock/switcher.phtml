@@ -1,0 +1,22 @@
+<?php 
+
+$defaultWarehouseID = $this->scopeConfig->getValue('inventorysystem/inventorysystemadvance/default_warehouse_select', \Magento\Store\Model\ScopeInterface::SCOPE_STORE); ?>
+<?php if ($this->isShow()) : ?>
+    <p class="switcher"><label for="warehouse_switcher"><?php echo __('Select Warehouse:') ?></label>
+        <select name="warehouse_switcher" id="warehouse_switcher">
+            <?php
+            $getWarehouses = [];
+            $getWarehouses = $block->getWarehouseOption();            
+            ?>
+            <?php array_shift($getWarehouses); ?>
+            <?php foreach ($getWarehouses as $key => $value) : ?>
+                <?php if ($defaultWarehouseID && $defaultWarehouseID == $value['value']) : ?>
+                    <option value="<?php echo $value['value'] ?>"
+                            selected="selected"><?php echo $value['label'] ?></option>
+                <?php else : ?>
+                    <option value="<?php echo $value['value'] ?>"><?php echo $value['label'] ?></option>
+                <?php endif; ?>
+            <?php endforeach; ?>
+        </select>
+    </p>
+<?php endif; ?>

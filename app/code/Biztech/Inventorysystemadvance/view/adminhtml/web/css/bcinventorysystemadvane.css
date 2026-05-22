@@ -1,0 +1,21 @@
+.col-warehouse_id{width:7%; !important; }
+.col-warehouse_name{width:26% !important;}
+.col-warehouse_city{width:15% !important;}
+.col-warehouse_state{width:15% !important;}
+.col-warehouse_country{width:15% !important;}
+.col-warehouse_status{width:15% !important;}
+.col-warehouse_primary_warehouse{width:7% !important;}
+.data-grid .data-grid-checkbox-cell {
+    overflow: hidden;
+    padding: 0;
+    vertical-align: top;
+    width: 5.2rem;
+    padding: 1rem 2rem 1rem 1rem; !important;
+}
+.admin__data-grid-wrap {
+    margin-bottom: 2rem;
+    max-width: 100%;
+    padding-bottom: 1rem;
+    padding-top: 2rem; !important;
+    overflow-x: visible;
+}

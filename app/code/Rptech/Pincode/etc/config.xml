@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <pincodeChecker>
+            <general>
+                <api_endpoint>https://staging-express.delhivery.com/c/api/pin-codes/json/</api_endpoint>
+                <api_key>5b578yg9yvi8sogirbvegoiufg9v9g579gviuiub8</api_key>
+                <api_token>f939438eba9c2d712539be8fc9991c056a142696</api_token>
+                <success_msg>This product can be delivered on given pincode.</success_msg>
+                <fail_msg>This product not delivered on given pincode.</fail_msg>
+            </general>
+        </pincodeChecker>
+    </default>
+</config>

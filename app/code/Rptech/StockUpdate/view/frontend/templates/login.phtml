@@ -1,0 +1,223 @@
+<?php
+// phpcs:disable Generic.Files.LineLength.TooLong
+
+/** @var \Rptech\StockUpdate\Block\Index $block */
+
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$storeManager = $objectManager->get('\Magento\Store\Model\StoreManagerInterface');
+$secureBaseUrl = $storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_WEB,true);
+$mobileloginHelper = $this->helper('\Magecomp\Mobilelogin\Helper\Data');
+?>
+<div class="block block-user-login mobile-otp-login">
+    <div class="block-title">
+        <strong id="block-user-login-heading" role="heading" aria-level="2"><?= $block->escapeHtml(__('Registered User')) ?></strong>
+    </div>
+    <div class="block-content" aria-labelledby="block-user-login-heading">
+        <form class="form form-login"
+              action="<?= $block->escapeUrl($block->getPostActionUrl()) ?>"
+              method="post"
+              id="login-form"
+              data-mage-init='{"validation":{}}'>
+            <?= $block->getBlockHtml('formkey') ?>
+            <fieldset class="fieldset login" data-hasrequired="<?= $block->escapeHtml(__('* Required Fields')) ?>">
+                <div class="field--note">
+                    <?php echo $block->escapeHtml(__('If you are a registered user, sign in with your mobile number.')) ?>
+                </div>
+                <!--<div class="field email required">
+                    <label class="label" for="email"><span><?= $block->escapeHtml(__('Email')) ?></span></label>
+                    <div class="control">
+                        <input name="login[username]" value="<?= $block->escapeHtmlAttr($block->getUsername()) ?>"
+                            <?php //if ($block->isAutocompleteDisabled()): ?> autocomplete="off"<?php //endif; ?>
+                               id="email" type="email" class="input-text"
+                               title="<?= $block->escapeHtmlAttr(__('Email')) ?>"
+                               data-mage-init='{"mage/trim-input":{}}'
+                               data-validate="{required:true, 'validate-email':true}">
+                    </div>
+                </div>
+                <div class="field mobile required">
+                    <label for="pass" class="label"><span><?= $block->escapeHtml(__('Mobile Number')) ?></span></label>
+                    <div class="control">
+                        <input name="login[mobile]" type="text"
+                            <?php //if ($block->isAutocompleteDisabled()): ?> autocomplete="off"<?php //endif; ?>
+                               class="input-text" id="mobile"
+                               title="<?= $block->escapeHtmlAttr(__('Mobile')) ?>"
+                               data-validate="{required:true, number:true}">
+                    </div>
+                </div>-->
+<div id="ajaxlogin-login-otp-window" class="login-window account-login">
+    <div class="loginotpmobileget">
+        <div class="loginotpmobbtnerror error1" id="loginotpmobbtnerror">
+            <span class=""><?php echo __("Please Enter Valid Mobile.");?></span>
+        </div>
+        <div class="loginsendotperror error1" id="loginsendotperror">
+            <span><?php echo __("Mobile Number Doesn't Exist");?></span>
+        </div>
+        <!--<div class="updatepasssuccess success" id="updatepasssuccess">
+            <span><?php //echo __("Password has been Updated Successfully.");?></span>
+        </div>-->
+        <div class="sendemail success" id="sendemail_success">
+        </div>
+        <div class="checkloginotperror error1" id="checkloginotperror">
+            <span><?php echo __("OTP Not Verified.");?></span>
+        </div>
+        <div class="emptyotp error1" id="emptyotp">
+            <span><?php echo __("Please enter otp");?></span>
+        </div>
+        <div class="field loginotpmob required">
+        <div class="otp-content control">
+            <input type="text" value="" id="loginotpmob" placeholder="<?php echo __('Mobile Number*') ?>" maxlength="12" data-validate="{required:true, number:true}" />
+            <!-- <input type="hidden" class="loginotp-otp-url" value="<?php //echo $this->getUrl("mobilelogin/index/ajaxsentotpforlogin"); ?>" /> -->
+            <input type="hidden" name="countryreg" id="countryreg" value="" />
+            <span id="valid-msg"><?php echo __('Valid') ?></span>
+            <span id="login-mob-error-msg"></span>
+        </div>
+        </div>
+        <div class="notice" id="notice">Mobile No. Without Country Code i.e 9898989898</div>
+        <div class="model-bottom">
+            <div class="submitbtnajax">
+                <input type="button" class="admin-login-send-otp mobbtn" value="<?php echo __('Send Otp') ?>" />
+            </div>
+            <div class="progress-indicator">
+                 <span class="please-wait" id="login-sms-please-wait">
+                    <img src="<?php echo $block->getViewFileUrl('Magecomp_Mobilelogin::images/ajax-loader.gif'); ?>" class="v-middle" alt=""/>
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="loginotpverify" id="loginotpverify">
+        <div class="info">
+            <span class="title"><?php echo __('Enter One Time Password') ?></span>
+            <p><?php echo __('One Time Password (OTP) has been sent to your mobile, please enter the same here to login.') ?></p>
+        </div>
+        <div class="otp-content">
+            <input type="password" id="admin-login-otp" placeholder="<?php echo __('OTP'); ?>" maxlength="<?php echo $mobileloginHelper->getOtpStringlenght() ?>"/>
+            <input type="hidden" class="admin-login-otp-verify-url" value="<?php echo $this->getUrl("productstock/index/loginpost"); ?>" />
+            <input type="hidden" class="base-url" value="<?= $secureBaseUrl; ?>" />
+        </div>
+        <div class="model-bottom">
+            <div class="submitbtnajax">
+                <input type="button" class="admin-login-verify-otp mobbtn" value="<?php echo __("Verify & Login");?>" />
+            </div>
+            <div class="progress-indicator">
+                 <span class="please-wait" id="login-verify-please-wait">
+                    <img src="<?php echo $block->getViewFileUrl('Magecomp_Mobilelogin::images/ajax-loader.gif'); ?>" class="v-middle" alt=""/>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+                <?= $block->getChildHtml('form_additional_info') ?>
+                <!--<div class="actions-toolbar">
+                    <div class="primary">
+                        <button type="submit" class="action login primary" name="send" id="send2">
+                            <span><?= $block->escapeHtml(__('Send OTP')) ?></span>
+                        </button>
+                    </div>
+                </div>-->
+            </fieldset>
+        </form>
+    </div>
+</div>
+<style type="text/css">
+    fieldset.login label {
+        color: black;
+    }
+</style>
+
+<script type="text/javascript">
+    require(['jquery'],function($){
+        jQuery(".admin-login-send-otp").click(function (e) {
+            var loginmobile = jQuery("#loginotpmob").val();
+            var countrycode = jQuery('.loginotpmobileget .selected-flag .selected-dial-code').text().replace('+','');
+            var mobile = countrycode.concat(loginmobile);
+
+            jQuery(".loginotpmobbtnerror").css('display','none');
+            jQuery(".loginsendotperror").css('display','none');
+            jQuery(".loginotpmobbtnerror").html("Please Enter Valid Mobile.");
+
+            if(jQuery('#login-mob-error-msg').text()!="" || loginmobile==""){
+                jQuery(".loginotpmobbtnerror").css('display','block');
+                //jQuery(".loginotpmobbtnerror").html(jQuery('#login-mob-error-msg').text());
+                return false;
+            }
+            
+            var base_url = jQuery(".base-url").val();
+            jQuery.ajax({
+                url: base_url+"productstock/index/verifyuser",
+                type:'GET',
+                data:{mobile:loginmobile},
+                success: function (data) {
+                    if(data=="true") {
+                        /*var url = jQuery(".loginotp-otp-url").val();
+                        jQuery("#login-sms-please-wait").css('display','block');
+                        jQuery(".admin-login-send-otp").css('display','none');
+                        //jQuery(".updatepasssuccess").css('display','none');
+
+                        jQuery.ajax({
+                            url: url,
+                            type:'GET',
+                            data:{mobile:mobile},
+                            success: function (data) {
+                                if(data == 'true'){*/
+                                    jQuery(".loginotpverify").css('display','block');
+                                    jQuery("#login-sms-please-wait").css('display','none');
+                                    jQuery(".admin-login-send-otp").css('display','block');
+                                    jQuery(".admin-login-send-otp").val("Resend OTP");
+                                }
+                                else{
+                                    jQuery(".loginsendotperror").css('display','block');
+                                    jQuery("#login-sms-please-wait").css('display','none');
+                                    jQuery(".admin-login-send-otp").css('display','block');;
+                                //}
+                            /*},
+                            error: function () {
+                                jQuery("#login-sms-please-wait").css('display','none');
+                                jQuery(".admin-login-send-otp").css('display','block');;
+                            }
+                        });*/
+                    }
+                }
+            });
+        });
+        jQuery(".admin-login-verify-otp").click(function (e) {
+            var loginmobile = jQuery("#loginotpmob").val();
+            var countrycode = jQuery('.loginotpmobileget .selected-flag .selected-dial-code').text().replace('+','');
+            var mobile = countrycode.concat(loginmobile);
+            var otp = jQuery("#admin-login-otp").val();
+            var url = jQuery(".admin-login-otp-verify-url").val();
+            jQuery("#login-verify-please-wait").css('display','block');
+            jQuery(".checkloginotperror").css('display','none');
+            jQuery(".admin-login-verify-otp").css('display','none');
+            if(!otp)
+            {
+                jQuery("#login-verify-please-wait").css('display','none');
+                jQuery(".admin-login-verify-otp").css('display','block');
+                jQuery(".emptyotp").css('display','block');
+                return false;
+            }
+            var base_url = jQuery(".base-url").val();
+            var red_url = base_url + "productstock/index/manage/";
+            
+            jQuery.ajax({
+                url: url,
+                type:'GET',
+                data:{mobile:loginmobile,otp:otp},
+                success: function (data) {
+                    if(data == 'true'){
+                        window.location.href = red_url;
+                    }
+                    else{
+                        jQuery("#login-verify-please-wait").css('display','none');
+                        jQuery(".checkloginotperror").css('display','block');
+                        jQuery(".admin-login-verify-otp").css('display','block');
+                    }
+                },
+                error: function () {
+                    jQuery(".admin-login-verify-otp").css('display','block');
+                    jQuery("#login-verify-please-wait").css('display','none');
+                    jQuery(".checkloginotperror").css('display','block');
+                }
+            });
+        });
+    });
+</script>

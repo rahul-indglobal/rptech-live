@@ -1,0 +1,210 @@
+<?php
+$product = $block->getProduct();
+$objectManager =\Magento\Framework\App\ObjectManager::getInstance();
+$helperImport = $objectManager->get('\Magento\Catalog\Helper\Image');
+$imageUrl = $helperImport->init($product, 'product_base_image')
+            ->setImageFile($product->getSmallImage()) // image,small_image,thumbnail
+            //->resize(380)
+            ->getUrl();
+$categoryColl = $objectManager->get('\Magento\Catalog\Model\ResourceModel\Category\CollectionFactory')->create();
+$categoryIds  = $product->getCategoryIds();
+$categories  = $categoryColl
+              ->addAttributeToFilter('entity_id', array('in' => $categoryIds))
+        ->addAttributeToSelect('*');
+              //->addLevelFilter(2);
+$url = $product->getUrlModel()->getUrl($product);
+?>
+<div class="user-profile-banner">
+  <div class="projectBanner">
+    <div class="image-section">
+      <img class="product-img" src="<?php echo $imageUrl ?>"/>
+    </div>
+    <div class="projectTtl">
+      <div class="project-name">
+      <?php echo $product->getName(); ?>
+      </div>
+    <div class="projecturl">
+      <a class="website" target="_blank" href="<?php echo $product->getWebsiteUrl() ?>"><?php echo $product->getWebsiteUrl() ?></a>
+    </div>
+    </div>
+  </div>
+</div>
+<div class="detailContent">
+  <div class="tabs">
+    <ul class="tabs-list">
+     <li class="profile active"><a href="#profiletab">Profile</a></li>
+     <li><a href="#gallerytab">Gallery</a></li>
+    </ul>
+    <div id="profiletab" class="tab active">
+     <div class="tabDesc project-desc">
+      <div class="tabTtl"><?php echo __("Project Details");?></div>
+      <div class="projectDesc">
+        <?php echo $product->getDescription(); ?>
+      </div>
+     <div class="project-profile-grid projectInfo">
+       <div class="projectInfoCol">
+        <div class="category proIcon">
+    <!--       <span class="title"><?php echo __("SERVICE AREA(S)");?></span> -->
+          <span class="title"><?php echo __("Category");?></span> 
+          <span class="content">
+          <?php
+          foreach ($categories as $category) {
+            if($category->getId() != 375) {
+            $names[] = $category->getName();
+            }
+          }
+            if(isset($names) && !empty($names)) {
+              $nm = implode(",",$names);
+              echo rtrim($nm,",");
+            }
+          ?>
+          </span>
+        </div>
+      </div>
+       <div class="projectInfoCol">
+        <div class="location proIcon">
+          <span class="title"><?php echo __("LOCATION");?></span>
+          <span class="content">
+                <?php $locationName = $product->getResource()->getAttribute('location')->getFrontend()->getValue($product);
+                echo $locationName; ?></span>
+        </div>
+       </div>
+       <div class="projectInfoCol">
+        <div class="industry proIcon">
+          <span class="title"><?php echo __("INDUSTRY");?></span>
+          <span class="content"><?php $industryName  = $product->getAttributeText('industries');
+            echo $industryName; ?></span>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+    <div id="gallerytab" class="tab">
+    <div class="tabDesc">
+    <div class="tabTtl"><?php echo __("Project Gallery");?></div>
+      <div class="galleryDiv">
+      <?php $images = $product->getMediaGalleryImages();
+          foreach($images as $child){ ?>
+      <div class="galleryBox">
+        <div class="galleryInner">
+                <a href="#" data-id="<?php echo $child->getId()?>" data-modal-id="modal-new-image-<?php echo $child->getId() ?>"><img src="<?php echo $child->getUrl(); ?>" ></a>
+        </div>
+        <div id="popup-modal-<?php echo $child->getId()?>" style="display:none;">
+          <div class="modal1 review-modal1 gallerypop" id="modal-new-image-<?php echo $child->getId() ?>" role="dialog" style="display:block">
+            <img src="<?php echo $child->getUrl(); ?>" height="500" width="1000">
+          </div>
+        </div>
+      </div>
+          <?php } ?>
+    </div>
+    </div>
+    </div>
+  </div>
+  <div class="contact-us">
+    <button type="button" data-toggle="modal" id="contact-us-btn" data-product-url="<?php echo $url ?>" data-modal-id="modal-new-contact" title="<?= $block->escapeHtmlAttr(__('Connect')) ?>" class="action primary add"><span><?= $block->escapeHtml(__('Connect')) ?></span></button>
+  </div>
+  <div id="popup-modal" style="display:none;">
+    <div class="modal1 review-modal1" id="modal-new-contact" role="dialog" style="display:block">
+    </div>
+  </div>
+  
+</div>
+
+<script type="text/javascript">
+require(['jquery'],function($){   
+ 
+  jQuery(".tabs-list li a").click(function(e){
+     e.preventDefault();
+  });
+  jQuery('.tabs-list li').on('click',function(){      
+       var tabid = jQuery(this).find("a").attr("href");
+     jQuery(".tabs-list li,.tabs div.tab").removeClass("active");
+     jQuery(".tab").hide();
+     jQuery(tabid).show();
+     jQuery(this).addClass("active");
+  });
+
+});
+</script>
+<script type="text/javascript">
+require(['jquery', 'jquery/ui'], function ($) {
+  $(':button[data-modal-id]').click(function (e) {
+    e.preventDefault();
+    //console.log('click');
+    var appendthis = ("<div class='modal-overlay js-modal-close'></div>");
+    var url = "<?php echo $this->getUrl().'productdetail/index/addcontactus'?>";
+  var producturl = $(this).data('product-url');
+  var dataObj = {
+      'producturl' : producturl,
+    };
+    $.ajax({
+      url: url,
+      type: "POST",
+    data: dataObj,
+      error: function () {
+        alert("Error");
+      },
+      success: function (data) {
+        $('#modal-new-contact').attr('style','display: block');
+        $("#modal-new-contact").html(data.html);
+        if($('.modal-title').length == 0) {
+          $('.action-close').before('<h1 id="modal-title-1" class="modal-title" data-role="title">Contact Us</h1>');
+        }
+        $("body").append(appendthis);
+        $(".modal-overlay").fadeTo(500, 0.7); 
+        $('#modal-new-contact').fadeIn($(this).data());
+        
+      },
+    })
+  }); 
+  
+  $('a[data-modal-id]').click(function (e) {
+    e.preventDefault();
+    console.log('image click');
+    var id = $(this).data('id');
+    var appendthis = ("<div class='modal-overlay js-modal-close'></div>");
+    $('#modal-new-image-'+id).attr('style','display: block');
+    $("body").append(appendthis);
+    $(".modal-overlay").fadeTo(500, 0.7); 
+    $('#modal-new-image-'+id).fadeIn($(this).data());
+  });
+
+  $(document).on('click','#close-popup',function(e){
+    e.preventDefault(); 
+    $("#popup-modal").modal("closeModal");   
+  });
+});
+</script>
+<script>
+    require(
+        [
+            'jquery',
+            'Magento_Ui/js/modal/modal'
+        ],
+        function(
+            $,
+            modal
+        ) {
+            var options = {
+                type: 'popup',
+                responsive: false,
+                innerScroll: false,
+                //title: 'Write a Review',                
+            };
+
+            var popup = modal(options, $('#popup-modal'));
+            $(":button[data-modal-id]").on('click',function(){ 
+                $("#popup-modal").modal("openModal");
+            });
+            $('[id^=popup-modal]').each(function(i) {
+              var popupid = $(this).attr('id');
+              var popup = modal(options, $('#'+popupid));  
+            });
+            
+            $("a[data-modal-id]").on('click',function(){ 
+                var id = $(this).data('id');
+                $("#popup-modal-"+id).modal("openModal");
+            });
+        }
+    );
+</script>

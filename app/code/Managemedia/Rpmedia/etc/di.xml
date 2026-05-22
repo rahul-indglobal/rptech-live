@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<!--
+/** Grid di xml
+ * @category  Managemedia_Rpmedia 
+ * @package   Managemedia_Rpmedia
+ * @author    Lalita Rajput
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Managemedia\Rpmedia\Api\Data\GridInterface" type="Managemedia\Rpmedia\Model\Grid" />
+
+    <virtualType name="Managemedia\Rpmedia\Model\ResourceModel\Grid\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">rptech_manageMedia</argument>
+            <argument name="resourceModel" xsi:type="string">Managemedia\Rpmedia\Model\ResourceModel\Grid</argument>
+        </arguments>
+    </virtualType>
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="rpmedia_record_grid_list_data_source" xsi:type="string">Managemedia\Rpmedia\Model\ResourceModel\Grid\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Managemedia\Rpmedia\Logger\Handler">
+        <arguments>
+            <argument name="filesystem" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>
+        </arguments>
+    </type>
+    <type name="Managemedia\Rpmedia\Logger\Logger">
+        <arguments>
+            <argument name="name" xsi:type="string">customLogHandler</argument>
+            <argument name="handlers"  xsi:type="array">
+                <item name="system" xsi:type="object">Managemedia\Rpmedia\Logger\Handler</item>
+            </argument>
+        </arguments>
+    </type>
+</config>

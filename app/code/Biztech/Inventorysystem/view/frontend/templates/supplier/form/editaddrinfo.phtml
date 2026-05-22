@@ -1,0 +1,83 @@
+<div class="page-title">
+    <h1><?php echo __('Edit Address Information') ?></h1>
+</div>
+<form action="<?php echo $block->getUrl('inventorysystem/supplierlogin/savesupplieraddrinfo') ?>" method="post" id="supplier_address_form" autocomplete="off" ata-mage-init='{"validation": {}}'>
+    <div class="fieldset">
+        <?php echo $block->getBlockHtml('formkey') ?>
+        <h2 class="legend"><?php echo __('Address Information') ?></h2>
+        <ul class="form-list">
+            <li class="fields">
+                <label class="required"><?php echo __('Street Address') ?></label><em>*</em>
+                <div class="input-box">
+                    <textarea name="street_addr" id="street_addr" title="<?php echo __('Street Address') ?>" class="required-entry"><?php echo $block->getStreetAddress() ?></textarea>
+                </div>
+            </li>
+            <li class="fields">
+                <label class="required"><?php echo __('City') ?></label><em>*</em>
+                <div class="input-box">
+                    <input type="text" name="city" id="city" value="<?php echo $block->getCity(); ?>" title="<?php echo __('City')  ?>" class="input-text required-entry" />
+                </div>
+            </li>
+            <li class="fields">
+                <label class="required"><?php echo __('Country') ?></label><em>*</em>
+                <div class="input-box">
+                    <?php echo $block->getCountry(); ?>
+                </div>
+            </li>
+            <li class="fields">
+                <label class="required"><?php echo __('State') ?></label><em>*</em>
+                <div class="input-box">
+                    <?php echo $block->getState(); ?>
+                </div>
+            </li>
+            <li class="fields">
+                <label class="required"><?php echo __('Postal Code') ?></label><em>*</em>
+                <div class="input-box">
+                    <input type="text" name="postal_code" id="postal_code" value="<?php echo $block->getPostalCode() ?>" title="<?php echo __('Postal Code') ?>" class="input-text required-entry" />
+                </div>
+            </li>
+            <li class="fields">
+                <label class="required"><?php echo __('Telephone') ?></label><em>*</em>
+                <div class="input-box">
+                    <input type="text" name="telephone" id="postal_code" value="<?php echo $block->getTelephone() ?>" title="<?php echo __('Telephone') ?>" class="input-text required-entry" />
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="buttons-set">
+        <p class="required"><?php echo __('* Required Fields') ?></p>
+        <button type="submit" title="<?php echo __('Save') ?>" class="button"><span><span><?php echo __('Save') ?></span></span></button>
+    </div>
+</form>
+
+<script type="text/javascript">
+    require([
+        'jquery',
+        'mage/mage'
+    ], function($){
+        var dataForm = $('#supplier_address_form');
+        dataForm.mage('validation', {});
+    });
+</script>
+
+<script type="text/javascript">
+    function getstate(selectElement) {
+        var reloadurl = '<?php echo $block->getUrl('inventorysystem/supplierlogin/state').'country/' ?>'+selectElement.value;
+        new Ajax.Request(reloadurl, {
+            method: 'get',
+            onComplete: function (transport) {
+                var response = transport.responseText;
+                if (response == '') {
+                    $('state').type = 'text';
+                    $('state_id').remove();
+                    $('state').up().insert('<input type=\'hidden\' value=\'\' name=\'state_id\' id=\'state_id\' />');
+                }
+                else {
+                    $('state').up().innerHTML = '<select name=\'state_id\' id=\'state_id\' class=\'required-entry select\'></select>';
+                    $('state_id').update(response);
+                    $('state_id').up().insert('<input type=\'hidden\' value=\'\' name=\'state\' id=\'state\' class=\'input-text\'/>');
+                }
+            }
+        });
+    }
+</script>

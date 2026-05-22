@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Rptech\CareerOpportunities\Api\CareerOpportunitiesRepositoryInterface" type="Rptech\CareerOpportunities\Model\CareerOpportunitiesRepository" />
+    <preference for="Rptech\CareerOpportunities\Api\Data\CareerOpportunitiesInterface" type="Rptech\CareerOpportunities\Model\CareerOpportunities" />
+    <virtualType name="CareerOpportunitiesGridFilterPool" type="Magento\Framework\View\Element\UiComponent\DataProvider\FilterPool">
+        <arguments>
+            <argument name="appliers" xsi:type="array">
+                <item name="regular" xsi:type="object">Magento\Framework\View\Element\UiComponent\DataProvider\RegularFilter</item>
+                <item name="fulltext" xsi:type="object">Magento\Framework\View\Element\UiComponent\DataProvider\FulltextFilter</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="CareerOpportunitiesGridDataProvider" type="Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider">
+        <arguments>
+            <argument name="collection" xsi:type="object" shared="false">\Rptech\CareerOpportunities\Model\Resource\CareerOpportunities\Collection</argument>
+            <argument name="filterPool" xsi:type="object" shared="false">CareerOpportunitiesGridFilterPool</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Rptech\CareerOpportunities\Model\ResourceModel\CareerOpportunities\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">career_opportunities</argument>
+            <argument name="resourceModel" xsi:type="string">Rptech\CareerOpportunities\Model\ResourceModel\CareerOpportunities</argument>
+        </arguments>
+    </virtualType>
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="career_index_grid_data_source" xsi:type="string">Rptech\CareerOpportunities\Model\ResourceModel\CareerOpportunities\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Rptech\CareerOpportunities\Controller\Adminhtml\Index\MassDelete">
+        <arguments>
+            <argument name="successMessage" xsi:type="string" translate="true">A total of %1 record(s) have been deleted.</argument>
+            <argument name="errorMessage" xsi:type="string" translate="true">An error occurred while deleting record(s).</argument>
+        </arguments>
+    </type>
+</config>

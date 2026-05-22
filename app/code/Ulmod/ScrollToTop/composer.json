@@ -1,0 +1,12 @@
+{
+    "name": "ulmod/module-scrolltotop",
+    "description": "Scroll To Top for Magento 2 by Ulmod",
+    "type": "magento2-module",
+    "version": "2.1.0",
+    "autoload": {
+        "files": [ "registration.php" ],
+        "psr-4": {
+            "Ulmod\\ScrollToTop\\": ""
+        }
+    }
+}

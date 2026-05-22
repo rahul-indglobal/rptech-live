@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Email:etc/email_templates.xsd">
+    <template id="feedback_email_template" label="Feedback Email Template" file="feedback.html" type="html" module="Rptech_Feedback" area="frontend"/>
+    <template id="business_opportunitis_enquiry_template" label="Business Enquiry Template" file="business_enquiry.html" type="html" module="Rptech_Feedback" area="frontend"/>
+</config>

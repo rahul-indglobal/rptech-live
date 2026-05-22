@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+<!--      <add id="Businesstobusiness_Details::orders" title="Orders" translate="title" module="Businesstobusiness_Details" parent="Magento_Sales::sales" sortOrder="10" dependsOnModule="Businesstobusiness_Details" resource="Businesstobusiness_Details::orders"/>-->
+<!--      <add id="Businesstobusiness_Details::orders_b2borders" title="B2B orders" translate="title" module="Businesstobusiness_Details" parent="Businesstobusiness_Details::orders" sortOrder="20" dependsOnModule="Businesstobusiness_Details" action="details/grid" resource="Businesstobusiness_Details::orders"/>-->
+    </menu>
+</config>
+  

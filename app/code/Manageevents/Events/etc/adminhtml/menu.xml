@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!--
+/** Grid menu xml
+ * @category  Manageevents_Events 
+ * @package   Manageevents_Events
+ * @author    Lalita Rajput
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+<!--        <add id="Manageevents_Events::manager" title="Event Management" module="Manageevents_Events" sortOrder="10" resource="Manageevents_Events::manager" />
+        <add id="Manageevents_Events::add_row" title="Event List" module="Manageevents_Events" sortOrder="20" parent="Manageevents_Events::manager" action="events/grid" resource="Manageevents_Events::add_row"/>-->
+    </menu>
+</config>

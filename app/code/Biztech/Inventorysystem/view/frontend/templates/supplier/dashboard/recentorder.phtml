@@ -1,0 +1,58 @@
+<?php
+/**
+ * Copyright © 2016 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+// @codingStandardsIgnoreFile
+?>
+<div class="block block-dashboard-orders">
+    <?php
+    $purchaseOrders = $block->getOrders();
+    ?>
+    <div class="block-title order">
+        <strong><?php /* @escapeNotVerified */ echo __('Recent Orders') ?></strong>
+        <?php //if (sizeof($purchaseOrders->count()) > 0): ?>
+<?php if (count($purchaseOrders) > 0): ?>
+            <a class="action view" href="<?php /* @escapeNotVerified */ echo $block->getUrl('inventorysystem/supplierorder/vieworder/') ?>">
+                <span><?php /* @escapeNotVerified */ echo __('View All') ?></span>
+            </a>
+<?php endif; ?>
+    </div>
+    <div class="block-content">
+        <?php echo $block->getChildHtml() ?>
+        <?php //if (sizeof($purchaseOrders->count()) > 0): ?>
+<?php if (count($purchaseOrders) > 0): ?>
+            <div class="table-wrapper orders-recent">
+                <table class="data table table-order-items recent" id="my-orders-table">
+                    <caption class="table-caption"><?php /* @escapeNotVerified */ echo __('Recent Orders') ?></caption>
+                    <thead>
+                        <tr>
+                            <th scope="col" class="col id"><?php /* @escapeNotVerified */ echo __('Order #') ?></th>
+                            <th scope="col" class="col date"><?php /* @escapeNotVerified */ echo __('Date') ?></th>
+                            <th scope="col" class="col total"><?php /* @escapeNotVerified */ echo __('Order Total') ?></th>
+                            <th scope="col" class="col status"><?php /* @escapeNotVerified */ echo __('Status') ?></th>
+                            <th scope="col" class="col actions"><?php /* @escapeNotVerified */ echo __('Action') ?></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+    <?php foreach ($purchaseOrders as $_order): ?>
+                            <tr>
+                                <td data-th="<?php echo $block->escapeHtml(__('Order #')) ?>" class="col id"><?php /* @escapeNotVerified */ echo $_order->getPurchaseOrderId() ?></td>
+                                <td data-th="<?php echo $block->escapeHtml(__('Date')) ?>" class="col date"><?php /* @escapeNotVerified */ echo $block->formatDate($_order->getCreatedAt()) ?></td>
+                                <td data-th="<?php echo $block->escapeHtml(__('Order Total')) ?>" class="col total"><?php /* @escapeNotVerified */ echo $this->getPriceHelper()->currency($_order->getTotal(), true, true) ?></td>
+                                <td data-th="<?php echo $block->escapeHtml(__('Status')) ?>" class="col status"><?php /* @escapeNotVerified */ echo $_order->getStatus() ?></td>
+                                <td data-th="<?php echo $block->escapeHtml(__('Actions')) ?>" class="col actions">
+                                    <a href="<?php /* @escapeNotVerified */ echo $this->getUrl('inventorysystem/supplierorder/vieworderdetails', ['id' => $_order->getId()]) ?>" class="action view">
+                                        <span><?php /* @escapeNotVerified */ echo __('View Order') ?></span>
+                                    </a>
+                                </td>
+                            </tr>
+    <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+                <?php else: ?>
+            <div class="message info empty"><span><?php /* @escapeNotVerified */ echo __('You have placed no orders.'); ?></span></div>
+<?php endif; ?>
+    </div>
+</div>

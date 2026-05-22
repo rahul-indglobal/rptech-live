@@ -1,0 +1,47 @@
+<!--@subject {{trans "Career Application Received by %name" name=$name}}  @-->
+
+{{template config_path="design/email/header_template"}}
+<p>{{trans "We have received a Career Opportunity Application from user. Following is the details."}}</p>
+<table>
+    <tr>
+        <th>Name</th>
+        <td>{{trans ": %name" name=$name}}</td>
+    </tr>
+    <tr>
+        <th>Email</th>
+        <td>{{trans ": %email" email=$email}}</td>
+    </tr>
+    <tr>
+        <th>Post Applied For</th>
+        <td>{{trans ": %post" post=$post}}</td>
+    </tr>
+    <tr>
+        <th>City/Location</th>
+        <td>{{trans ": %city" city=$city}}</td>
+    </tr>
+    <tr>
+        <th>Age</th>
+        <td>{{trans ": %age" age=$age}}</td>
+    </tr>
+    <tr>
+        <th>Qualification</th>
+        <td>{{trans ": %qualification" qualification=$qualification}}</td>
+    </tr>
+    <tr>
+        <th>Experience</th>
+        <td>{{trans ": %experience" experience=$experience}}</td>
+    </tr>
+    <tr>
+        <th>Mobile</th>
+        <td>{{trans ": %mobile" mobile=$mobile}}</td>
+    </tr>
+    <tr>
+        <th>Uploaded CV</th>
+        <td>{{trans ": %cv_file" cv_file=$cv_file}}</td>
+    </tr>
+    <tr>
+        {{trans "This has been submitted successfully in the system."}}
+    </tr>
+
+</table>
+{{template config_path="design/email/footer_template"}}

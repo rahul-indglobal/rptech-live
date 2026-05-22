@@ -1,0 +1,74 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+// @codingStandardsIgnoreFile
+
+/** @var \Magento\Customer\Block\Widget\Telephone $block */
+?>
+<?php
+//echo "<pre>";print_r($_SESSION);die;
+$number = '';
+if(isset($_SESSION['customer_base']['customer_id'])) {
+        $cid = $_SESSION['customer_base']['customer_id'];
+        $customerRepository = \Magento\Framework\App\ObjectManager::getInstance()->get('\Magento\Customer\Api\CustomerRepositoryInterface');
+        $customer = $customerRepository->getById($cid);
+        $customerAttributeData = $customer->__toArray();
+        if(isset($customerAttributeData['custom_attributes']['mobilenumber']['value'])) {
+                $number = $customerAttributeData['custom_attributes']['mobilenumber']['value'];
+        } else if(isset($customerAttributeData['addresses'][0]['telephone'])) {
+                $number = $customerAttributeData['addresses'][0]['telephone'];
+        }
+
+        if(isset($number)) {
+                if(strlen($number)==12 || strlen($number)>10) {
+                    if(substr($number, 0, 2)=="91") {
+                        $number = substr($number, 2);
+                    }
+                }
+        }
+?>
+<div class="form-group telephone <?= $block->isRequired() ? 'required' : '' ?>">
+    
+    
+        <?php
+        $_validationClass = $block->escapeHtmlAttr(
+                $this->helper('Magento\Customer\Helper\Address')
+                        ->getAttributeValidationClass('telephone')
+        );
+        ?>
+      <label class="input_label">Mobile Number</label>
+        <input type="text"
+               name="telephone"
+               id="telephone"
+               value="<?= $number?:$block->escapeHtmlAttr($block->getTelephone()) ?>"
+               title="<?= $block->escapeHtmlAttr(__('Mobile Number')) ?>"
+               class="form-control <?= $_validationClass ? : '' ?>"
+               >
+       
+   
+</div>
+
+  <?php }else { ?>
+<div class="form-group telephone <?= $block->isRequired() ? 'required' : '' ?>">
+    
+    
+        <?php
+        $_validationClass = $block->escapeHtmlAttr(
+                $this->helper('Magento\Customer\Helper\Address')
+                        ->getAttributeValidationClass('telephone')
+        );
+        ?>
+        <input type="text"
+               name="telephone"
+               id="telephone"
+               value="<?= $block->escapeHtmlAttr($block->getTelephone()) ?>"
+               title="<?= $block->escapeHtmlAttr(__('Mobile Number')) ?>"
+               class="form-control <?= $_validationClass ? : '' ?>"
+               >
+         <label class="input_label">Mobile Number</label>
+   
+</div>
+
+  <?php } ?>

@@ -1,0 +1,104 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Ulmod. All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+ -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../Magento/Backend/etc/system_file.xsd">
+    <system>
+        <tab id="ulmod_extensions" translate="label" sortOrder="8888888">
+            <label>Ulmod Extensions</label>
+        </tab>		
+        <section id="umscrolltotop" translate="label" type="text" sortOrder="130" showInDefault="1" showInWebsite="1" showInStore="1">
+            <class>separator-top</class>
+            <label>Scroll To Top</label>
+            <tab>ulmod_extensions</tab>
+            <resource>Ulmod_ScrollToTop::config_scrolltotop</resource>
+			<group id="general" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+				<label>General</label>
+				<field id="enabled" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+					<label>Is Enabled</label>
+					<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+				</field>
+			</group>
+			<group id="page" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+				<label>Pages</label>
+				<field id="hide_home" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+					<label>Hide On Home Page</label>
+					<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+				</field>
+				<field id="hide_cms" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+					<label>Hide On CMS Pages</label>
+					<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+				</field>
+				<field id="hide_category" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+					<label>Hide On Category</label>
+					<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+				</field>
+				<field id="hide_product" translate="label comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+					<label>Hide On Product Page</label>
+					<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+				</field>
+				<field id="hide_additional" translate="label comment" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+					<label>Hide On Additional Page</label>
+					<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+				</field>
+				<field id="additional_pages" translate="label comment" type="textarea" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+					<label>Additional Page(s)</label>
+					<depends>
+						<field id="hide_additional">1</field>
+					</depends>	
+							<comment><![CDATA[Please add the links of the pages to enable the social share buttons. One link per line. Example : <br>
+									http://mysite/blog/<br>						
+									http://mysite/faqs/<br>		
+									http://mysite/documents/<br>]]></comment>						
+				</field>			
+			</group>	
+			<group id="design" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+				<label>Design</label>
+				<field id="type" translate="label " type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+					<label>Type</label>
+					<source_model>Ulmod\ScrollToTop\Model\System\Config\Source\LinkType</source_model>
+				</field>
+				<field id="arrow" translate="label tooltip comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+					<label>Arrow</label>
+					<depends>
+						<field id="type">arrow</field>
+					</depends>
+					<source_model>Ulmod\ScrollToTop\Model\System\Config\Source\Arrow</source_model>
+					<comment>Please select scroll to top Arrow.</comment>
+					<tooltip><![CDATA[<div class=um-arrows-tooltip id=um-arrows-tooltip><div class=um-arrow id=um-arrow><i aria-hidden=true class="fa fa-arrow-up"></i> <span class=um-label id=um-label>Arrow Up</span></div><div class=um-arrow id=um-arrow><i aria-hidden=true class="fa fa-long-arrow-up"></i> <span class=um-label id=um-label>LongArrow Up</span></div><div class=um-arrow id=um-arrow><i aria-hidden=true class="fa fa-arrow-circle-up"></i> <span class=um-label id=um-label>Arrow Circle Up 1</span></div><div class=um-arrow id=um-arrow><i aria-hidden=true class="fa fa-arrow-circle-o-up"></i> <span class=um-label id=um-label>Arrow Circle Up 2</span></div><div class=um-arrow id=um-arrow><i aria-hidden=true class="fa fa-chevron-up"></i> <span class=um-label id=um-label>Chevron Up</span></div><div class=um-arrow id=um-arrow><i aria-hidden=true class="fa fa-chevron-circle-up"></i> <span class=um-label id=um-label>Chevron Circle Up</span></div><div class=um-arrow id=um-arrow><i aria-hidden=true class="fa fa-caret-up"></i> <span class=um-label id=um-label>Caret Up</span></div><div class=um-arrow id=um-arrow><i aria-hidden=true class="fa fa-caret-square-o-up"></i> <span class=um-label id=um-label>Caret Square Up</span></div><div class=um-arrow id=um-arrow><i aria-hidden=true class="fa fa-angle-up"></i> <span class=um-label id=um-label>Angle Up</span></div><div class=um-arrow id=um-arrow><i aria-hidden=true class="fa fa-angle-double-up"></i> <span class=um-label id=um-label>Angle Double Up</span></div><div class=um-arrow id=um-arrow><i aria-hidden=true class="fa fa-level-up"></i> <span class=um-label id=um-label>Level Up</span></div></div>]]></tooltip>
+				</field>
+				<field id="text" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+					<label>Text</label>
+					<depends>
+						<field id="type">text</field>
+					</depends>
+					<comment>Scroll to top text. eg : Up, Back, Return, Scroll Up</comment>
+				</field>
+				<field id="image" translate="label" type="image" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+					<label>Image</label>
+					<backend_model>Ulmod\ScrollToTop\Model\System\Config\Backend\Image\Img</backend_model>
+					<base_url type="media" scope_info="1">ulmod/images/scrolltotop/img</base_url>
+					<depends>
+						<field id="type">image</field>
+					</depends>
+					<comment>Please, upload image. Allowed file types:PNG, GIF, JPG, JPEG.</comment>
+				</field>
+				<field id="label" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+					<label>Label</label>
+					<depends>
+						<field id="type" separator=",">image,arrow</field>
+					</depends>					
+					<comment>eg : Up, Back, Top</comment>
+				</field>				
+				<field id="position" translate="label" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+					<label>Position</label>
+					<source_model>Ulmod\ScrollToTop\Model\System\Config\Source\Position</source_model>
+					<comment>Select position</comment>
+				</field>
+			</group>				
+        </section>
+    </system>
+</config>

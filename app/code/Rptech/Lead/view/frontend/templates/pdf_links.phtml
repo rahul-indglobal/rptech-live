@@ -1,0 +1,52 @@
+<?php
+/**
+ * @var \Magento\Framework\View\Element\Template $block
+ */
+
+$baseUrl = $block->getBaseUrl();
+$link1 = $baseUrl."media/fileupload/prowess-powerstore-vs-ibm-whitepaper-blog.pdf";
+$link2 = $baseUrl."media/fileupload/powerstore-efficiency-infographic.pdf";
+$link3 = $baseUrl."media/fileupload/h18962-ebook-powerscale-top-reasons.pdf";
+
+
+if (isset($_SESSION['display_links']) && $_SESSION['display_links'] == 'yes') : ?>
+    <?php
+            echo $this->getLayout()
+            ->createBlock(\Magento\Cms\Block\Block::class)
+            ->setBlockId('dell_form_pdf_links')
+            ->toHtml();
+    ?>
+    <?php unset($_SESSION['display_links']); ?>
+<?php endif;?>
+
+
+
+<style>
+    div#pdflinks {
+        max-width: 960px;
+        margin-left: auto;
+        margin-right: auto;
+        display: flex;
+        gap: 15px;
+        justify-content: flex-start;
+        align-items: center;
+        flex-wrap: wrap;
+        margin-bottom: 15px;
+    }
+
+    #pdflinks .links a {
+        display: inline-block;
+        padding: 10px 20px;
+        background: #007bff;
+        color: #fff !important;
+        text-decoration: none;
+        border-radius: 6px;
+        width: 160px;
+        text-align: center;
+        font-size: 14px;
+        transition: 0.2s ease;
+    }
+    #pdflinks .links a:hover {
+        background: #0056b3;
+    }
+</style>

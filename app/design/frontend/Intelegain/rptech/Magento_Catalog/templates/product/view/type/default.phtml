@@ -1,0 +1,14 @@
+<?php /* @var $this Mage_Catalog_Block_Product_View_Abstract */?>
+<?php $_product = $this->getProduct() ?>
+
+<?php if ($_product->isAvailable()): ?>
+<p class=”availability in-stock”><?php echo $this->__(‘Availability:’) ?> <span><?php echo $this->__(‘4 to 5 days’) ?></span></p>
+<?php else: ?>
+<p class=”availability out-of-stock”><?php echo $this->__(‘Availability:’) ?> <span><?php echo $this->__(‘4 to 5 days’) ?></span></p>
+<?php endif; ?>
+<?php echo $this->getChildHtml(‘product_type_data_extra’) ?>
+<?php if($_product->price==0): ?>
+<?php echo ‘Please call 01223 1111111’; ?>
+<?php else: ?>
+<?php echo $this->getPriceHtml($_product) ?>
+<?php endif; ?>

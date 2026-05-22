@@ -1,0 +1,26 @@
+<!-- <?xml version="1.0"?> -->
+<!-- 
+/** Setubridge Technolabs
+* http://www.setubridge.com/
+* @author SetuBridge
+* @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+**/
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="SetuBridge_Holidaytheme::css/festivetheme.css"/>
+        
+    </head>
+    <body>
+         <referenceBlock name="head.additional">
+            <block class="SetuBridge\Holidaytheme\Block\Festivetheme" name="festivetheme.festivetheme" template="SetuBridge_Holidaytheme::festivetheme.phtml"/>
+        </referenceBlock> 
+        <referenceBlock name="content">
+             
+            <block class="SetuBridge\Holidaytheme\Block\Festivetheme" name="festivethemecontent" template="SetuBridge_Holidaytheme::festivethememovingsanta.phtml"/>
+        </referenceBlock>
+        <referenceContainer name="footer-container">
+            <block class="SetuBridge\Holidaytheme\Block\Festivetheme" name="holidayfooter" template="SetuBridge_Holidaytheme::festivethemefooter.phtml"/>
+        </referenceContainer>
+    </body>
+</page>

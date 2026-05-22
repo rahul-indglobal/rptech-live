@@ -1,0 +1,104 @@
+<div class="page-title">
+    <h1><?php echo __('My Products') ?></h1>
+</div>
+<form action="<?php echo $block->getUrl('inventorysystem/supplierproduct/savesupplierproductinfo') ?>" method="post" id="supplier_view_product_form" autocomplete="off" data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>"
+      data-mage-init='{"validation":{}}'>
+    <div class="fieldset">
+        <?php echo $block->getBlockHtml('formkey') ?>
+        <h2 class="legend"><?php echo __('Supplier Products') ?></h2>
+        <table id="my-orders-table" class="data-table">
+            <colgroup>
+                <col width="5%">
+                <col width="35%">
+                <col width="40%">
+                <col width="20%">
+            </colgroup>
+            <?php $supplierProducts = $block->getSupplierProduct(); ?>
+            <?php
+            if (!empty($supplierProducts)) {
+                ?>    
+                <thead>
+                    <tr class="first last">
+                        <th>&nbsp;</th>
+                        <th>SKU</th>
+                        <th>Name</th>
+                        <th>Status</th>
+                        <th>Admin Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php $oddEven = 1; ?>
+                    <?php
+                    foreach ($supplierProducts as $key => $data) {
+                        
+                        $prodModel = $block->getProduct();
+                        $prod = $prodModel->load($data['product_id']);
+                        $prodName = $prod->getName();
+                        $prodStatus = $prodModel->setStore(0)->setStoreId(0)->load($data['product_id'])->getStatus();
+                        ?>
+                        <?php if ($oddEven == 1) {
+                            ?>
+                            <tr class="first odd">
+                            <?php } else if ($oddEven % 2 == 0) {
+                                ?>
+                            <tr class="even">
+                                <?php
+                            } else {
+                                ?>
+                            <tr class="odd">
+                                <?php
+                            }
+                            ?>
+
+                    <input type="hidden" value="<?php echo $data['supplier_id']; ?>" name="supplier_id" />
+                    <td><input type="checkbox" id="select_product" name="select_product[<?php echo $data['product_id']; ?>]" /></td>
+                    <td><?php echo $prod->getSku(); ?></td>
+                    <td><?php echo $prodName; ?></td>
+                    <td>
+                        <select id="product_status" name="product_status[<?php echo $data['product_id']; ?>]">
+                            <option value="1" <?php if ($data['supplier_status'] == 1) echo "selected='selected'" ?>><?php echo __('Enabled') ?></option>
+                            <option value="2" <?php if ($data['supplier_status'] == 2) echo "selected='selected'" ?>><?php echo __('Disabled') ?></option>
+                        </select>
+                    </td>
+                    <?php
+                    if ($data['approve_status'] == 0) {
+                        $status = "Not Approved";
+                    } else {
+                        $status = "Approved";
+                    }
+                    ?> 
+                    <td><?php echo __(ucwords($status)); ?></td>
+                    </tr>
+                    <?php
+                    $oddEven++;
+                }
+                ?>
+                </tbody>
+                <?php
+            } else { ?> 
+                <div>
+                    <?php echo __("There are no products assigned to you.");?>
+                </div>
+            <?php } ?>
+        </table>
+    </div>
+    <?php if (!empty($supplierProducts)) { ?>
+    <div class="buttons-set">
+        <button type="submit" title="<?php echo __('Save') ?>" class="button"><span><span><?php echo __('Save') ?></span></span></button>
+    </div>
+    <?php } ?>
+</form>
+<script type="text/javascript">
+    require([
+        'jquery',
+        'jquery/ui',
+        'jquery/validate',
+        'mage/translate'
+    ], function ($) {
+        $.validator.addMethod(
+                'supplier_view_product_form', function (value) {
+                    return (value.length === 16 && /^[a-zA-Z0-9]+$/.test(value)); // Validation logic here
+                }, $.mage.__('Not a valid Membership ID'));
+
+    });
+</script>

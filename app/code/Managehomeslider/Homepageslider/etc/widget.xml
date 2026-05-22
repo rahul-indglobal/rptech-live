@@ -1,0 +1,15 @@
+<?xml version="1.0" ?>
+<widgets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Widget:etc/widget.xsd">
+            <widget class="Managehomeslider\Homepageslider\Block\Widget\Homepageslider" id="homepageslider_widget">
+                        <label>Home Page Slider Widget</label>
+                        <description></description>
+<!--                        <parameters>
+                                    <parameter name="widgettitle" sort_order="10" visible="true" xsi:type="text">
+                                                <label>Get Home Slider</label>
+                                    </parameter>
+                                    <parameter name="widgetcontent" sort_order="20" visible="true" xsi:type="textarea">
+                                                <label>Content</label>
+                                    </parameter>
+                        </parameters>-->
+            </widget>
+</widgets>

@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Rptech_ServiceAddress::main" title="Rptech" module="Rptech_ServiceAddress" sortOrder="51" resource="Rptech_ServiceAddress::main_menu"/>
+        <add id="Rptech_ServiceAddress::addresses" title="Service Addresses" module="Rptech_ServiceAddress" sortOrder="10" action="service/address/index" resource="Rptech_ServiceAddress::addresses" parent="Rptech_ServiceAddress::main"/>
+<!--        <add id="Rptech_ServiceAddress::address_configuration" title="Configuration" module="Rptech_ServiceAddress" sortOrder="99" parent="Rptech_ServiceAddress::main" action="adminhtml/system_config/edit/section/address" resource="Rptech_ServiceAddress::address_configuration"/>-->
+    </menu>
+</config>

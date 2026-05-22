@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="sales_order_shipment_save_after">
+        <observer name="rptech_order_shipment_sms" instance="Rptech\SMS\Observer\SalesOrderShipmentAfter" />
+    </event>
+    <event name="customer_register_success">
+        <observer name="rptech_customer_register_sms" instance="Rptech\SMS\Observer\Customers" />
+    </event>
+    <event name="sales_order_invoice_save_after">
+        <observer name="rptech_order_invoice_sms" instance="Rptech\SMS\Observer\Invoice" />
+    </event>
+    <event name="sales_order_creditmemo_save_after">
+        <observer name="rptech_order_creditmemo_sms" instance="Rptech\SMS\Observer\Creditmemo" />
+    </event>
+</config>

@@ -1,0 +1,59 @@
+<div class="col-xs-12 col-sm-4 col-md-5">
+<div class="block block-search row">
+    <div class="block block-content">
+        <form class="form minisearch" id="startup_search_form" action="<?php echo $this->getUrl('ajaxsearch/index/filter')?>" method="post">
+            <div class="field search col-xs-12 col-md-9 col-lg-8 pn">
+                 <div class="control">
+                    <input id="category_search"
+                           type="text"
+                           name="category_search"
+                           placeholder="<?php /* @escapeNotVerified */ echo __('Search'); ?>"
+                           class="input-text"
+                           autocomplete="off"/>
+                </div>
+            </div>
+            <div class="actions col-xs-2 col-md-3 col-lg-4 pn">
+                <button type="submit"
+                        title="<?php echo $block->escapeHtml(__('Search')) ?>"
+                        class="action search">
+                    <span><?php /* @escapeNotVerified */ echo __('Search'); ?></span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+</div>
+<script type="text/javascript">
+require(['jquery'],function(){
+  jQuery(document).ready(function() {
+      jQuery("#startup_search_form").submit(function(){
+        var url = "<?php echo $this->getUrl().'ajaxsearch/index/filter'?>";
+
+        var query = jQuery("input[name='category_search']").val();
+        var dataObj = {
+          'query' : query,
+        };
+        jQuery.ajax({
+          url: url,
+          type: "POST",
+          data: dataObj,
+          showLoader: true,
+          error: function () {
+            alert("Error");
+          },
+          success: function (response) {
+			jQuery('.products-row').remove();
+			jQuery('#amasty-shopby-product-list').html(response.html);
+            //jQuery(".products-row:first").html(response.html);
+			//jQuery('.products-row').eq(0).html(response.html);
+			//jQuery('.products-row').eq(1).remove();
+			jQuery(".amscroll-load-button").css('display','none');
+			jQuery(".toolbar-products").css('display','none');
+          },
+        })
+        return false;
+    
+      });
+  });
+});
+</script>

@@ -1,0 +1,144 @@
+<?php
+/**
+ * @var \Rptech\Event\Block\Index $block
+ */
+?>
+<?php $gridrecords = $block->getEventCollection(); ?>
+<?php if ($gridrecords && sizeof($gridrecords)): ?>
+    <div class="news-wapper inner-wrapper">
+        <section class="container-fluid">
+        <div class="row">
+            <div class="col-sm-10 news-events">
+                <div class="row">
+                    <div class="col-sm-10">
+                        <h3>Events</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-2">
+                <form method="post" action="<?= $block->getBaseUrl()."year/"?>">
+                    <div class="">
+                        <select class="form-control" name="event_year" id="event_year">
+                            <option value="all">All</option>
+                            <?php $yearCollection = $block->getYearCollection(); ?>
+                            <?php if(!empty($yearCollection)) :?>
+                                <?php foreach ($block->getYearCollection() as $year) :?>
+                                    <option value="<?= $year?>" <?php echo ($block->getYearFilter() == $year) ? "selected":"";?>><?= __($year)?></option>
+                                <?php endforeach; ?>
+                            <?php endif;?>
+                        </select>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12 media-menu">
+                <?php foreach ($gridrecords as $event) :?>
+                    <div class="media-sub-menu">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h3 class="event-dt-title">
+                                    <a href="<?= $block->getEachUrl($event->getEntityId()) ?>" target="_blank"><?= __($event->getTitle()) ?></a>
+                                </h3>
+                                <p class="date"><?= __($block->getPublishDate($event)) ?></p>
+                                <hr>
+                            </div>
+                        </div>
+                    </div>
+
+                <?php endforeach;?>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 media-menu">
+                <?php if ($block->getPagerHtml()): ?>
+                        <div class="order-products-toolbar toolbar bottom"><?php echo $block->getPagerHtml(); ?></div>
+                <?php endif ?>
+            </div>
+        </div>
+
+    </section>
+    </div>
+<?php else: ?>
+        <div class="message info empty"><span><?php echo __('No any record.'); ?></span></div>
+<?php endif ?>
+
+<style>
+    .events-index-index main#maincontent{
+        width: 76%;
+    }
+
+    .events-index-index .pager {
+        padding-left: 0;
+        margin: 20px 0;
+        text-align: center;
+        list-style: none;
+        display: inline-flex;
+        width: 100%;
+    }
+
+    .events-index-index p.toolbar-amount {
+        width: 33.33333333%;
+    }
+    .events-index-index .pages {
+        width: 33.33333333%;
+    }
+    .events-index-index .limiter {
+        width: 33.33333333%;
+    }
+    .events-index-index .label {
+        display: inline;
+        padding: 0.2em 0.6em 0.3em;
+        font-size: 75%;
+        font-weight: 700;
+        line-height: 1;
+        color: #fff;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: baseline;
+        display: none;
+        border-radius: 0.25em;
+    }
+
+    .pager .previous>a, .pager .previous>span {
+        float: none;
+    }
+    .pager .next>a, .pager .next>span {
+        float: none;
+    }
+
+    hr {
+        border-top: 1px solid #d5ccbc;
+    }
+    h3 {
+        font-family: roboto;
+        font-size: 24px;
+        margin: 0;
+    }
+    .col-sm-10.news-events {
+        margin-bottom: 60px;
+    }
+</style>
+<script>
+    require([
+        'jquery'
+    ], function ($) {
+        $(document).ready( function() {
+            $('#event_year').on("change",function()
+            {
+                if ($(this).val() === 'all') {
+                    var url = "<?= $block->getBaseUrl().'events'?>"
+                }else {
+                    var url = "<?= $block->getBaseUrl().'events?year='?>"+$(this).val();
+                }
+                window.location = url;``
+                console.log(url);
+            });
+        });
+    });
+
+</script>
+
+
+

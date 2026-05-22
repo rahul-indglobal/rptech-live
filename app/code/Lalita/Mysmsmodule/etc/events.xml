@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2015 Magenest. All rights reserved.
+ * See COPYING.txt for license details.
+ *
+ * Magenest_SmsMarketing extension
+ * NOTICE OF LICENSE
+ *
+ * @category Magenest
+ * @package  Magenest_SmsMarketing
+ * @author   CanhND
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="checkout_onepage_controller_success_action">
+        <observer name="lalita_mysmsmodule1" instance="Lalita\Mysmsmodule\Observer\SaveOrderDetail"/>	
+    </event>
+    <event name="checkout_cart_product_add_after">
+        <observer name="lalita_mysmsmodule2" instance="Lalita\Mysmsmodule\Observer\BeforeAddToCart"/>
+    </event>
+    <event name="controller_action_predispatch_checkout_index_index">
+        <observer name="lalita_mysmsmodule3" instance="Lalita\Mysmsmodule\Observer\BeforeOrderPlace"/>
+    </event>
+    <event name="catalog_product_compare_add_product">
+        <observer name="lalita_mysmsmodule4" instance="Lalita\Mysmsmodule\Observer\BeforeCompareAdd"/>
+    </event>
+</config>

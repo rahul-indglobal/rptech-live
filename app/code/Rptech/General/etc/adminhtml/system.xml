@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="rpt_general" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>General</label>
+            <tab>rptechin</tab>
+            <resource>Rptech_General::config</resource>
+            <group id="product_label" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="0">
+                <label>Product Label Settings</label>
+                <field id="label_new_status" translate="label" type="select" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enabled</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="label_new" translate="label" type="Magento\Config\Block\System\Config\Form\Field\Image" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Label New Image</label>
+                    <backend_model>Magento\Config\Model\Config\Backend\Image</backend_model>
+                    <upload_dir config="system/filesystem/media" scope_info="1">catalog/product/label</upload_dir>
+                    <base_url type="media" scope_info="1">catalog/product/label</base_url>
+                    <comment>The image to show for the new product (jpg, jpeg, gif, png)</comment>
+                </field>
+                <field id="label_sale_status" translate="label" type="select" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enabled</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="label_sale" translate="label" type="Magento\Config\Block\System\Config\Form\Field\Image" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Label Sale Image</label>
+                    <backend_model>Magento\Config\Model\Config\Backend\Image</backend_model>
+                    <upload_dir config="system/filesystem/media" scope_info="1">catalog/product/label</upload_dir>
+                    <base_url type="media" scope_info="1">catalog/product/label</base_url>
+                    <comment>The image to show for the sale product (jpg, jpeg, gif, png)</comment>
+                </field>
+                <field id="label_sold_status" translate="label" type="select" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enabled</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="label_sold" translate="label" type="Magento\Config\Block\System\Config\Form\Field\Image" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Label Sold Out Image</label>
+                    <backend_model>Magento\Config\Model\Config\Backend\Image</backend_model>
+                    <upload_dir config="system/filesystem/media" scope_info="1">catalog/product/label</upload_dir>
+                    <base_url type="media" scope_info="1">catalog/product/label</base_url>
+                    <comment>The image to show for the sold out product (jpg, jpeg, gif, png)</comment>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

@@ -1,0 +1,127 @@
+<div class="page-title">
+    <h1><?php echo __('Create Product') ?></h1>
+</div>
+<form action="<?php echo $this->getUrl('inventorysystem/supplierproduct/createsupplierproduct') ?>" method="post" id="supplier_create_product_form" autocomplete="off" ata-mage-init='{"validation": {}}'  data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>">
+    <div class="fieldset">
+        <h2 class="legend"><?php echo __('Product Attributes') ?></h2>
+        <table class="form-list" style="border-spacing:0.5em;">
+            <colgroup>
+                <col width="30%">
+                <col width="70%">
+            </colgroup>
+            <tr>
+                <th><label class="required fields"><?php echo __('Name') ?></label><em>*</em></th>
+                <td>
+                    <div class="input-box">
+                        <input type="text" name="product[product_name]" id="product_name" title="<?php echo __('Name') ?>" class="required-entry" />
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <th><label class="required fields"><?php echo __('Description') ?></label><em>*</em></th>
+                <td>
+                    <div class="input-box">
+                        <textarea name="product[description]" id="description" title="<?php echo __('Description') ?>" class="required-entry" ></textarea>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <th><label class="required fields"><?php echo __('Short Description') ?></label><em>*</em></th>
+                <td>
+                    <div class="input-box">
+                        <textarea name="product[short_description]" id="short_description" title="<?php echo __('Short Description') ?>" class="required-entry" ></textarea>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <th><label class="required fields"><?php echo __('SKU') ?></label><em>*</em></th>
+                <td>
+                    <div class="input-box">
+                        <input type="text" name="product[sku]" id="sku" title="<?php echo __('SKU') ?>" class="required-entry" />
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <th><label class="required fields"><?php echo __('Weight') ?></label><em>*</em></th>
+                <td>
+                    <div class="input-box">
+                        <input type="text" name="product[weight]" id="weight" title="<?php echo __('Weight') ?>" class="required-entry validate-number" />
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <th><label class="required fields"><?php echo __('Visibility') ?><em>*</em></label></th>
+                <td>
+                    <div class="input-box">
+
+
+                        <select class="required-entry required-entry select" name="product[visibility]" id="visibility" title="<?php echo __('Visibility') ?>">
+                            <option value=""><?php echo __('-- Please Select --') ?></option>
+                            <option value="1"><?php echo __('Not Visible Individually') ?></option>
+                            <option value="2"><?php echo __('Catalog') ?></option>
+                            <option value="3"><?php echo __('Search') ?></option>
+                            <option selected="selected" value="4"><?php echo __('Catalog, Search') ?></option>
+                        </select>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <th><label class="required fields"><?php echo __('Price') ?></label><em>*</em></th>
+                <td>
+                    <div class="input-box">
+                        <input type="text" name="product[price]" id="price" title="<?php echo __('Price') ?>" class="required-entry validate-number" />
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <th><label><?php echo __('Cost') ?></label></th>
+                <td>
+                    <div class="input-box">
+                        <input type="text" name="product[cost]" id="cost" title="<?php echo __('Cost') ?>" class="validate-number" />
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <th><label class="required fields"><?php echo __('Tax Class') ?></label><em>*</em></th>
+                <td>
+                    <div class="input-box">
+                        <select class="required-entry required-entry select" name="product[tax_class]" id="tax_class" title="<?php echo __('Tax Class') ?>">
+                            <option value=""><?php echo __('-- Please Select --') ?></option>
+                            <option selected="selected" value="0"><?php echo __('None') ?></option>
+                            <?php                            
+                            $taxClasses = $block->getProductTaxSource();
+                            foreach ($taxClasses->getAllOptions() as $key => $value) {
+                                if ($value['value'] == 0) {
+                                    continue;
+                                }
+                                ?>
+                                <option value="<?php $value['value'] ?>"><?php echo __($value['label']) ?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <th><label class="required fields"><?php echo __('Qty') ?></label><em>*</em></th>
+                <td>
+                    <div class="input-box">
+                        <input type="text" name="product[qty]" id="qty" title="<?php echo __('Qty') ?>" class="required-entry validate-number integer" />
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="buttons-set">
+        <button type="submit" title="<?php echo __('Create Product') ?>" class="button"><span><span><?php echo __('Create Product') ?></span></span></button>
+    </div>
+</form>
+
+<script type="text/javascript">
+    require([
+        'jquery',
+        'mage/mage'
+    ], function ($) {
+        var dataForm = $('#supplier_create_product_form');
+        dataForm.mage('validation', {});
+    });
+</script>

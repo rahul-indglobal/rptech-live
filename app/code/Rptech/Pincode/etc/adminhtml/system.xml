@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="rptechin" translate="label" sortOrder="101">
+            <label>Rptech</label>
+        </tab>
+        <section id="pincodeChecker" translate="label" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+            <class>separator-top</class>
+            <label>Pincode Checker</label>
+            <tab>rptechin</tab>
+            <resource>Rptech_Pincode::config</resource>
+            <group id="general" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>General Configuration</label>
+                <field id="api_endpoint" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Api Endpoint</label>
+                    <comment>Please enter api endpoint.</comment>
+                </field>
+                <field id="api_key" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Api Key</label>
+                    <comment>Please enter api key.</comment>
+                </field>
+                <field id="api_token" translate="label" type="text" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Api Token</label>
+                    <comment>Please enter api token.</comment>
+                </field>
+                <field id="success_msg" translate="label" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Success Message</label>
+                    <comment>This success message will show in frontend.</comment>
+                </field>
+                <field id="fail_msg" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Failed Message</label>
+                    <comment>This error message will show in frontend.</comment>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

@@ -1,0 +1,199 @@
+<?php
+/**
+ * @var \Rptech\Feedback\Block\Feedback $block
+ */
+?>
+<?php $branchCollection = $block->getBranchCollection(); ?>
+<div class="col col-sm-5">
+    <div class="col-inner">
+        <div class="branches-wrapper">
+            <div class="form-group" style="margin-top: 35px;">
+                <label><?= __("Select Location :") ?></label>
+                <select id="branch_form" class="form-control" name="branch_form">
+                    <?php foreach ($branchCollection as $location): ?>
+                        <option value="<?= $location->getEntityId() ?>"><?= $location->getBranchLocation() ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col col-sm-4">
+    <div class="col-inner">
+        <div class="select-address" style="margin-top: 35px;">
+            <h4><?= __("Address") ?></h4>
+            <div id="branch_location_address">
+                <?= $branchCollection->getData()[0]["branch_address"] ?? "" ?>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    require([
+        'jquery',
+        'Magento_Ui/js/modal/modal'
+    ], function ($, modal) {
+        $(document).ready(function () {
+            $("#branch_form").on("change", function () {
+                var branch_id = $(this).val();
+                console.log('fsdfsfs');
+                $.ajax({
+                    url: "<?= $block->getUrl('branchaddress/branch/address') ?>",
+                    type: "GET",
+                    data: {
+                        branch_id: branch_id
+                    },
+                    showLoader: true
+                }).done(function (data) {
+                    if (data.success) {
+                        $("#branch_location_address").html(data.data.branch_address);
+                    } else {
+                        console.log(data);
+                    }
+                });
+            })
+        });
+        // $(function() {
+        //     $("#age,#experience").on("keypress keyup", function() {
+        //         if ($(this).val() == '0') {
+        //             $(this).val('');
+        //         }
+        //     });
+        //     $('ul.tab-head li a').click(function() {
+        //         $(this).parent("li").addClass("active").siblings("li").removeClass("active");
+        //         $('html, body').animate({
+        //             scrollTop: $($(this).attr('href')).offset().top
+        //         }, 500);
+        //         return false;
+        //     });
+        //
+        //
+        //     // Initialize form validation on the registration form.
+        //     // It has the name attribute "registration"
+        //     $("form[name='feedbackfrm']").validate({
+        //         // Specify validation rules
+        //         rules: {
+        //             // The key name on the left side is the name attribute
+        //             // of an input field. Validation rules are defined
+        //             // on the right side
+        //             type: "required",
+        //             name: "required",
+        //             description: "required",
+        //             phoneno: {
+        //                 required: true,
+        //                 number: true
+        //             },
+        //             email: {
+        //                 required: true,
+        //                 // Specify that email should be validated
+        //                 // by the built-in "email" rule
+        //                 email: true
+        //             },
+        //             mobileno: {
+        //                 number: true
+        //             }
+        //         },
+        //         // Specify validation error messages
+        //         messages: {
+        //             type: "Please select type",
+        //             name: "Please enter your name",
+        //             description: "Please enter description",
+        //             phoneno: {
+        //                 required: "Please enter phone number",
+        //                 number: "Please enter numbers only"
+        //             },
+        //             email: "Please enter a valid email address",
+        //             mobileno: {
+        //                 number: "Pleae enter numbers only"
+        //             }
+        //         },
+        //         errorPlacement: function(error, element) {
+        //             if (element.attr("name") == "type") {
+        //                 error.appendTo('#error_name');
+        //             } else if (element.attr("name") == "name") {
+        //                 error.appendTo('#error_name');
+        //             } else if (element.attr("name") == "description") {
+        //                 error.appendTo('#error_description');
+        //             } else if (element.attr("name") == "email") {
+        //                 error.appendTo('#error_email');
+        //             } else if (element.attr("name") == "phoneno") {
+        //                 error.appendTo('#error_phoneno');
+        //             } else {
+        //                 error.insertAfter(element);
+        //             }
+        //         },
+        //         // Make sure the form is submitted to the destination defined
+        //         // in the "action" attribute of the form when valid
+        //         submitHandler: function(form) {
+        //             form.submit();
+        //         }
+        //     });
+        //     $("form[name='careerfrm']").validate({
+        //         // Specify validation rules
+        //         rules: {
+        //             candidate_name: "required",
+        //             mobileno: {
+        //                 required: true,
+        //                 number: true
+        //             },
+        //             cand_email: {
+        //                 required: true,
+        //                 email: true
+        //             },
+        //             experience: {
+        //                 number: true
+        //             },
+        //             age: {
+        //                 number: true
+        //             },
+        //             resume: {
+        //                 required: true
+        //             }
+        //         },
+        //         // Specify validation error messages
+        //         messages: {
+        //             candidate_name: "Please enter your name",
+        //             mobileno: {
+        //                 required: "Please enter mobile number",
+        //                 number: "Please enter numbers only"
+        //             },
+        //             cand_email: "Please enter a valid email address",
+        //             experience: {
+        //                 number: "Please enter number "
+        //             },
+        //             age: {
+        //                 number: "Please enter number "
+        //             },
+        //             resume: {
+        //                 required: "Please upload resume "
+        //             }
+        //         },
+        //         errorPlacement: function(error, element) {
+        //             if (element.attr("name") == "candidate_name") {
+        //                 error.appendTo('#error_candname');
+        //             } else if (element.attr("name") == "mobileno") {
+        //                 error.appendTo('#error_candmob');
+        //             } else if (element.attr("name") == "cand_email") {
+        //                 error.appendTo('#error_candemail');
+        //             } else if (element.attr("name") == "cand_email") {
+        //                 error.appendTo('#error_candemail');
+        //             } else if (element.attr("name") == "experience") {
+        //                 error.appendTo('#error_candexp');
+        //             } else if (element.attr("name") == "age") {
+        //                 error.appendTo('#error_candage');
+        //             } else if (element.attr("name") == "resume") {
+        //                 error.appendTo('#error_resume');
+        //             } else {
+        //                 error.insertAfter(element);
+        //             }
+        //         },
+        //         // Make sure the form is submitted to the destination defined
+        //         // in the "action" attribute of the form when valid
+        //         submitHandler: function(form) {
+        //             form.submit();
+        //         }
+        //     });
+        //
+        // });
+    });
+</script>

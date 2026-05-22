@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <!-- PDF Uploader -->
+    <type name="Rptech\FinancialReport\Model\ImageUploader">
+        <arguments>
+            <argument name="baseTmpPath" xsi:type="string">financialreport/documents</argument>
+            <argument name="basePath" xsi:type="string">financialreport/documents</argument>
+            <argument name="allowedExtensions" xsi:type="array">
+                <item name="jpg" xsi:type="string">jpg</item>
+                <item name="jpeg" xsi:type="string">jpeg</item>
+                <item name="gif" xsi:type="string">gif</item>
+                <item name="png" xsi:type="string">png</item>
+                <item name="pdf" xsi:type="string">pdf</item>
+                <item name="doc" xsi:type="string">doc</item>
+                <item name="docx" xsi:type="string">docx</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Rptech\FinancialReport\Controller\Adminhtml\Admin\Upload">
+        <arguments>
+            <argument name="imageUploader" xsi:type="object">VirtualTypeName</argument>
+        </arguments>
+    </type>
+    <!-- End PDF Uploader -->
+
+    <!--Admin GRID -->
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="financial_grid_listing_data_source" xsi:type="string">
+                    Rptech\FinancialReport\Model\ResourceModel\FinancialReport\Grid\Collection
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <virtualType name="Rptech\FinancialReport\Model\ResourceModel\FinancialReport\Grid\Collection"
+                 type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">financial_report</argument>
+            <argument name="resourceModel" xsi:type="string">Rptech\FinancialReport\Model\ResourceModel\FinancialReport</argument>
+        </arguments>
+    </virtualType>
+    <!--End Admin GRID -->
+</config>

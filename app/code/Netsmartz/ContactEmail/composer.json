@@ -1,0 +1,21 @@
+{
+    "name": "netsmartz/contactemail",
+    "description": "To add extra emails to receive contact form",
+    "require": {
+        "php": "^7.1.0"
+    },
+    "suggest": {},
+    "type": "magento2-module",
+    "version": "1.0.0",
+    "license": [
+        "Commercial"
+    ],
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Netsmartz\\ContactEmail\\": ""
+        }
+    }
+}

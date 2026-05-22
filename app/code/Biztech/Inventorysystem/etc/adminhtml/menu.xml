@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Biztech, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../Backend/etc/menu.xsd">
+    <menu>        
+        <add id="Biztech_Inventorysystem::base" title="MageMob Inventory" module="Biztech_Inventorysystem" sortOrder="20" dependsOnModule="Biztech_Inventorysystem" resource="Biztech_Inventorysystem::base"/>
+
+        <add id="Biztech_Inventorysystem::inventorysystem" title="Manage Suppliers" module="Biztech_Inventorysystem" sortOrder="10" parent="Biztech_Inventorysystem::base" action="inventorysystem/managesupplier/index" resource="Biztech_Inventorysystem::inventorysystem"/>
+
+        <add id="Biztech_Inventorysystem::pendingitems" title="Pending Products" module="Biztech_Inventorysystem" sortOrder="40" parent="Biztech_Inventorysystem::base" action="inventorysystem/pendingitems/index" resource="Biztech_Inventorysystem::inventorysystem"/>
+
+        <add id="Biztech_Inventorysystem::pendingorders" title="Pending Orders" module="Biztech_Inventorysystem" sortOrder="50" parent="Biztech_Inventorysystem::base" action="inventorysystem/pendingorders/index" resource="Biztech_Inventorysystem::inventorysystem"/>
+
+        <add id="Biztech_Inventorysystem::purchaseorders" title="Purchase Orders" module="Biztech_Inventorysystem" sortOrder="60" parent="Biztech_Inventorysystem::base" action="inventorysystem/purchaseorders/index" resource="Biztech_Inventorysystem::inventorysystem"/>
+        
+        <add id="Biztech_Inventorysystem::managestock" title="Manage Stock" module="Biztech_Inventorysystem" sortOrder="20" parent="Biztech_Inventorysystem::base" action="inventorysystem/inventorysystem/index" resource="Biztech_Inventorysystem::inventorysystem"/>
+
+        <add id="Biztech_Inventorysystem::stockreceived" title="Stock Received" module="Biztech_Inventorysystem" sortOrder="70" parent="Biztech_Inventorysystem::base" action="inventorysystem/stockreceived/index" resource="Biztech_Inventorysystem::inventorysystem"/>
+        
+        <add id="Biztech_Inventorysystem::purchaseinvoice" title="Purchase Invoice" module="Biztech_Inventorysystem" sortOrder="70" parent="Biztech_Inventorysystem::base" action="inventorysystem/purchaseinvoice/index" resource="Biztech_Inventorysystem::inventorysystem"/>
+
+    </menu>
+</config>

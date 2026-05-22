@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Manageaboutus_Aboutus Grid Product Map Layout
+ * @category  Manageaboutus_Aboutus 
+ * @package   Manageaboutus_Aboutus
+ * @author    Lalita Rajput
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="content">
+            <!-- here we call our ui component of grid-->
+            <uiComponent name="aboutus_record_grid_list"/>
+        </referenceContainer>
+    </body>
+</page>

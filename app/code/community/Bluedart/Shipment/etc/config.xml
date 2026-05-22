@@ -1,0 +1,174 @@
+<?xml version="1.0"?>
+<config>
+  <modules>
+    <Bluedart_Shipment>
+      <version>0.1.0</version>
+    </Bluedart_Shipment>
+  </modules>
+  <frontend>
+    <routers>
+      <shipment>
+        <use>standard</use>
+          <args>
+            <module>Bluedart_Shipment</module>
+            <frontName>shipment</frontName>
+          </args>
+      </shipment>
+    </routers>
+		<layout>
+		  <updates>
+			<shipment>
+			  <file>shipment.xml</file>
+			</shipment>
+		  </updates>
+		</layout>
+  </frontend>
+  <global>
+    <helpers>
+      <shipment>
+        <class>Bluedart_Shipment_Helper</class>
+      </shipment>
+    </helpers>
+    <blocks>
+			<adminhtml>
+				<rewrite>
+					<sales_order_view>Bluedart_Shipment_Block_Sales_Order_View</sales_order_view>
+				</rewrite>
+				<rewrite>
+					<sales_order_shipment_view>Bluedart_Shipment_Block_Sales_Order_Shipment_View</sales_order_shipment_view>
+				</rewrite>
+				<rewrite>
+					<sales_order_grid>Bluedart_Shipment_Block_Sales_Order_Grid</sales_order_grid>
+				</rewrite>				
+			</adminhtml>
+			<shipping>
+				<rewrite>
+					<tracking_popup>Bluedart_Shipment_Block_Tracking_Popup</tracking_popup>
+				</rewrite>
+			</shipping>
+	</blocks>	
+	<blocks>
+	  <shipment>
+		<class>Bluedart_Shipment_Block</class>
+	  </shipment>
+	</blocks>
+	<models>
+	  <shipment>
+		<class>Bluedart_Shipment_Model</class>
+		<resourceModel>shipment_mysql4</resourceModel>
+	  </shipment>
+	</models>
+  </global>
+  <admin>
+	<routers>
+	  <shipment>
+	    <use>admin</use>
+		<args>
+		  <module>Bluedart_Shipment</module>
+		  <frontName>admin_shipment</frontName>
+		</args>
+	  </shipment>
+	</routers>
+  </admin>
+  <adminhtml>
+	<menu>
+	  <shipment module="shipment">
+		<title>Blue Dart</title>
+		<sort_order>100</sort_order>
+		<children>
+		  <shipmentbackend module="shipment">
+			<title>Pincode Finder</title>
+			<sort_order>1</sort_order>
+			<action>admin_shipment/adminhtml_shipmentbackend</action>
+		  </shipmentbackend>
+		  
+		</children>
+		<children>
+			<shipmenttransit module="shipment">
+			<title>Transit Time</title>
+			<sort_order>2</sort_order>
+			<action>admin_shipment/adminhtml_shipmenttransit</action>
+		  </shipmenttransit>
+		</children>
+		
+		<children>
+			<waybillcancelation module="shipment">
+			<title>Waybill Cancellation</title>
+			<sort_order>3</sort_order>
+			<action>admin_shipment/adminhtml_waybillcancelation</action>
+		  </waybillcancelation>
+		</children>
+		<children>
+			<pickupregistration module="shipment">
+			<title>Pickup Registration</title>
+			<sort_order>4</sort_order>
+			<action>admin_shipment/adminhtml_pickupregistration</action>
+		  </pickupregistration>
+		</children>
+		<children>
+			<pickupcancelation module="shipment">
+			<title>Pickup Cancellation</title>
+			<sort_order>5</sort_order>
+			<action>admin_shipment/adminhtml_pickupcancelation</action>
+		  </pickupcancelation>
+		</children>
+	
+		<children>
+			<shipmentimport module="shipment">
+			<title>Shipment Track</title>
+			<sort_order>6</sort_order>
+			<action>admin_shipment/adminhtml_shipmenttrack</action>
+		  </shipmentimport>
+		</children>
+
+		<children>
+			<waybillmassimport module="shipment">
+			<title>Mass Waybill Generation</title>
+			<sort_order>7</sort_order>
+			<action>admin_shipment/adminhtml_waybillmass</action>
+		  </waybillmassimport>
+		</children>
+
+	  </shipment>
+	</menu>
+	<acl>
+	  <resources>
+		<all>
+		  <title>Allow Everything</title>
+		</all>
+		<admin>
+		  <children>
+			<shipment translate="title" module="shipment">
+			  <title>Shipment</title>
+			  <sort_order>1000</sort_order>
+			  <children>
+		  <shipmentbackend translate="title">
+			<title>Backend Page Title</title>
+		  </shipmentbackend>
+			  </children>
+			</shipment>
+		  </children>
+		</admin>
+	  </resources>
+	</acl>
+	<layout>
+	  <updates>
+		<shipment>
+		  <file>shipment.xml</file>
+		</shipment>
+	  </updates>
+	</layout>
+  </adminhtml>    
+	<default>
+        <carriers>
+            <bluedart>
+                <active>1</active>
+                <model>shipment/carrier_bluedart</model>
+                <name>bluedart</name>
+                <title>Blue Dart</title>
+                <description>bluedart shippping method</description>
+                <sort_order>0</sort_order>
+            </bluedart>
+        </carriers>
+    </default>
+</config> 

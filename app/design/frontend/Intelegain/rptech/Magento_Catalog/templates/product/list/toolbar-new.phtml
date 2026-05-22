@@ -1,0 +1,35 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+// @codingStandardsIgnoreFile
+?>
+<?php
+
+/**
+ * Product list toolbar
+ *
+ * @var $block \Magento\Catalog\Block\Product\ProductList\Toolbar
+ */
+use Magento\Catalog\Model\Product\ProductList\Toolbar;
+?>
+<?php
+$catalogHelperData = $this->helper('Magento\Catalog\Helper\Data');
+$categoryObject = $catalogHelperData->getCategory();
+$categoryId = '';
+if(isset($categoryObject) && !empty($categoryObject)) {
+	$categoryId = $categoryObject->getId();
+}
+?>
+<?php if ($block->getCollection()->getSize()): ?>
+	<div class="toolbar toolbar-products" data-mage-init='<?= /* @escapeNotVerified */ $block->getWidgetOptionsJson() ?>'>
+		<?= $block->getPagerHtml() ?>
+		<?php if ($categoryId != 375): ?>
+		    <?php if ($block->isExpanded()): ?>
+            	<?php include ($block->getTemplateFile('Magento_Catalog::product/list/toolbar/sorter.phtml')) ?>
+			<?php endif; ?>
+		<?php endif; ?>
+	</div>
+<?php endif;
+?>

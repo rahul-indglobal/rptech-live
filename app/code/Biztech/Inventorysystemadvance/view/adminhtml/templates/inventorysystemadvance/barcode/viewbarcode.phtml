@@ -1,0 +1,428 @@
+<?php
+
+if ($barcode = $this->getRequest()->getParam('barcode')) {    
+    $barcodeData = $block->getBarcode($barcode);
+} else if ($barcodeID = $this->getRequest()->getParam('id')) {
+    $barcodeData = $block->getBarcode($barcodeID);
+}
+
+$productData = $block->getProduct($barcodeData['product_id']);
+
+if(!array_key_exists('price',$productData)){
+    $productData['price'] = 0;
+}
+$productStock = $block->getStockRepo($barcodeData['product_id']);
+
+$this->_resources = $block->getResource();
+$connection = $this->_resources->getConnection();
+
+$supplierData = $block->getSupplier($barcodeData['supplier']);
+
+if (isset($supplierData) && !empty($supplierData)) {
+
+    $countryName = $block->getCountry($supplierData['country']);
+    if ($supplierData['state_id'] != '') {
+
+        $state = $block->getRegion($supplierData['state_id'], $supplierData['country']);
+        $sName = $state->getName();
+    } else {
+        $sName = $supplierData['state'];
+    }
+} else {
+    $countryName = '';
+    $sName = '';
+}
+if ($barcodeData['purchaseorder_id'] > 0) {
+
+    $poData = $block->getPurchaseOrder($barcodeData['purchaseorder_id']);
+    $purchase_order_id = $poData['purchase_order_id'];
+} else {
+    $purchase_order_id = '';
+}
+?>
+
+<div id="general_information">
+    <div class='entry-edit'>
+        <div class="view-barcode">
+            <div id='barcode_form-head' class='entry-edit-head' class="view-barcode">
+                <h4 class='icon-head head-edit-form fieldset-legend'><?php echo __('Barcode Information'); ?> </h4>
+                <input type="hidden" id="product_id" name="product_id" value="<?php echo $barcodeData['product_id']; ?>" />
+            </div>
+            <div id="barcode_form" class="fieldset " style="">
+                <div class="hor-scroll">
+                    <table class="form-list" cellspacing="0">
+                        <tbody>
+                            <tr>
+                                <td class="label"><label><?php echo __('Barcode'); ?></label></td>
+                                <td class="value"><?php echo $barcodeData['barcode']; ?><input type="hidden" id="barcode" name="barcode" value="<?php echo $barcodeData['barcode']; ?>" /></td>
+                            </tr>
+                            <tr>
+                                <td class="label"><label><?php echo __('Product Name'); ?></label></td>
+                                <td class="value"><?php echo $productData['name']; ?><input type="hidden" id="prod_name" name="prod_name" value="<?php echo $productData['name']; ?>" /></td>
+                            </tr>
+                            <tr>
+                                <td class="label"><label><?php echo __('Product Sku'); ?></label></td>
+                                <td class="value"><?php echo $productData['sku']; ?></td>
+                            </tr>
+                            <tr>
+                                <td class="label"><label><?php echo __('Reck No.'); ?></label></td>
+                                <td class="value"><?php
+                                    if (isset($productData['reck_no'])) {
+                                        echo $productData['reck_no'];
+                                    } else {
+                                        echo "";
+                                    }
+                                    ?></td>
+                            </tr>
+                            <tr>
+                                <td class="label"><label><?php echo __('Supplier'); ?></label></td>
+                                <td class="value">
+                                    <?php
+                                    if (isset($supplierData) && !empty($supplierData)) {
+                                        echo $supplierData['first_name'] . " " . $supplierData['last_name'];
+                                    } else {
+                                        echo "No supplier exist";
+                                    }
+                                    ?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="label"><label><?php echo __('Quantity'); ?></label></td>
+                                <td class="value"><?php echo $barcodeData['barcode_qty']; ?><input type="hidden" id="barcode_qty" name="barcode_qty" value="<?php echo $barcodeData['barcode_qty']; ?>" /></td>
+                            </tr>
+                            <tr>
+                                <td class="label"><label><?php echo __('Generated date'); ?></label></td>
+                                <td class="value"><?php echo date("M d, Y h:i:s A", strtotime(__($barcodeData['created_at']))); ?></td>
+                            </tr>
+                            <tr>
+                                <td class="label"><label><?php echo __('Status'); ?></label></td>
+                                <td class="value"><?php
+                                    if ($barcodeData['status'] == 1)
+                                        echo "Enable";
+                                    else
+                                        echo "Disable";
+                                    ?></td>
+                            </tr>
+                            <tr>
+                                <td class="label"><label><?php echo __('Purchase Order'); ?></label></td>
+                                <td class="value"><a target="_blank" href="<?php echo $this->getUrl('inventorysystem/purchaseorders/view', array('id' => $barcodeData['purchaseorder_id'])); ?>"><?php echo $purchase_order_id; ?></a></td>
+                            </tr>
+                            <?php
+                            if ($barcode) {
+                                if ($barcodeData['status'] == 1) {
+                                    ?>
+                                    <tr>
+                                        <td class="button" colspan="2" align="center"><button type="button" onclick="printBarcodeWindow();" id="scan_barcode_print" name="scan_barcode_print"><span><span><span>Print</span></span></span></button></td>
+        <!--                                    <td class="button" colspan="2" align="center"><button type="button" id="scan_barcode_print" name="scan_barcode_print">Print</button></td>-->
+                                    </tr>
+                                    <?php
+                                }
+                            }
+                            ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="view-barcode">
+            <div id='product_form-head' class='entry-edit-head' class="product-form">
+                <h4 class='icon-head head-edit-form fieldset-legend'><?php echo __('Product Information'); ?> </h4>
+            </div>
+            <div id="product_form" class="fieldset " style="">
+                <div class="hor-scroll">
+                    <table class="form-list" cellspacing="0">
+                        <tbody>
+                            <tr>
+                                <td class="label"><label><?php echo __('Image'); ?></label></td>
+                                <td class="value"><?php
+                                    if (isset($productData['small_image'])) {
+                                        $store = $block->getCurrentStore();
+                                        $imageUrl = $store->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA) . 'catalog/product' . $productData['small_image'];
+                                        ?><img width="150px" height="150px" src="<?php echo $imageUrl; ?>" alt="">
+                                        <?php
+                                    } else {
+                                        echo "No Image Found";
+                                    }
+                                    ?></td>
+                            </tr>
+                            <tr>
+                                <td class="label"><label><?php echo __('Name'); ?></label></td>
+                                <td class="value"><?php echo $productData['name']; ?></td>
+                            </tr>
+                            <tr>
+                                <td class="label"><label><?php echo __('Sku'); ?></label></td>
+                                <td class="value"><?php echo $productData['sku']; ?></td>
+                            </tr>
+                            <tr>
+                                <td class="label"><label><?php echo __('Price'); ?></label></td>
+                                <td class="value"><?php echo $block->getBiztechHelper() . number_format($productData['price'], 2); ?><input type="hidden" id="prod_price" name="prod_price" value="<?php echo $productData['price']; ?>" /></td>
+                            </tr>
+                            <tr>
+                                <td class="label"><label><?php echo __('Quantity'); ?></label></td>
+                                <td class="value"><?php echo number_format($productStock['qty'], 2); ?></td>
+                            </tr>
+                            <tr>
+                                <td class="label"><label><?php echo __('Stock Availability'); ?></label></td>
+                                <td class="value"><?php
+                                    if ($productStock['is_in_stock'] == 1)
+                                        echo "In Stock";
+                                    else
+                                        echo "Out of Stock";
+                                    ?></td>
+                            </tr>
+                            <tr>
+                                <td class="label"><label><?php echo __('Status'); ?></label></td>
+                                <td class="value"><?php
+                                    if ($productData['status'] == 1)
+                                        echo "Enable";
+                                    else
+                                        echo "Disable";
+                                    ?>
+                                </td>
+                            </tr>
+                            <?php
+                            if ($barcode) {
+                                ?>
+
+                                <?php
+                            }
+                            ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="view-barcode">
+            <div id='supplier_form-head' class='entry-edit-head' class="view-supplier">
+                <h4 class='icon-head head-edit-form fieldset-legend'><?php echo __('Supplier Information'); ?> </h4>
+            </div>
+            <div id="supplier_form" class="fieldset " style="">
+                <?php if (isset($supplierData) && !empty($supplierData)) { ?>
+                    <div class="hor-scroll">
+                        <table class="form-list" cellspacing="0">
+                            <tbody>
+                                <tr>
+                                    <td class="label"><label><?php echo __('Name'); ?></label></td>
+                                    <td class="value"><?php echo $supplierData['first_name'] . " " . $supplierData['last_name']; ?></td>
+                                </tr>
+                                <tr>
+                                    <td class="label"><label><?php echo __('Email'); ?></label></td>
+                                    <td class="value email"><?php echo $supplierData['email']; ?></td>
+                                </tr>
+                                <tr>
+                                    <td class="label"><label><?php echo __('Active'); ?></label></td>
+                                    <td class="value"><?php
+                                        if ($supplierData['is_active'] == 1)
+                                            echo "Yes";
+                                        else
+                                            echo "No";
+                                        ?></td>
+                                </tr>
+                                <tr>
+                                    <td class="label"><label><?php echo __('Address'); ?></label></td>
+                                    <td class="value"><?php echo $supplierData['address_line']; ?></td>
+                                </tr>
+                                <tr>
+                                    <td class="label"><label><?php echo __('Country'); ?></label></td>
+                                    <td class="value"><?php echo $countryName; ?></td>
+                                </tr>
+                                <tr>
+                                    <td class="label"><label><?php echo __('State'); ?></label></td>
+                                    <td class="value"><?php echo $sName; ?></td>
+                                </tr>
+                                <tr>
+                                    <td class="label"><label><?php echo __('City'); ?></label></td>
+                                    <td class="value"><?php echo $supplierData['city']; ?></td>
+                                </tr>
+                                <tr>
+                                    <td class="label"><label><?php echo __('Postal Code'); ?></label></td>
+                                    <td class="value"><?php echo $supplierData['postal_code']; ?></td>
+                                </tr>
+                                <tr>
+                                    <td class="label"><label><?php echo __('Telephone'); ?></label></td>
+                                    <td class="value"><?php echo $supplierData['telephone']; ?></td>
+                                </tr>
+                                <tr>
+                                    <td class="label"><label><?php echo __('Fax'); ?></label></td>
+                                    <td class="value"><?php echo $supplierData['fax']; ?></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <?php
+                } else {
+                    echo __('No Supplier Information Availabe');
+                    ?>
+                <?php } ?>
+            </div>
+        </div>
+        <!-- Warehouse div -->
+        <div class="view-barcode">
+            <div id='warehouse_form-head' class='entry-edit-head' class="view-warehouse">
+                <h4 class='icon-head head-edit-form fieldset-legend'><?php echo __('Warehouse Information'); ?> </h4>
+            </div>
+
+            <?php $getWarehouseDetails = $block->getAdvanceHelper($barcodeData['product_id']); ?>
+            <div id="warehouse_form" class="fieldset " style="">
+                <?php if ($getWarehouseDetails != false) { ?>
+                    <div class="hor-scroll grid">
+                        <table class="data" cellspacing="0" cellpadding="0">
+                            <colgroup>
+                                <?php if ($barcode): ?>
+                                    <col style="width: 50px">
+                                    <col style="width: 20px">
+                                    <col style="width: 30px">
+                                <?php else: ?>
+                                    <col style="width: 70px">
+                                    <col style="width: 30px">
+                                <?php endif; ?>
+                            </colgroup>
+                            <tr>
+                                <td class="label a-center"><b><?php echo __('Name'); ?></b></td>
+                                <td class="label"><b><?php echo __('Avail. Qty'); ?></b></td>
+                                <?php if ($barcode): ?>
+                                    <td class="label"><b><?php echo __('Qty. Received'); ?></b></td>
+                                <?php endif; ?>
+                            </tr>
+                            <?php
+                            foreach ($getWarehouseDetails as $key => $data):
+                                ?>
+                                <tr>
+                                    <td class="label a-center"><a target="_blank" href="<?php echo $this->getUrl('inventorysystemadvance/warehouse/edit', array('id' => $data['warehouse_id'])) ?>"><?php echo $data['warehouse_code'] ?></a></td>
+                                    <td class="label"><?php echo $data['quantity']; ?></td>
+                                    <?php if ($barcode): ?>
+                                        <td class="value"><input value="0" type="text" size="5" id="bar_scan_qty" name="bar_scan_qty[<?php echo $data['warehouse_id']; ?>]" /></td>
+                                    <?php endif; ?>
+                                </tr>
+                            <?php endforeach; ?>
+                            <?php if ($barcode): ?>
+                                <tr>
+                                    <td colspan="3" class="button a-center"><button type="button" onclick="return submitForm();" id="bar_scan_qty_upd" name="bar_scan_qty_upd"><span><span><span><?php echo __('Add Qty.'); ?></span></span></span></button></td>
+                                </tr>
+                            <?php endif; ?>
+                        </table>
+                    </div>
+                    <?php
+                }else {
+                    echo __('No Warehouse Information Availabe');
+                }
+                ?>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="barcode-printer" id="barcode-printer" style="display: none; width: auto;" >
+    <table>
+        <tr>
+            <td><label><?php echo __('Symbology'); ?></label></td>
+            <td><select id="sym_code" name="sym_code" onchange="changeTemplate();">
+                    <option value="code128">code128</option>
+                    <option value="code128b">code128b</option>
+                    <option value="code128a">code128a</option>
+                    <option value="code39">code39</option>
+                    <option value="code25">code25</option>
+                    <option value="codabar">codabar</option>
+                </select></td>
+        </tr>
+        <tr>
+            <td><?php echo __('Barcode Qty'); ?></td>
+            <td><input type="text" size="5" id="barcode_print_qty" value="<?php echo $barcodeData['barcode_qty']; ?>" name="barcode_print_qty" /></td>
+        </tr>
+        <tr>
+            <td><?php echo __('Select Template'); ?></td>
+            <td><select id="select_template" name="select_template" onchange="changeTemplate();">
+                    <option value="barcode">Barcode</option>
+                    <option value="barcode_prodname">Product Name and Barcode</option>
+                    <option value="barcode_prodname_price">Product Name, Price and Barcode</option>
+                </select><br><br></td>
+        </tr>
+        <tr>
+            <td>&nbsp;&nbsp;</td>
+            <td align="center"><div id="barcode_attribs"></div></td>
+        </tr>
+    </table>
+</div>
+<script type="text/javascript">
+<?php
+$baseUrlpath = $block->getCurrentStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_WEB);
+?>
+    require([
+        'jquery',
+        'Magento_Ui/js/modal/modal'
+    ],
+            function (
+                    $,
+                    modal
+                    ) {
+                var options = {
+                    type: 'popup',
+                    responsive: true,
+                    innerScroll: true,
+                    id: 'barcode_print',
+                    className: 'magento',
+                    title: 'Barcode Print',
+                    buttons: [{
+                            text: $.mage.__('Print'),
+                            class: '',
+                            click: function () {
+                                printDiv();
+                            }
+                        }]
+                };
+                var popup = modal(options, $('#barcode-printer'));
+                $("#print_barcode").on('click', function () {
+                    var url = '<?php echo $baseUrlpath . "bcinventorysystemadvance/barcode/Barcode.php?text=" . $barcodeData['barcode']; ?>';
+                    var url_append = url + '&codetype=' + $('#sym_code').val();
+                    document.getElementById("barcode_attribs").innerHTML = '<div id="barcode_img"><img src="' + url_append + '" /></div><div id = "attr_barcode"><?php echo $barcodeData['barcode']; ?></div>';
+                    $("#barcode-printer").modal("openModal");
+                });
+            }
+    );
+    function changeTemplate()
+    {
+        var url = '<?php echo $baseUrlpath . "bcinventorysystemadvance/barcode/Barcode.php?text=" . $barcodeData['barcode']; ?>';
+        var url_append = url + '&codetype=' + document.getElementById("sym_code").value;
+        if ($('select_template').value == 'barcode_prodname')
+        {
+            document.getElementById("barcode_attribs").innerHTML = '<div id="attr_prodname"><?php echo $productData['name']; ?></div><div id="barcode_img"><img src="' + url_append + '" /></div><div id="attr_barcode"><?php echo $barcodeData['barcode']; ?></div>';
+        }
+        if ($('select_template').value == 'barcode_prodname_price')
+        {
+            document.getElementById("barcode_attribs").innerHTML = '<div  id="barcode_img"><img src="' + url_append + '" /></div><div   id="attr_barcode"><?php echo $barcodeData['barcode']; ?></div><div id="attr_prodname"><?php echo $productData['name']; ?></div><div id="attr_price"><?php echo $block->getBiztechHelper() . number_format($productData['price'], 2); ?></div>';
+        }
+        if ($('select_template').value == 'barcode')
+        {
+            document.getElementById("barcode_attribs").innerHTML = '<div id="barcode_img"><img src="' + url_append + '" /></div><div id="attr_barcode"><?php echo $barcodeData['barcode']; ?></div>';
+        }
+    }
+
+    function printDiv()
+    {
+        var divToPrint = document.getElementById('barcode_attribs');
+        var barcodeQty = document.getElementById('barcode_print_qty');
+        var finalDivToPrint = "<table cellpadding='5' cellspacing='5' width='100%'>";
+        for (var i = 0; i < barcodeQty.value; i++)
+        {
+            if (i % 2 == 0)
+            {
+                if (i == 0)
+                    finalDivToPrint = finalDivToPrint + "<tr>";
+                else
+                    finalDivToPrint = finalDivToPrint + "</tr><tr>";
+            }
+            finalDivToPrint = finalDivToPrint + "<td align='center'>" + divToPrint.innerHTML + "</td>";
+        }
+        var params = [
+            'height=' + screen.height, 'width=' + screen.width / 1.25,
+            'fullscreen=yes' // only works in IE, but here for completeness
+        ].join(',');
+        finalDivToPrint = finalDivToPrint + "</tr></table>";
+        var popupWin = window.open('', '_blank', params);
+        popupWin.moveTo(0, 0);
+        popupWin.document.open();
+        popupWin.document.write('<html><body onload="window.print()">' + finalDivToPrint + '</html>');
+        popupWin.document.close();
+    }
+</script>

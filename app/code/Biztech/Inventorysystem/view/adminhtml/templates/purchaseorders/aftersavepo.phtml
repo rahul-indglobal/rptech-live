@@ -1,0 +1,200 @@
+<?php
+
+$poArray = $this->getRequest()->getParam('po_array');
+$priceHelper = $block->getPriceHelper();
+$currencyCode = $block->getCurrencyCode();
+$_localeCurrency = $block->getCurrencyInterface();
+$currencySymbol = $_localeCurrency->getCurrency($currencyCode)->getSymbol();
+$_bizHelper = $block->getBizHelper();
+?>
+<?php if ($_bizHelper->isEnable()) : ?>
+<form enctype="multipart/form-data" method="post"
+      action="<?php echo $this->getUrl('inventorysystem/purchaseorders/updatePurchaseOrderDetails'); ?>"
+      id="afterposave_form">
+    <?php
+    echo $this->getBlockHtml('formkey');
+    ?>
+    <?php
+    foreach ($poArray as $supID => $data) {
+        $supName = $this->getSupplierFullName($supID);
+        ?>
+        <input type="hidden" id="po_id" name="po_id[]" value="<?php echo $poArray[$supID]['po_id']; ?>"/>
+        <input type="hidden" id="po_incr_id" name="po_incr_id[]" value="<?php echo $poArray[$supID]['po_incr_id']; ?>"/>
+
+        <section class="admin__page-section">
+            <div class="admin__page-section-content">
+                <div class="admin__page-section-title">
+                    <span class="title"> <?php echo __('Supplier: ') . $supName; ?> </span>
+                </div>
+                <div class="admin__control-table-wrapper">
+                    <table cellspacing="0" class="admin__control-table data-table" width="100%">
+                        <thead>
+                        <tr class="headings">
+                            <th class="col-name"><?php echo __('Name') ?></th>
+                            <th class="col-sku"><?php echo __('SKU'); ?></th>
+                            <?php if ($_bizHelper->isModuleEnabled('Biztech_Inventorysystemadvance')): ?>
+                            <th class="col-warehouse"><?php echo __('Warehouse'); ?></th>
+                            <?php endif; ?>
+                            <th class="col-qty-purchased"><?php echo __('Quantity Purchased'); ?></th>
+                            <th class="col-price"><?php echo __('Unit Cost'); ?></th>
+                            <th class="col-row-total"><?php echo __('Row Total'); ?></th>
+                        </tr>
+                        </thead>
+                        <?php
+                        $i = 0;
+                        foreach ($data as $prodID => $prodData) {
+                            $i++;
+                            if (is_numeric($prodID)) {
+                                if ($_bizHelper->isModuleEnabled('Biztech_Inventorysystemadvance')):
+                                $warehouseModel = $block->getWarehouse($prodData['warehouse']);
+                                $warehouseName = $warehouseModel->getWarehouseName();
+                                endif;
+                                ?>
+                                <tbody class="<?php /* @escapeNotVerified */ echo($i%2) ? 'even' : 'odd' ?>">
+                                <tr>
+                                    <td class="col-product"><?php echo $prodData['name']; ?></td>
+                                    <td><?php echo $prodData['sku']; ?></td>
+                                    <?php if ($_bizHelper->isModuleEnabled('Biztech_Inventorysystemadvance')): ?>
+                                    <td><?php echo $warehouseName; ?></td>
+                                    <?php endif; ?>
+                                    <td><?php echo $prodData['req_qty']; ?></td>
+                                    <td><?php echo $currencySymbol . number_format($prodData['row_total'] / $prodData['req_qty'], 2); ?></td>
+                                    <td><?php echo $currencySymbol . number_format($prodData['row_total'], 2); ?></td>
+                                </tr>
+                                </tbody>
+                                <?php
+                            }
+                        }
+                        ?>
+                    </table>
+                </div>
+            </div>
+        </section>
+        <section class="admin__page-section order-summary">
+            <div class="admin__page-section-title">
+                <span class="title"><?php echo __('Purchase Order Total') ?></span>
+            </div>
+            <div class="admin__page-section-content">
+                <div class="admin__page-section-item order-comments-history">
+                    <div class="admin__page-section-item-title">
+                        <span class="title"><?php echo __('Additional Details') ?></span>
+                    </div>
+                    <div id="edit-purchase-order" class="edit-order-comments">
+                        <div class="admin__field">
+                            <label for="ship_method"
+                                   class="admin__field-label"><?php echo __('Shipping Method') ?></label>
+
+                            <div class="admin__field-control">
+                                <input type="text" id="ship_method" class="admin__control-text"
+                                       name="ship_method[<?php echo $poArray[$supID]['po_id']; ?>]"
+                                       value="<?php echo $this->getShippingMethod($supID); ?>"/>
+                            </div>
+                        </div>
+
+                        <div class="admin__field">
+                            <label for="payment_method"
+                                   class="admin__field-label"><?php echo __('Payment Method') ?></label>
+
+                            <div class="admin__field-control">
+                                <textarea type="text" id="payment_method" class="admin__control-textarea"
+                                          name="payment_method[<?php echo $poArray[$supID]['po_id']; ?>]"><?php echo $this->getPaymentMethod($supID); ?></textarea>
+                            </div>
+                        </div>
+
+
+                        <div class="admin__field">
+                            <label for="po_comment"
+                                   class="admin__field-label"><?php echo __('Purchase Order Comment') ?></label>
+
+                            <div class="admin__field-control">
+                                <textarea type="text" rows="3" cols="5" id="po_comment" class="admin__control-textarea"
+                                          name="po_comment[<?php echo $poArray[$supID]['po_id']; ?>]"></textarea>
+                                <input type="hidden" id="temp_po_id" po_id="<?php echo $poArray[$supID]['po_id']; ?>"/>
+                            </div>
+                        </div>
+
+
+                        <div class="admin__field">
+                            <label for="required_date_<?php echo $poArray[$supID]['po_id']; ?>"
+                                   class="admin__field-label"><?php echo __('Expected Delivery Date') ?></label>
+
+                            <div class="admin__field-control">
+                                <input class="input-text admin__control-text required-entry"
+                                       type="text"
+                                       id="required_date_<?php echo $poArray[$supID]['po_id']; ?>"
+                                       name="required_date[<?php echo $poArray[$supID]['po_id']; ?>]"
+                                       value=""
+                                    />
+                                <span id="required_date_<?php echo $poArray[$supID]['po_id']; ?>"></span>
+                            </div>
+                            <script>
+                                require([
+                                    "jquery",
+                                    "mage/calendar"
+                                ], function ($) {
+                                    $('#required_date_<?php echo $poArray[$supID]['po_id'];?>').calendar({
+                                        buttonText: "<?php echo __('Select Date') ?>",
+                                        dateFormat: "yy-mm-dd",
+                                        hideIfNoPrevNext: true,
+                                        minDate: new Date(),
+                                        showsTime: false,
+                                    });
+                                });
+                            </script>
+                        </div>
+                    </div>
+                </div>
+                <div class="admin__page-section-item order-totals">
+                    <fieldset id="order-totals" class="admin__fieldset">
+                        <legend class="admin__legend"><span><?php echo __('Order Totals') ?></span></legend>
+                        <table class="admin__table-secondary data-table">
+                            <tbody>
+                            <tr class="row-totals">
+                                <td style="" class="admin__total-mark" colspan="1">
+                                    <?php echo __('Subtotal') ?>
+                                </td>
+                                <td style="" class="admin__total-amount">
+                                    <span class="price"
+                                          id="sub_total"><?php echo $currencySymbol . number_format($poArray[$supID]['grand_total'], 2); ?></span>
+                                </td>
+                            </tr>
+                            <tr class="row-totals">
+                                <td style="" class="admin__total-mark" colspan="1">
+                                    <strong><?php echo __('Grand Total') ?></strong>
+                                </td>
+                                <td style="" class="admin__total-amount">
+                                    <strong><span class="price"
+                                                  id="grand_total"><?php echo $currencySymbol . number_format($poArray[$supID]['grand_total'], 2); ?></span></strong>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="order-totals-options">
+                            <div class="divider"></div>
+                            <div class="admin__field admin__field-option">
+                                <input id="send_email_<?php echo $poArray[$supID]['po_id']; ?>" type="checkbox"
+                                       class="admin__control-checkbox"
+                                       name="send_email[<?php echo $poArray[$supID]['po_id']; ?>]"/>
+                                <label for="send_email_<?php echo $poArray[$supID]['po_id']; ?>"
+                                       class="admin__field-label"><?php echo __('Email to Supplier') ?></label>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+
+            </div>
+        </section>
+    <?php } ?>
+</form>
+<script type="text/javascript">
+    require([
+        "jquery",
+    ], function ($) {
+        $(document).on('click', '#save', function (event) {
+            event.preventDefault();
+            $('#afterposave_form').submit();
+        });
+    });
+</script>
+<?php endif; ?>

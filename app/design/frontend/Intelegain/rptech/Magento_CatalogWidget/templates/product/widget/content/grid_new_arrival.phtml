@@ -1,0 +1,123 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+// @codingStandardsIgnoreFile
+
+/** @var \Magento\CatalogWidget\Block\Product\ProductsList $block */
+?>
+<?php if ($exist = ($block->getProductCollection() && $block->getProductCollection()->getSize())): ?>
+	<?php
+	$type = 'widget-product-grid';
+	$mode = 'grid';
+	$image = 'new_products_content_widget_grid';
+	$items = $block->getProductCollection()->getItems();
+	$showWishlist = true;
+	$showCompare = true;
+	$showCart = true;
+	$templateType = \Magento\Catalog\Block\Product\ReviewRendererInterface::DEFAULT_VIEW;
+	$description = false;
+	//$priceHelper = $this->helper('Magento\Framework\Pricing\Helper\Data');
+	$label_new_status = $this->helper('Rptech\General\Helper\Data')->getLabelNewStatus();
+	$label_sale_status = $this->helper('Rptech\General\Helper\Data')->getLabelSaleStatus();
+	$label_sold_status = $this->helper('Rptech\General\Helper\Data')->getLabelSoldStatus();
+	$label_new = $this->helper('Rptech\General\Helper\Data')->getLabelNewImage();
+	$label_sale = $this->helper('Rptech\General\Helper\Data')->getLabelSaleImage();
+	$label_sold = $this->helper('Rptech\General\Helper\Data')->getLabelSoldImage();
+	?>
+	<div class="arrivals_product">
+		<div class="heading_border">
+			<div class="product-after">
+			</div>
+			<h2 class="heading">
+				New <strong>Arrivals</strong>
+			</h2>
+		</div>
+		<div class="arrivals-sec equalheight_wrapper" id="arrivals-sec1">
+			<?php $i = 1; ?>
+			<?php
+			foreach ($items as $_item):
+				//echo '<pre>'; print_r($_item);die; 
+				?>
+				<div class="arrivals-box equalheight">
+					<div class="arrivals-box-text">
+						<?php
+                        $class = '';
+                        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+                        $media_url = $objectManager->get('Magento\Store\Model\StoreManagerInterface')->getStore()
+                                                    ->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
+                        $stock_item = $objectManager->get('Magento\CatalogInventory\Api\StockRegistryInterface')->getStockItemBySku($_item->getSku());
+                        if(!$stock_item->getIsInStock()==1) {
+                            $class = "product-sold";
+                        }
+                        else if ($_item->getSpecialPrice() && $_item->getFinalPrice() == $_item->getSpecialPrice() && $_item->getIsSalable()) {
+                            $class = "product-sale";
+                        }
+                        else if($_item->getNewsFromDate() || $_item->getNewsToDate()) {
+                            $from_date = date('d/m/Y',strtotime($_item->getNewsFromDate()));
+                            $to_date = date('d/m/Y',strtotime($_item->getNewsToDate()));
+                            $today = date('d/m/Y');
+                            if($from_date<$today || $to_date>$today || ($from_date<$today && $today<$to_date)) {
+                                $class = "product-new";
+                            }
+                        }
+                        ?>
+                        <div class="product-tag <?= $class; ?>">
+                            <?php
+                            if($label_sold_status && !$stock_item->getIsInStock()==1) {
+                                echo "<img class='tag-sold' src='".$media_url.'catalog/product/label/'.$label_sold."' />";
+                            }
+                            else if ($label_sale_status && $_item->getSpecialPrice() && $_item->getFinalPrice() == $_item->getSpecialPrice() && $_item->getIsSalable()) {
+                                echo "<img class='tag-sale' src='".$media_url.'catalog/product/label/'.$label_sale."' />";
+                            }
+                            else if($_item->getNewsFromDate() || $_item->getNewsToDate()) {
+                                $from_date = date('d/m/Y',strtotime($_item->getNewsFromDate()));
+                                $to_date = date('d/m/Y',strtotime($_item->getNewsToDate()));
+                                $today = date('d/m/Y');
+                                if($label_new_status && ($from_date<$today || $to_date>$today || ($from_date<$today && $today<$to_date))) {
+                                    echo "<img class='tag-new' src='".$media_url.'catalog/product/label/'.$label_new."' />";
+                                }
+                            }
+                            ?>
+                        </div>
+						<a title="<?= $block->escapeHtml($_item->getName()) ?>"
+							       href="<?= $block->escapeUrl($block->getProductUrl($_item)) ?>"
+							       class="product-title">
+								       <?php 
+									$_productNameStripped = $block->escapeHtml($_item->getName(), null, true);
+									if(strlen($_productNameStripped) > 30){
+										echo substr($_productNameStripped, 0, 30).'...';
+									}else{
+										echo $_productNameStripped;
+									}
+									?>
+						</a>
+						<p class="product-txt"><?php 
+									$_productDescStripped = $_item->getShortDescription();
+									if(strlen($_productDescStripped) > 50){
+										echo substr($_productDescStripped, 0, 50).'...';
+									}else{
+										echo $_productDescStripped;
+									}
+									?> </p>
+						<p class="product-price"><?php
+						//echo $priceHelper->currency($_item->getFinalPrice(), true, false); 
+						echo $block->getProductPriceHtml($_item, $type);
+							//echo $block->getProductPriceHtml($_item, $type);
+						?></p>
+					</div>
+					<div class="arrivals-box-img">
+						<a href="<?= $block->escapeUrl($block->getProductUrl($_item)) ?>" class="product-item-photo">
+							<img src="<?= $block->getImage($_item, $image)->getImageUrl(); ?>" />
+						</a>
+					</div>
+				</div>
+				<?php
+				$i++;
+			endforeach
+			?>
+		</div>
+	</div>
+	<div class="clearfix"></div>
+<?php endif; ?>

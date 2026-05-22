@@ -1,0 +1,13 @@
+<!--@subject {{trans "Rptech Webinar Verify your email"}} @-->
+{{template config_path="design/email/header_template"}}
+<table style="float:left; margin-right: 10px" class="fue-abc-items">
+    <tr>
+        <td>
+            <p class="greeting">{{trans "Hi %name" name=$name|raw}}</p>
+            <p>{{trans "Please verify your email. Your OTP code is below"}}</p>
+            <p style="font-size: 24px">{{trans "%otp" otp=$otp|raw}}</p>
+        </td>
+    </tr>
+
+</table>
+{{template config_path="design/email/footer_template"}}

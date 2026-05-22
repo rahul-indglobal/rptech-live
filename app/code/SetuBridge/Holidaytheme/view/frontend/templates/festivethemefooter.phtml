@@ -1,0 +1,60 @@
+<?php
+/**
+* Setubridge Technolabs
+* http://www.setubridge.com/
+* @author SetuBridge
+* @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+**/
+?>
+<?php $_configHelper=$this->helper('SetuBridge\Holidaytheme\Helper\Data');
+if($_configHelper->isActive() &&  $_configHelper->isAllowedPage()):
+    if($_configHelper->getConfig('setubridge_holidaytheme/footerimageconfiguration/footerimageactive')):
+        $fromDate=$_configHelper->getConfig('setubridge_holidaytheme/general/festivedatestart');
+        $toDate=$_configHelper->getConfig('setubridge_holidaytheme/general/festivedateend');
+        $result=$_configHelper->isActiveForDate($fromDate,$toDate); 
+        if($result):    
+            $final_footer_image_left="";
+            $final_footer_image_right="";
+            $getchristmasimagesoathfooter   =  $block->getMediaurl() ."festivetheme/footer/default/resize/";
+            $footerleftimage= $_configHelper->getConfig('setubridge_holidaytheme/footerimageconfiguration/footerimagebrowseleft');
+            $footerrightimage= $_configHelper->getConfig('setubridge_holidaytheme/footerimageconfiguration/footerimagebrowseright');
+            
+            $_media_dir =  $block->getMediaurl().'festivetheme/footer/footer/default/';
+            
+            $cache_dir = $_media_dir . '/resize/';
+            $leftimage=explode("/",$footerleftimage);
+            if(count($leftimage)>1):
+                $image=$leftimage[1]; 
+                if (file_exists($cache_dir.$image)){$returnleftimage=$image;}else{$returnleftimage=$_configHelper->imageResize($image);} 
+                $final_footer_image_left=$getchristmasimagesoathfooter.$returnleftimage;
+                endif;
+            $rightimage=explode("/",$footerrightimage);
+            if(count($rightimage)>1):
+                $image=$rightimage[1];
+                if (file_exists($cache_dir.$image)){$returnrightimage=$image;}else{$returnrightimage=$_configHelper->imageResize($image);}
+                $final_footer_image_right=$getchristmasimagesoathfooter.$returnrightimage;
+                endif;
+            $lheight="";
+            $rheight="";
+            $lwidth="";
+            $rwidth="";
+
+            if($final_footer_image_left){ 
+
+                
+?>                <?php list($lwidth, $lheight) = getimagesize($final_footer_image_left);?>
+                <div class="christmas-tree" <?php if ($final_footer_image_left) { ?> style="background-image: url(<?php echo $final_footer_image_left; ?>);height:<?php echo $lheight ?>px; width:<?php echo $lwidth ?>px" <?php } ?>> </div>
+                <?php } if($final_footer_image_right){
+                list($rwidth, $rheight) = getimagesize($final_footer_image_right);
+
+                ?>
+                <div class="christmas-tree-right" <?php if ($final_footer_image_right) { ?> style="background-image: url(<?php echo $final_footer_image_right; ?>); height:<?php echo $rheight ?>px; width:<?php echo $rwidth ?>px" <?php } ?>> </div>
+                <?php }
+             endif;
+              endif;
+               endif;?> 
+
+
+
+
+

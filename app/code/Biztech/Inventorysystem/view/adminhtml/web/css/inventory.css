@@ -1,0 +1,109 @@
+#pendingitemsGrid_filter_price_currency { height: 100%; }
+#pendingitemsGrid_table .col-entity_id { width: 25px !important; }
+#pendingitemsGrid_table .col-qty { width: 25px !important; }
+#pendingitemsGrid_table .col-image { width: 50px !important; }
+#pendingordersGrid_table .col-increment_id { width: 100px !important; }
+#purchaseorderGrid_table .col-id { width: 50px !important; }
+#purchaseorderGrid_table .col-sales_order_id { width: 150px !important; }
+#purchaseorderGrid_table .col-invoiced { width: 150px !important; }
+
+#purchaseorder_create_product_grid_table .col-entity_id { width: 50px !important; }
+#purchaseorder_create_product_grid_table .col-qty { width: 90px !important; }
+.biz-fixed-width { width: 142px;  }
+.biz-col-qty {width: 50px;}
+.biz-last-month-sale {width: 104px;}
+.warehouse_select {width: 100% !important;}
+.selectSup {width: 100% !important;}
+.col-thumbnail {padding-left: 7px;}
+
+
+#create_invoice .order-tables {border: 0.1rem solid #8a837f;}
+#create_invoice .order-tables .headings {text-align: left;}
+#create_invoice .order-tables .headings th {background: #514943;color: #FFF;}
+#create_invoice .order-tables td,
+#create_invoice .order-tables th {padding: 10px 5px;}
+
+#create_invoice .box-left {width: 50%;float: left;}
+#create_invoice .box-right {width: 50%;float: right;}
+#create_invoice .box-right .entry-edit-head {text-align: right;}
+#create_invoice .order-totals-bottom .a-right {text-align: right;}
+#create_invoice .order-totals td {padding: 5px;text-align: right;}
+#create_invoice #submit_invoice {background-color:#514943;border-color: #514943;color: #ffffff;text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);}
+
+#view_invoice .icon-head{float: left;}
+#view_invoice .form-buttons {float: right;}
+#view_invoice .content-header::after {content: '';display: table;clear: both;}
+
+#view_invoice .order-tables {border: 0.1rem solid #8a837f;}
+#view_invoice .order-tables .headings {text-align: left;}
+#view_invoice .order-tables .headings th {background: #514943;color: #FFF;white-space: nowrap;}
+#view_invoice .order-tables td,
+#view_invoice .order-tables th {padding: 10px 5px;}
+
+#view_invoice .box-left {width: 50%;float: left;}
+#view_invoice .box-right {width: 50%;float: right;}
+#view_invoice .box-right .entry-edit-head {text-align: right;}
+#view_invoice .order-totals-bottom .a-right {text-align: right;}
+#view_invoice .order-totals td {padding: 5px;text-align: right;}
+#view_invoice #view_invoice {background-color:#514943;border-color: #514943;color: #ffffff;text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);}
+
+
+#general_information::after {content: '';clear: both;display: table;}
+#general_information button {background-color:#514943;border-color: #514943;color: #ffffff;text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);}
+#general_information .view-barcode {width:30%;float:left;border:0.1rem solid #8a837f;margin-right:25px;margin-bottom: 25px;}
+#general_information .view-barcode .icon-head {background-color: #373330;color: #FFF;padding: 5px 10px;margin-bottom: 0;}
+#general_information .view-barcode:last-child {clear: both;}
+
+#general_information .view-barcode #barcode_form table td,
+#general_information .view-barcode #product_form table td,
+#general_information .view-barcode #supplier_form table td {padding: 8px;text-align: left;}
+#general_information .view-barcode #warehouse_form table td {padding: 5px;text-align: left;}
+
+#general_information .view-barcode #barcode_form table td.label,
+#general_information .view-barcode #product_form table td.label,
+#general_information .view-barcode #supplier_form table td.label,
+#general_information .view-barcode #warehouse_form table td.label {font-weight: 600;}
+
+#general_information .view-barcode #supplier_form table td.email {word-break: break-all;}
+
+
+.barcode-printer {clear: both;margin-top: 20px;border: 0.1rem solid #8a837f;} 
+.barcode-printer table td {padding: 5px 10px;text-align: left;vertical-align: unset;}
+
+.scan-barcode-printer {clear: both;margin-top: 20px;border: 0.1rem solid #8a837f;} 
+.scan-barcode-printer table td {padding: 5px 10px;text-align: left;vertical-align: unset;}
+
+#container .content-header .icon-head {float: left;}
+#container .content-header .form-buttons {float: right;margin-top: -7px;}
+#container .entry-edit-head {clear: both;}
+#supplier_form {clear: both;}
+
+.admin__data-grid-wrap {margin-top: 1rem;} 
+
+#stockreceive_form .admin__control-table th {white-space: nowrap;} 
+#supplier_form #barcode_search {width: 100%;padding: 6px;}
+
+#supplier_form table td .email{word-break: break-word !important; }
+
+#productGrid_table .data-grid-th {white-space: nowrap;}
+.mass-select-wrap {transform: translateY(50%);-webkit-transform: translateY(50%);-moz-transform: translateY(50%);-o-transform: translateY(50%);-ms-transform: translateY(50%);}
+
+#barcode-printer #barcode_attribs {text-align: center;}
+
+
+#barcode-printer #barcode_img {margin: 8px 0;line-height: 0;}
+#stockreceivedGrid table th {white-space: nowrap;}
+
+#inventorysystemGrid .data-grid .data-grid-th {white-space: nowrap;}
+#inventorysystemGrid .data-grid .col-status {width: 7%;}
+.admin__data-grid-toolbar .admin__filter-actions {float: right !important;}
+.admin__control-thumbnail {border: 1px solid #514943;}
+#productGrid .data-grid td {white-space: nowrap;}
+
+.edit-order-table th:first-child,
+.edit-order-table td:first-child {padding-left: 1rem !important;}
+.edit-order-table td img {border: 1px solid #514943;}
+
+.data-grid tr.data-grid-filters .range input {
+    min-width: 200px !important;
+}

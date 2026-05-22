@@ -1,0 +1,168 @@
+<?php
+
+$poID = $this->getRequest()->getParam('porder_id');
+$poCollection = $block->getPO()->load($poID);
+
+$poiCollection = $block->getPOItems()->addFieldToFilter('purchase_order_id', $poID);
+$poData = $poCollection->getData();
+$poiData = $poiCollection->getData();
+
+$currency_code = $block->getCurrentStore()->getCurrentCurrencyCode();
+
+$supCollection = $block->getSupplier()->load($poData['supplier_id']);
+$supName = $supCollection->getFirstName() . " " . $supCollection->getLastName();
+
+$_localeCurrency = $block->getCurrencyInterface();
+$currency_symbol = $_localeCurrency->getCurrency($currency_code)->getSymbol();
+?>
+
+<form enctype="multipart/form-data" method="post" action="<?php echo $this->getUrl('inventorysystem/purchaseorders/saveInvoice'); ?>" id="create_invoice">
+    <?php echo $this->getBlockHtml('formkey') ?>
+    <div class="content-header">
+        <?php /*  <h3 class="icon-head head-adminhtml-purchaseorders"><?php echo __('PO Invoice') . " | " . $poData['purchase_order_id']; ?></h3> */ ?>
+        <input id="po_incr_id" name="po_incr_id" type="hidden" value="<?php echo $poData['purchase_order_id']; ?>" />
+        <input id="po_id" name="po_id" type="hidden" value="<?php echo $poID; ?>" />
+    </div>
+
+    <div class='entry-edit'>
+        <div class='entry-edit-head'><h4 class='icon-head head-products'><?php echo __('Items to Invoice'); ?> </h4></div>
+        <div class="grid np">
+
+            <div class="hor-scroll">
+                <table cellspacing="0" class="data order-tables" width="100%">
+                    <?php
+                    if ($poiData && is_array($poiData) && !empty($poiData)) {
+                        ?>
+                        <tr class="headings">
+                            <th width="25%"><?php echo __('Name'); ?></th>
+                            <th width="25%"><?php echo __('SKU'); ?></th>
+                            <th width="10%"><?php echo __('Supplier'); ?></th>
+                            <th width="10%"><?php echo __('Quantity Purchased'); ?></th>
+                            <th width="10%"><?php echo __('Quantity Received'); ?></th>
+                            <th width="10%"><?php echo __('Unit Cost'); ?></th>
+                            <th width="10%"><?php echo __('Row Total'); ?></th>
+                        </tr>
+
+                        <?php
+                        foreach ($poiData as $key => $data) {
+                            ?>
+                            <tr>
+                                <td width="25%"><?php echo $data['product_name']; ?><input type="hidden" id="product_id" name="product_id[]" value="<?php echo $data['product_id']; ?>" /><input type="hidden" id="name" name="name[]" value="<?php echo htmlspecialchars($data['product_name']); ?>" /></td>
+                                <td width="25%"><?php echo $data['product_sku']; ?><input type="hidden" id="sku" name="sku[]" value="<?php echo htmlspecialchars($data['product_sku']); ?>" /></td>
+                                <td width="10%"><?php echo $supName; ?><input type="hidden" id="supplier" name="supplier[]" value="<?php echo $poData['supplier_id']; ?>" /></td>
+                                <td align="justify" width="10%"><?php echo $data['qty_purchased']; ?><input type="hidden" id="req_qty_<?php echo $data['product_id']; ?>" name="req_qty[]" value="<?php echo $data['qty_purchased']; ?>" item_id="<?php echo $data['product_id']; ?>" /></td>
+                                <td align="justify" width="10%"><?php echo $data['qty_received']; ?><input type="hidden" id="rec_qty_<?php echo $data['product_id']; ?>" name="rec_qty[]" value="<?php echo $data['qty_received']; ?>" item_id="<?php echo $data['product_id']; ?>" /></td>
+                                <?php
+                                $unitCost = $data['rec_row_total'] / $data['qty_received']
+                                ?>
+                                <td align="justify" width="10%"><?php echo $currency_symbol . $unitCost; ?><input type="hidden" value="<?php echo $data['cost']; ?>" size="5" id="input_cost_<?php echo $data['product_id']; ?>" name="input_cost[]" item_id="<?php echo $data['product_id']; ?>" /></td>
+                                <td align="justify" width="10%"><?php echo $currency_symbol . $data['rec_row_total']; ?><input type="hidden" value="<?php echo $data['rec_row_total']; ?>" id="row_total_<?php echo $data['product_id']; ?>" size="5" name="row_total[]" /></td>
+                            </tr>
+                            <?php
+                        }
+                    }
+                    ?>
+                </table>
+            </div>
+
+        </div>
+        <br>
+        <div class="box-right entry-edit">
+            <div class="entry-edit-head">
+                <h4>Invoice Totals</h4>
+            </div>
+            <div class="order-totals">
+                <table width="100%" cellspacing="0">
+                    <colgroup>
+                        <col>
+                        <col width="1">
+                    </colgroup>
+                    <tfoot>
+                        <tr class="0">
+                            <td class="label" align="right">
+                                <strong>Grand Total</strong>
+                            </td>
+                            <td class="emph">
+                                <strong>
+                                    <span class="price" id="grand_total_span"><?php echo $currency_symbol . $poData['ship_grand_total']; ?><input id="grand_total" name="grand_total" value="<?php echo $poData['ship_grand_total']; ?>" type="hidden" /></span>
+                                </strong>
+                            </td>
+                        </tr>
+                    </tfoot>
+                    <tbody>
+                        <tr class="0">
+                            <td class="label" align="right" width="90%"> Subtotal </td>
+                            <td width="10%">
+                                <span class="price"><?php echo $currency_symbol . $poData['ship_sub_total']; ?><input id="sub_total" name="sub_total" value="<?php echo $poData['ship_sub_total']; ?>" type="hidden" /></span>
+                            </td>
+                        </tr>
+                        <tr class="0">
+                            <td class="label" align="right" width="90%"> Shipping Cost </td>
+                            <td width="10%">
+                                <span class="price"><?php echo $currency_symbol . $poData['ship_cost']; ?><input id="ship_cost" name="ship_cost" value="<?php echo $poData['ship_cost']; ?>" type="hidden" /></span>
+                            </td>
+                        </tr>
+                        <tr class="0">
+                            <td class="label" align="right" width="90%"> Tax Amount </td>
+                            <td width="10%">
+                                <span class="price"><input id="tax_amount" name="tax_amount" value="0.00" type="text" size="5" onchange="changeGrandTotal();" /></span>
+                            </td>
+                        </tr>
+                        <tr class="0">
+                            <td class="label" align="right" width="90%"> Discount </td>
+                            <td width="10%">
+                                <span class="price"><input id="discount" name="discount" value="0.00" type="text" size="5" onchange="changeGrandTotal();" /></span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="order-totals-bottom">
+                    <div class="divider"></div>
+                    <div class="a-right">
+                        <button id="submit_invoice" class="scalable save submit-button" type="submit" title="Submit Invoice">
+                            <span>
+                                <span>
+                                    <span>Submit Invoice</span>
+                                </span>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="box-left entry-edit">
+            <div class="entry-edit-head">
+                <h4>Invoice History</h4>
+            </div>
+            <fieldset>
+                <div id="history_form" class="order-history-form">
+                    <span class="field-row">
+                        <label class="normal" for="invoice_comment_text">Invoice Comments</label>
+                        <textarea id="invoice_comment_text" style="height:10em; width:98%;" cols="5" rows="3" name="invoice[comment_text]"></textarea>
+                    </span>
+                    <div class="clear"></div>
+                </div>
+            </fieldset>
+        </div>
+    </div>
+</form>
+<script type="text/javascript">
+    function changeGrandTotal()
+    {
+        var subTotal = document.getElementById("sub_total").value;
+        var shipCost = document.getElementById("ship_cost").value;
+        var taxAmount = document.getElementById("tax_amount").value;
+        if (isNaN(taxAmount)) {
+            alert('Please enter valid number');
+            return;
+        }
+        var discount = document.getElementById("discount").value;
+        if (isNaN(discount)) {
+            alert('Please enter valid number');
+            return;
+        }
+        var grandTotal = parseFloat((Number(subTotal) + Number(shipCost) + Number(taxAmount)) - Number(discount)).toFixed(2);
+        document.getElementById("grand_total_span").innerHTML = "$" + grandTotal + "<input id='grand_total' name='grand_total' type='hidden' />";
+        document.getElementById("grand_total").value = grandTotal;
+    }
+</script>

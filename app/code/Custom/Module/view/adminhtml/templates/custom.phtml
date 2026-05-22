@@ -1,0 +1,67 @@
+
+<?php 
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance(); // Instance of object manager
+$resource = $objectManager->get('Magento\Framework\App\ResourceConnection');
+$connection = $resource->getConnection();
+$tableName = $resource->getTableName('sales_order'); //gives table name with prefix
+
+//////////////////// todays order ////////////////////////////////////////////////
+//Indian date & time
+date_default_timezone_set('Asia/kolkata');
+
+$starttoday_date = date('Y-m-d', time())." 00:00:01";
+$endtoday_date = date('Y-m-d H:i:s', time());
+
+//$starttoday_date = "2018-08-01 00:00:01";
+//$endtoday_date = "2018-09-26 23:59:59";
+
+$today_order_condition = " where sog.created_at between '".$starttoday_date."' AND '".$endtoday_date."' AND sog.status != 'Canceled' order by sog.created_at";
+$today_order_sql = "select sog.increment_id,sog.customer_name,cg.customer_group_code as customer_group,soi.name,sog.status,sog.shipping_address,sog.base_grand_total from sales_order_grid sog join sales_order_item soi on sog.entity_id = soi.order_id join customer_group cg on sog.customer_group = cg.customer_group_id".$today_order_condition;
+$today_order_result = $connection->fetchAll($today_order_sql); // gives associated array, table fields as key in array.
+//////////////////// todays order ////////////////////////////////////////////////
+?>
+
+<!-- Todays order -->
+<div class="dashboard-store-stats" style="padding-top: 50px;">
+    <div class="dashboard-item-title">Today's Order</div>
+    </br>
+    <div>
+    	<table class="admin__table-primary dashboard-data"> 
+    		<thead>
+    			<tr>
+    				<th class='data-grid-th  no-link col-name'>Order ID</td>
+                    <th class='data-grid-th  no-link col-name'>Customer Name</td>
+                    <th class='data-grid-th  no-link col-name'>Customer Group</td>
+                    <th class='data-grid-th  no-link col-name'>Product Name</td>
+                    <th class='data-grid-th  no-link col-name'>Status</td>
+                    <th class='data-grid-th  no-link col-name'>Shipping Address</th>
+                    <th class='data-grid-th  no-link col-name'>Total Price</td>
+    			</tr>
+    		</thead>
+    		<?php 
+    		if(!empty($today_order_result)){
+    			foreach ($today_order_result as $key => $value) {
+    			?>
+    			<tr>
+                    <td class=' col-avg col-orders_avg_amount a-right '><?= $value['increment_id'] ?></td>
+    				<td class=' col-name '><?= $value['customer_name'] ?></td>
+                    <td class=' col-name '><?= $value['customer_group'] ?></td>
+                    <td class=' col-name '><?= $value['name'] ?></td>
+                    <td class=' col-name '><?= $value['status'] ?></td>
+                    <td class=' col-avg col-orders_avg_amount a-right '><?= $value['shipping_address'] ?></td>
+                    <td class=' col-avg col-orders_avg_amount a-right '><?= $value['base_grand_total'] ?></td>
+    			</tr>
+    			<?php
+    			}
+    		}else{
+    			?>
+    			<tr>
+    				<td class='data-grid-th  no-link col-name'><?= "We couldn't find any record" ?></td>
+    			</tr>
+    			<?php
+    		}
+    		?>
+    	</table>
+    </div>
+</div>
+<!-- Todays order -->

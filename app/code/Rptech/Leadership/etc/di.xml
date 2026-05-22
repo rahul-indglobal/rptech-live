@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <virtualType name="Rptech\Leadership\LeaderImageUpload" type="Rptech\Leadership\Model\ImageUploader">
+        <arguments>
+            <argument name="baseTmpPath" xsi:type="string">catalog/tmp/leadership</argument>
+            <argument name="basePath" xsi:type="string">catalog/leadership</argument>
+            <argument name="allowedExtensions" xsi:type="array">
+                <item name="jpg" xsi:type="string">jpg</item>
+                <item name="jpeg" xsi:type="string">jpeg</item>
+                <item name="gif" xsi:type="string">gif</item>
+                <item name="png" xsi:type="string">png</item>
+            </argument>
+            <argument name="allowedMimeTypes" xsi:type="array">
+                <item name="jpg" xsi:type="string">image/jpg</item>
+                <item name="jpeg" xsi:type="string">image/jpeg</item>
+                <item name="gif" xsi:type="string">image/gif</item>
+                <item name="png" xsi:type="string">image/png</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <type name="Rptech\Leadership\Controller\Adminhtml\Index\Image\Upload">
+        <arguments>
+            <argument name="imageUploader" xsi:type="object">Rptech\Leadership\LeaderImageUpload</argument>
+        </arguments>
+    </type>
+
+    <type name="Rptech\Leadership\Model\ResourceModel\Leadership">
+        <plugin name="clear_cache_leadership_listing" type="Rptech\Leadership\Plugin\ClearCache" sortOrder="900"/>
+        <plugin name="image_processing" type="Rptech\Leadership\Plugin\ImageProcessingPlugin" sortOrder="999"/>
+    </type>
+    <type name="Rptech\Leadership\Plugin\ImageProcessingPlugin">
+        <arguments>
+            <argument name="imageUploader" xsi:type="object">Rptech\Leadership\LeaderImageUpload</argument>
+        </arguments>
+    </type>
+
+    <!-- ADMIN IMAGE -->
+    <type name="Rptech\Leadership\Model\ImageUploader">
+        <arguments>
+            <argument name="baseTmpPath" xsi:type="string">leader/tmp/image</argument>
+            <argument name="basePath" xsi:type="string">leader/image</argument>
+            <argument name="allowedExtensions" xsi:type="array">
+                <item name="jpg" xsi:type="string">jpg</item>
+                <item name="jpeg" xsi:type="string">jpeg</item>
+                <item name="gif" xsi:type="string">gif</item>
+                <item name="png" xsi:type="string">png</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <!--Admin GRID -->
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="leadership_grid_listing_data_source" xsi:type="string">
+                    Rptech\Leadership\Model\ResourceModel\Leadership\Grid\Collection
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <virtualType name="Rptech\Leadership\Model\ResourceModel\Leadership\Grid\Collection"
+                 type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">leadership</argument>
+            <argument name="resourceModel" xsi:type="string">Rptech\Leadership\Model\ResourceModel\Leadership</argument>
+        </arguments>
+    </virtualType>
+</config>

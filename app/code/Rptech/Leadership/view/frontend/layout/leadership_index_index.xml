@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+	<head>
+		<title>RP tech India Leadership Team | Meet Our Experts &amp; Visionaries</title>
+		<meta name="description" content="Discover the diverse leadership team driving RP tech India's success. Meet our experts,
+              innovators, and visionaries guiding our technology solutions forward."/>
+		<meta name="keywords"
+		      content="RP Tech India management team roles, RP Tech India leadership team, Rashi peripherals about company, rashi peripherals company details, rashi peripherals founder, rashi peripherals management team, rashi peripherals owner name, rashi peripherals promoters, Corporate leadership structure at RP Tech India"/>
+	</head>
+	<referenceContainer name="content">
+		<block class="Rptech\Leadership\Block\Leader" name="leaders_index_index"
+		       template="Rptech_Leadership::leaders.phtml"/>
+	</referenceContainer>
+</page>

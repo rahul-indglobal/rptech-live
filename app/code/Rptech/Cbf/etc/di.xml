@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../../lib/internal/Magento/Framework/ObjectManager/etc/config.xsd">
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="rptech_cbf_cbfxv_listing_data_source" xsi:type="string">Rptech\Cbf\Model\ResourceModel\CbfxvLead\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+    <virtualType name="Rptech\Cbf\Model\ResourceModel\CbfxvLead\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">rptech_cbfxv_lead</argument>
+            <argument name="resourceModel" xsi:type="string">Rptech\Cbf\Model\ResourceModel\CbfxvLead</argument>
+        </arguments>
+    </virtualType>
+</config>

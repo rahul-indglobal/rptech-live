@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <rptech>
+            <webinar>
+                <sender>sales</sender>
+                <otp_email_template>rptech_webinar_otp_email_template</otp_email_template>
+                <data_email_template>rptech_webinar_data_email_template</data_email_template>
+            </webinar>
+        </rptech>
+    </default>
+</config>

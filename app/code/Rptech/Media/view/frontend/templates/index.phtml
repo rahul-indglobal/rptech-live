@@ -1,0 +1,186 @@
+<?php
+/**
+ * @var \Rptech\Media\Block\Index $block
+ */
+    $collection = $block->getMediaCollection();
+
+?>
+
+<?php if ($collection && $collection->getSize() > 0) :?>
+    <section>
+        <div class="media-wapper inner-wrapper">
+            <div class="row" id="main">
+                <form method="GET" action="<?= $block->getBaseUrl()."mediagallery/" ?>">
+                    <div class="col-sm-5">
+                        <div class="custom-select-my">
+                            <!-- <select onmousedown="if(this.options.length>15){this.size=15;}" onchange='this.size=0;' onblur="this.size=0;" class="form-control" name="brand_id"> -->
+                            <select class="form-control" name="brand_id" id="media_year">
+                                <option value="">Select Brand</option>
+                                <?php if(!empty($block->getBrandCollection())) :?>
+                                    <?php foreach ($block->getBrandCollection() as $brand) :?>
+                                        <option value="<?= $brand->getEntityId() ?>" <?php echo ($block->getBrandFilter() == $brand->getEntityId()) ? "selected":"";?> ><?= __($brand->getTitle())?></option>
+                                    <?php endforeach; ?>
+                                <?php endif;?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-5">
+                        <div class="custom-select-my">
+                            <select class="form-control" name="media_year" id="media_year">
+                                <option value="">All</option>
+                                <?php if(!empty($block->getYearCollection())) :?>
+                                    <?php foreach ($block->getYearCollection() as $year) :?>
+                                        <option value="<?= $year?>" <?php echo ($block->getYearFilter() == $year) ? "selected":"";?>><?= __($year)?></option>
+                                    <?php endforeach; ?>
+                                <?php endif;?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <button type="submit" class="media-search btn-block" href="#"><i class="fa fa-search"></i>Search</button>
+                    </div>
+                </form>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="media-menu">
+                        <?php foreach ($collection as $media) :?>
+                            <div class="media-sub-menu">
+                                <div class="row">
+                                    <div class="col-sm-10">
+                                        <h3><?= __(date('F Y', strtotime($media->getPublishDate()))) ?></h3>
+                                        <p><a target="" href="#" class="more"> <?= $media->getTitle() ?> </a></p>
+                                        <div class="news-txt">
+                                            <button class="btn btn-view-more">View More</button>
+                                        </div>
+                                        <div class="viewmore-div hidden">
+                                            <?php echo $media->getContent() ?>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-2 col-right">
+                                            <p><?php if ($media->getBrandId()) {
+                                                   echo $block->getBrandCollection($media->getBrandId())->getData('title');
+                                                } ?></p>
+                                        </div>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--Pagination-->
+        <div class="row">
+            <div class="col-sm-12 media-menu">
+                <?php if ($block->getPagerHtml()): ?>
+                        <div class="order-products-toolbar toolbar bottom"><?php echo $block->getPagerHtml(); ?></div>
+                <?php endif ?>
+            </div>
+        </div>
+    </section>
+<?php elseif($block->getBrandFilter() || $block->getYearFilter()): ?>
+        <?php if ($collection->getSize() == 0) :?>
+        <section>
+            <div class="row">
+                <div class="col-sm-12">
+                    <ul class="breadcrumb">
+                        <li><a href="https://rptechindia.com/page">Home</a></li>
+                        <i class="right"></i>
+                        <li>Media</li>
+                        <hr />
+                    </ul>
+                </div>
+            </div>
+            <div class="row" id="main">
+                <form method="GET" action="<?= $block->getBaseUrl()."mediagallery/" ?>">
+                    <div class="col-sm-5">
+                        <div class="custom-select-my">
+                            <!-- <select onmousedown="if(this.options.length>15){this.size=15;}" onchange='this.size=0;' onblur="this.size=0;" class="form-control" name="brand_id"> -->
+                            <select class="form-control" name="brand_id" id="media_year">
+                                <option value="">Select Brand</option>
+                                <?php if(!empty($block->getBrandCollection())) :?>
+                                    <?php foreach ($block->getBrandCollection() as $brand) :?>
+                                        <option value="<?= $brand->getEntityId() ?>" <?php echo ($block->getBrandFilter() == $brand->getEntityId()) ? "selected":"";?> ><?= __($brand->getTitle())?></option>
+                                    <?php endforeach; ?>
+                                <?php endif;?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-5">
+                        <div class="custom-select-my">
+                            <select class="form-control" name="media_year" id="media_year">
+                                <option value="">All</option>
+                                <?php if(!empty($block->getYearCollection())) :?>
+                                    <?php foreach ($block->getYearCollection() as $year) :?>
+                                        <option value="<?= $year?>" <?php echo ($block->getYearFilter() == $year) ? "selected":"";?>><?= __($year)?></option>
+                                    <?php endforeach; ?>
+                                <?php endif;?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <button type="submit" class="media-search btn-block" href="#"><i class="fa fa-search"></i>Search</button>
+                    </div>
+                </form>
+            </div>
+            <div class="message info empty"><span><?php echo __('No record found.'); ?></span></div>
+        </section>
+        <?php endif; ?>
+<?php else :?>
+        <div class="message info empty"><span><?php echo __('No record found.'); ?></span></div>
+<?php endif;?>
+<style type="text/css">
+    .mediagallery-index-index main#maincontent {
+        width: 86%;
+    }
+
+    .columns .column.main {
+        max-width: 100%;
+        width: 1170px;
+        margin: 0 auto;
+    }
+
+    .pager .previous>a, .pager .previous>span {
+        float: none;
+    }
+    .pager .next>a, .pager .next>span {
+        float: none;
+    }
+
+    .media-sub-menu {
+        border-bottom: 1px solid #cac9c8;
+        padding: 1.5em 0 0.75em;
+    }
+
+    .media-search {
+        text-align: center;
+        max-width: 150px;
+        padding: 0px 10px;
+        line-height: 32px;
+        background-color: #a02a7f;
+        color: white;
+        border: 1px solid #d7d5d5;
+        border-radius: 4px;
+        transition: 0.5s;
+    }
+
+    .media-sub-menu .col-right p {
+        color: black;
+        font-size: 22px;
+        margin-top: 20px;
+        font-weight: 500;
+    }
+
+</style>
+<script type="text/javascript">
+    require([
+        'jquery',
+        'domReady!'// wait for dom ready
+    ], function ($) {
+        $(".btn-view-more").click(function(){
+            $(this).parent().siblings(".viewmore-div").toggleClass('hidden');
+        });
+    });
+
+    media-search
+</script>

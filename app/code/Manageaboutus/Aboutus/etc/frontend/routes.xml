@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Manageaboutus_Aboutus Grid routes xml
+ * @category  Manageaboutus_Aboutus
+ * @package   Manageaboutus_Aboutus
+ * @author    Manageaboutus_Aboutus
+ * @copyright Copyright (c) 2010-2017 Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:App/etc/routes.xsd">
+    <router id="standard">
+        <route id="aboutus" frontName="aboutus">
+            <module name="Manageaboutus_Aboutus" />
+        </route>
+    </router>
+</config>

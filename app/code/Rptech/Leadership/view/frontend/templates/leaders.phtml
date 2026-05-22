@@ -1,0 +1,131 @@
+<?php
+/**
+ * @var \Rptech\Leadership\Block\Leader $block
+ * @var \Rptech\Leadership\Model\Leadership $item
+ */
+?>
+<?php $collection = $block->getDirectorsLeadershipCollection(); ?>
+<?php $seniorManagementCollection = $block->getSeniorManagementLeadershipCollection(); ?>
+<div class="container main-container">
+    <div class="main main-inner">
+        <section>
+            <div class="about-wapper inner-wrapper">
+                <!-- Wrap heading in a row so it aligns with col-md-10 -->
+                <div class="row team-row">
+                    <div class="col-md-2"></div> <!-- empty column to align -->
+                    <div class="col-md-10">
+                        <h3><?= __('Board of Directors'); ?></h3>
+                    </div>
+                </div>
+                <div class="team-wrapper">
+                    <?php foreach ($collection as $item): ?>
+                        <div class="row team-row">
+                            <div class="col-md-2 col-img">
+                                <img class="brand-head-img" src="<?= /* @escapeNotVerified */ $item->getImageUrl() ?>"/>
+                            </div>
+                            <div class="col-md-10 col-txt">
+                                <h3><?= /* @escapeNotVerified */ $item->getTitle() ?></h3>
+                                <p><?= /* @escapeNotVerified */ $item->getDescription() ?></p>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </section>
+        <?php if ($seniorManagementCollection->getSize() > 0): ?>
+        <section>
+            <div class="about-wapper inner-wrapper">
+                <div class="row team-row">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-10">
+                        <h3><?= __('Key Managerial Personnel and Senior Management'); ?> </h3>
+                    </div>
+                </div>
+                <div class="team-wrapper">
+				    <?php foreach ($seniorManagementCollection as $item): ?>
+                        <div class="row team-row">
+                            <div class="col-md-2 col-img">
+                                <img class="brand-head-img" src="<?= /* @escapeNotVerified */ $item->getImageUrl() ?>"/>
+                            </div>
+                            <div class="col-md-10 col-txt">
+                                <h3><?= /* @escapeNotVerified */ $item->getTitle() ?></h3>
+                                <p><?= /* @escapeNotVerified */ $item->getDescription() ?></p>
+                            </div>
+                        </div>
+				    <?php endforeach; ?>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </section>
+        <?php endif; ?>
+    </div>
+    <div class="main main-inner">
+        <div id="board_directors">
+	        <?php
+	        echo $block->getLayout()
+		        ->createBlock(\Magento\Cms\Block\Block::class)
+		        ->setBlockId('leadership_board_directors')
+		        ->toHtml();
+	        ?>
+        </div>
+        <div id="key_managerial_personnel">
+		    <?php
+		    echo $block->getLayout()
+			    ->createBlock(\Magento\Cms\Block\Block::class)
+			    ->setBlockId('leadership_key_managerial_personnel')
+			    ->toHtml();
+		    ?>
+        </div>
+    </div>
+</div>
+<style type="text/css" xml="space">
+    .bh-wrapper {
+        padding: 0 30px;
+    }
+
+    .team-wrapper {
+        padding: 0 10px;
+    }
+
+    .team-wrapper .team-row {
+        margin-bottom: 4em;
+    }
+
+    .team-wrapper .team-row > div {
+        display: table-cell;
+        vertical-align: middle;
+        float: none;
+    }
+
+    .team-wrapper .team-row .col-txt h3 {
+        margin: 0 0 .5em;
+        color: #a02a7f;
+        font-size: 1.500em;
+    }
+
+    .team-wrapper .team-row .col-txt p {
+        margin: 0;
+        font-size: 1em;
+    }
+
+    .team-wrapper .team-row .col-img {
+        width: 182px;
+    }
+
+    .pagination-wrapper {
+        margin-bottom: 2em;
+    }
+
+    .pagination-wrapper .row {
+        text-align: center;
+    }
+
+    .pagination-wrapper .pagination li a {
+        color: #6e2d88;
+    }
+
+    .pagination-wrapper .pagination li.active a {
+        color: #fff;
+    }
+</style>

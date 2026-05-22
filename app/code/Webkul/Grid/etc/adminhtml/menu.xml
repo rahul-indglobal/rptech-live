@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!--
+/** Grid menu xml
+ * @category  Webkul
+ * @package   Webkul_Grid
+ * @author    Webkul
+ * @copyright Copyright (c) 2010-2017 Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Webkul_Grid::manager" title="Corporate Management" module="Webkul_Grid" sortOrder="10" resource="Webkul_Grid::manager" />
+        <add id="Webkul_Grid::add_row" title="News Management" module="Webkul_Grid" sortOrder="20" parent="Webkul_Grid::manager" action="grid/grid" resource="Webkul_Grid::add_row"/>
+        <add id="Manageaboutus_Aboutus::add_row_aboutus" title="About Us Content Management" module="Manageaboutus_Aboutus" sortOrder="20" parent="Webkul_Grid::manager" action="aboutus/grid" resource="Manageaboutus_Aboutus::add_row_aboutus"/>
+        <add id="Managebranchheads_Branchheads::add_row_branchhead" title="Branch Head Managment" module="Managebranchheads_Branchheads" sortOrder="20" parent="Webkul_Grid::manager" action="branchheads/grid" resource="Managebranchheads_Branchheads::add_row_branchhead"/>
+        <add id="Manageawards_Awards::add_row_awards" title="Awards Content Management" module="Manageawards_Awards" sortOrder="20" parent="Webkul_Grid::manager" action="awards/grid" resource="Manageawards_Awards::add_row_awards"/>
+        <add id="Manageevents_Events::add_row_events" title="Event Managment" module="Manageevents_Events" sortOrder="20" parent="Webkul_Grid::manager" action="events/grid" resource="Manageevents_Events::add_row_events"/>
+        <add id="Manageewastecontent_Ewastecontent::add_row_ewaste" title="E-Waste Content Management" module="Manageewastecontent_Ewastecontent" sortOrder="20" parent="Webkul_Grid::manager" action="ewaste/grid" resource="Manageewastecontent_Ewastecontent::add_row_ewaste"/>
+        <add id="Managefaq_Faq::add_row_faq" title="FAQ Management" module="Managefaq_Faq" sortOrder="20" parent="Webkul_Grid::manager" action="faq/grid" resource="Managefaq_Faq::add_row_faq"/>
+        <add id="Managehomeslider_Homepageslider::add_row_homeslider" title="Home Page Slider Management" module="Managehomeslider_Homepageslider" sortOrder="20" parent="Webkul_Grid::manager" action="homepageslider/grid" resource="Managehomeslider_Homepageslider::add_row_homeslider"/>
+        <add id="Manageleaders_Leaders::add_row_leaders" title="Leadership Page Management" module="Manageleaders_Leaders" sortOrder="20" parent="Webkul_Grid::manager" action="leaders/grid" resource="Manageleaders_Leaders::add_row_leaders"/>
+        <add id="Managemedia_Rpmedia::add_row_rpmedia" title="Media Management" module="Managemedia_Rpmedia" sortOrder="20" parent="Webkul_Grid::manager" action="rpmedia/grid" resource="Managemedia_Rpmedia::add_row_rpmedia"/>
+    </menu>
+</config>

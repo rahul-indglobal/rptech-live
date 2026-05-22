@@ -1,0 +1,139 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+// @codingStandardsIgnoreFile
+
+$name = $email = $mobile = $city = $success_message = "";
+$display_field = 1;
+$cancel_message = __("We have already received your enquiry for this product.");
+$error_message = __("There is some error. Please try again later.");
+$success_message = __("Your Enquiry Have been posted. We'll get back to you shortly.");
+$session = \Magento\Framework\App\ObjectManager::getInstance()->get('\Magento\Customer\Model\Session');
+$customerRepository = \Magento\Framework\App\ObjectManager::getInstance()->get('\Magento\Customer\Api\CustomerRepositoryInterface');
+if($session->isLoggedIn()) {
+	$cid = $session->getCustomer()->getId();
+	$name = $session->getCustomer()->getName();
+	$email = $session->getCustomer()->getEmail();
+	$customer = $customerRepository->getById($cid);
+    $customerAttributeData = $customer->__toArray();
+    $display_field = 0;
+
+    /* MOBILE NUMBER */
+    if(isset($customerAttributeData['custom_attributes']['mobilenumber']['value'])) {
+        $mobile = $customerAttributeData['custom_attributes']['mobilenumber']['value'];
+    } else if($customer->getAddresses()) {
+        $mobile = $customer->getAddresses()[0]->getTelephone();
+    }
+
+    /* CITY */
+    if($customer->getAddresses()) {
+        $city = $customer->getAddresses()[0]->getCity();
+    }
+}
+
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$product = $objectManager->get('\Magento\Framework\Registry')->registry('current_product');
+if ($product) {
+    $isNvidia = $product->getIsNvidia();
+}
+
+
+?>
+<div class="modal" id="enquiryModal">
+	<div class="modal-dialog">
+		<form class="modal-content animate" id="sendEnquiryForm" >
+			<div class="modal-header">
+				<span class="close" title="Close Modal"><i class="fa fa-close"></i></span>
+				<h1 class="title"><b>Enquiry for Product</b></h1>
+				<h4 id="proName"></h4>
+			</div>
+			<div class="modal-body">
+				<span class="cancel" style="display: none;"><?php echo $cancel_message; ?></span>
+				<span class="error" style="display: none;"><?php echo $error_message; ?></span>
+                <span class="success" style="display: none;"><?php echo $success_message; ?></span>
+				<div class="form-group">
+					<label class="input_label">Your Name</label>
+					<input type="hidden" id="baseUrl" value="<?php echo $this->getBaseUrl(); ?>" />
+					<input type="hidden" id="product_sku" name="product_sku" />
+					<input type="hidden" id="product_name" name="product_name" />
+					<input type="hidden" id="product_image" name="product_image" />
+					<input type="hidden" id="product_url" name="product_url" />
+					<input type="hidden" id="product_price" name="product_price" />
+					<input class="form-control <?= $name? " readonly" : ''; ?>" type="text" id="username" name="username" value="<?= $name?:''; ?>" <?= $name? " readonly" : ''; ?> required="" placeholder="Enter Your Name">
+				</div>
+				<div class="form-group" <?php if($display_field==0) { echo " style='display:none;'"; } ?>>
+					<label class="input_label">Email Id</label>
+					<input class="form-control" type="email" name="useremail" value="<?= $email?:''; ?>" required="" placeholder="Enter Your Email ID">
+				</div>
+				<div class="form-group">
+					<label class="input_label">Mobile</label>
+					<input class="form-control <?= $mobile? " readonly" : ''; ?>" type="mobile" id="usermobile" name="usermobile" value="<?= $mobile?:''; ?>" <?= $mobile? " readonly" : ''; ?> maxlength="10" placeholder="Enter Your Mobile No" required>
+				</div>
+				<div class="form-group" <?php if($display_field==0) { echo " style='display:none;'"; } ?>>
+					<label class="input_label">City</label>
+					<input class="form-control" id="city" name="usercity" value="<?= $city?:''; ?>" required="" placeholder="Enter Your city">
+				</div>
+				<div class="form-group">
+					<label class="input_label">Comment</label>
+					<textarea class="form-control" type="text" name="usercomment" placeholder="Type Here" required></textarea>
+				</div>
+                <div class="form-group" id="company_name" style="display:none">
+                    <label class="input_label" for="company_name_field">Company / University Name</label>
+                    <input class="form-control" id="company_name_field" name="company_name" placeholder="Enter Company / University Name">
+                </div>
+				<div class="isnvidia" id="isnvidia" style="display:none">
+				    <div class="form-group">
+                        <label class="input_label">We would like to know if you are a:</label>
+                        <select class="form-control" id="liketoknow" name="liketoknow">
+                            <option value="">Please Select</option>
+                            <option value="reseller">Reseller</option>
+                            <option value="educationalike">Educational Institute</option>
+                            <option value="design_house">Design House</option>
+                            <option value="oem">OEM</option>
+                        </select>
+                    </div>
+				    <div class="form-group">
+                        <label class="input_label">Let us know the Application where Nvidia Jetson will be used</label>
+                        <select class="form-control" id="applicationnvidia" name="applicationnvidia">
+                            <option value="">Please Select</option>
+				    		<option value="educationalapp">Educational Institute</option>
+                            <option value="hobby">Hobby Project</option>
+                            <option value="drone">Drone</option>
+                            <option value="robotics">Robotics</option>
+                            <option value="smartcity">Smart City</option>
+                            <option value="industrial">Industrial IoT</option>
+                            <option value="factory">Factory Automation , Security & Surveillance</option>
+                            <option value="any">any other (pls mention)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="input_label" for="quantity">Quantity</label>
+                        <input class="form-control" type="number" id="quantity" name="quantity" placeholder="Enter Quantity"/>
+                    </div>
+				</div>
+				<div class="form-group">
+					<button class="form-button send-enq" type="submit">Send</button>
+				</div>
+			</div>
+            <div class="preloader">
+                <div class="loader">
+                    <img src="<?php echo $this->getViewFileUrl('images/loader-1.gif'); ?>"/>
+                </div>
+            </div>
+		</form>
+	</div>
+</div>
+<style>
+	#enquiryModal .modal-header h1.title {
+		text-align: center;
+	}
+	input.form-control.readonly {
+		background-color: white;
+	}
+	#sendEnquiryForm button.form-button.send-enq {
+		display: block;
+        margin: 0 auto;
+	}
+</style>

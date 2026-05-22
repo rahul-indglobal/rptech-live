@@ -1,0 +1,395 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+// @codingStandardsIgnoreFile
+?>
+<?php $_order = $block->getOrder() ?>
+<?php $_invoice = $block->getInvoice() ?>
+<?php if ($_invoice): ?>
+    <?php $_invoices = [$_invoice]; ?>
+<?php else: ?>
+    <?php $_invoices = $_order->getInvoiceCollection() ?>
+<?php endif; ?>
+<?php foreach ($_invoices as $_invoice): ?>
+    <div class="order-details-items invoice">
+        <div class="order-title">
+            <strong><?= /* @escapeNotVerified */ __('Invoice #') ?><?= /* @escapeNotVerified */ $_invoice->getIncrementId() ?></strong>
+        </div>
+        <div class="table-wrapper table-order-items invoice">
+            <table class="data table table-order-items invoice" id="my-invoice-table-<?= /* @escapeNotVerified */ $_invoice->getId() ?>">
+                <caption class="table-caption"><?= /* @escapeNotVerified */ __('Items Invoiced') ?></caption>
+                <thead>
+                    <tr>
+                        <th class="col name"><?= /* @escapeNotVerified */ __('Product Name') ?></th>
+                        <th class="col sku"><?= /* @escapeNotVerified */ __('SKU') ?></th>
+                        <th class="col price"><?= /* @escapeNotVerified */ __('Price') ?></th>
+                        <th class="col qty"><?= /* @escapeNotVerified */ __('Qty Invoiced') ?></th>
+                        <th class="col subtotal"><?= /* @escapeNotVerified */ __('Subtotal') ?></th>
+                    </tr>
+                </thead>
+                <?php $_items = $_invoice->getItemsCollection(); ?>
+                <?php foreach ($_items as $_item): ?>
+                    <?php if (!$_item->getOrderItem()->getParentItem()): ?>
+                        <tbody>
+                            <?= $block->getItemHtml($_item) ?>
+                        </tbody>
+                    <?php endif; ?>
+                <?php endforeach; ?>
+                <tfoot>
+                    <?= $block->getInvoiceTotalsHtml($_invoice) ?>
+                </tfoot>
+            </table>
+        </div>
+        <div class="block block-order-details-view">
+            <div class="block-title">
+                <strong><?= /* @escapeNotVerified */ __('Order Information') ?></strong>
+            </div>
+            <div class="block-content">
+                <?php if (!$_order->getIsVirtual()): ?>
+                    <div class="box box-order-shipping-address">
+                        <div class="box-title">
+                            <strong><?= /* @escapeNotVerified */ __('Shipping Address') ?></strong>
+                        </div>
+                        <div class="box-content">
+                            <?php $_shipping = $_invoice->getShippingAddress() ?>
+                            <address><?= /* @escapeNotVerified */ $block->formatAddress($_shipping, 'html') ?></address>
+                        </div>
+                    </div>
+
+                    <div class="box box-order-shipping-method">
+                        <div class="box-title">
+                            <strong><?= /* @escapeNotVerified */ __('Shipping Method') ?></strong>
+                        </div>
+                        <div class="box-content">
+                            <?php if ($_order->getShippingDescription()): ?>
+                                <?= $block->escapeHtml($_order->getShippingDescription()) ?>
+                            <?php else: ?>
+                                <?= /* @escapeNotVerified */ __('No shipping information available') ?>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                <?php endif; ?>
+                <div class="box box-order-billing-address">
+                    <div class="box-title">
+                        <strong><?= /* @escapeNotVerified */ __('Billing Address') ?></strong>
+                    </div>
+                    <div class="box-content">
+                        <?php $_billing = $_invoice->getbillingAddress() ?>
+                        <address><?= /* @escapeNotVerified */ $block->formatAddress($_order->getBillingAddress(), 'html') ?></address>
+                    </div>
+                </div>
+
+                <div class="box box-order-billing-method">
+                    <div class="box-title">
+                        <strong><?= /* @escapeNotVerified */ __('Payment Method') ?></strong>
+                    </div>
+                    <div class="box-content">
+                        <?= $block->getPaymentInfoHtml() ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php endforeach; ?>
+
+<?php foreach ($_invoices as $_invoice): ?>
+    <!DOCTYPE html>
+    <html>
+        <head>
+            <title></title>
+            <style type="text/css">
+
+            </style>
+        </head>
+        <body>
+
+
+            <table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="white">
+                <tr>
+                    <td >
+                        <table width="100%" border="0" cellpadding="5" cellspacing="0">
+                            <tr>
+                                <td align="left" style="font-size: 12px; font-family:Tahoma;font-weight:bold;">Tax Invoice cum Delivery Challan</td>
+                                <td align="right" style="font-size: 12px; font-family:Tahoma;font-weight:normal;">(Original)</td>
+                            </tr>
+                        </table>
+                    </td>
+
+                </tr>
+                <tr>
+                    <td>
+                        <table width="100%" border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse;">
+                            <tr>
+                                <td>
+                                    <table width="100%" cellpadding="10" border="1" style="border-collapse: collapse;" border-color="#333">
+                                        <tr>
+                                            <td width="15%" valign="middle" rowspan="2">
+                                                <img width="150" src="http://www.rptechindia.com/images/logo.png">
+                                            </td>
+                                            <td width="25%" rowspan="2" style="font-size: 12px; font-family:Tahoma;font-weight:normal;">
+                                                RP tech India <br><small>(A Division of Rashi Peripherals Pvt Ltd)</small><br>Regd Office : Ariisto House, 5th Floor, Telli Galli, Andheri (E), Mumbai-400069, INDIA - CIN: U30007MH1989PTC051039
+                                            </td>
+                                            <td width="30%" valign="top">
+                                                <table width="100%">
+                                                    <tr>
+                                                        <td width="50%" style="font-size: 12px; font-family:Tahoma;font-weight:bold;">Date:</td>
+                                                        <td width="50%" style="font-size: 12px; font-family:Tahoma;font-weight:normal;"><?= date('d.m.Y', strtotime($_invoice->getCreatedAt())) ?></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td width="50%" style="font-size: 12px; font-family:Tahoma;font-weight:bold;">Invoice Number:</td>
+                                                        <td width="50%" style="font-size: 12px; font-family:Tahoma;font-weight:normal;"> <?= /* @escapeNotVerified */ $_invoice->getIncrementId() ?></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td width="50%" style="font-size: 12px; font-family:Tahoma;font-weight:bold;">Reference Number:</td>
+                                                        <td width="50%" style="font-size: 12px; font-family:Tahoma;font-weight:normal;"> - </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td width="50%" style="font-size: 12px; font-family:Tahoma;font-weight:bold;">Delivery Number: </td>
+                                                        <td width="50%" style="font-size: 12px; font-family:Tahoma;font-weight:normal;"> - </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                            <td width="30%" valign="top">
+                                                <table width="100%">
+                                                    <tr>
+                                                        <td width="50%" style="font-size: 12px; font-family:Tahoma;font-weight:bold;">Customer Code:</td>
+                                                        <td width="50%" style="font-size: 12px; font-family:Tahoma;font-weight:normal;"> 8000000000</td>
+                                                    </tr>
+    <!--                                                <tr>
+                                                        <td width="50%" style="font-size: 12px; font-family:Tahoma;font-weight:bold;">Customer PO:</td>
+                                                        <td width="50%" style="font-size: 12px; font-family:Tahoma;font-weight:normal;">NVDLUC01031905886</td>
+                                                    </tr>-->
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td valign="top">
+                                                <table width="100%">
+                                                    <tr>
+                                                        <td width="50%" style="font-size: 12px; font-family:Tahoma;font-weight:bold;">Shipping Terms: </td>
+                                                        <td width="50%" style="font-size: 12px; font-family:Tahoma;font-weight:normal;"> - </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td width="50%" style="font-size: 12px; font-family:Tahoma;font-weight:bold;">Doc No:</td>
+                                                        <td width="50%" style="font-size: 12px; font-family:Tahoma;font-weight:normal;"> - </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td width="50%" style="font-size: 12px; font-family:Tahoma;font-weight:bold;">Carrier Name:</td>
+                                                        <td width="50%" style="font-size: 12px; font-family:Tahoma;font-weight:normal;"> - </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                            <td valign="top"> 
+                                                <table width="100%">
+                                                    <tr>
+                                                        <td width="50%" style="font-size: 12px; font-family:Tahoma;font-weight:bold;">Terms of Payment:</td>
+                                                        <td width="50%" style="font-size: 12px; font-family:Tahoma;font-weight:normal;">  <?= $block->getPaymentInfoHtml() ?></td>
+                                                    </tr>
+    <!--             B2B work flow                                   <tr>
+                                                        <td width="50%" style="font-size: 12px; font-family:Tahoma;font-weight:bold;">Due Date:</td>
+                                                        <td width="50%" style="font-size: 12px; font-family:Tahoma;font-weight:normal;"> 02.03.2019</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td width="50%" style="font-size: 12px; font-family:Tahoma;font-weight:bold;">Bank:</td>
+                                                        <td width="50%" style="font-size: 12px; font-family:Tahoma;font-weight:normal;"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td width="50%" style="font-size: 12px; font-family:Tahoma;font-weight:bold;">Cheque Number:</td>
+                                                        <td width="50%" style="font-size: 12px; font-family:Tahoma;font-weight:normal;">****</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td width="50%" style="font-size: 12px; font-family:Tahoma;font-weight:bold;"> Date:</td>
+                                                        <td width="50%" style="font-size: 12px; font-family:Tahoma;font-weight:normal;"></td>
+                                                    </tr>-->
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>							
+                            </tr>
+                            <tr>
+                                <td>
+                                    <table width="100%" cellpadding="10" border="1" style="border-collapse: collapse;" border-color="#333">
+                                        <tr>
+                                            <td width="40%">
+                                                <table width="100%">
+                                                    <tr>
+                                                        <td style="font-size: 12px; font-family:Tahoma;font-weight:normal;">
+                                                            SUPPLIED FROM: <br>
+                                                            RP tech India- Rashi Complex, 'A' Building, Survey 186,Dongaripada,Poman Village,Vasai Bhiwandi Rd Thane - 401208 - Maharashtra<br/>
+                                                            Tel. No. : 0250-2450261.<br/>
+                                                            GSTIN : 27AAACR2162H1ZK
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                            <td width="30%">
+                                                <table width="100%">
+                                                    <tr>
+                                                        <td style="font-size: 12px; font-family:Tahoma;font-weight:normal;">
+                                                            BILL TO (Place of Supply) : <br/>
+                                                            <?php $_billing = $_invoice->getbillingAddress() ?>
+                                                            <address><?= /* @escapeNotVerified */ $block->formatAddress($_order->getBillingAddress(), 'html') ?></address>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                            <td width="30%">
+                                                <table width="100%">
+                                                    <tr>
+                                                        <td style="font-size: 12px; font-family:Tahoma;font-weight:normal;">
+                                                            SHIP TO : <br/>
+                                                            <?php if ($_order->getShippingDescription()): ?>
+                                                                <?= $block->escapeHtml($_order->getShippingDescription()) ?>
+                                                            <?php else: ?>
+                                                                <?= /* @escapeNotVerified */ __('No shipping information available') ?>
+                                                            <?php endif; ?>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <table width="100%" border="1" bordercolr="#333" cellpadding="5" bordercolor="#333" style="border-collapse: collapse;">
+                                        <tr>
+                                            <th width="10%" height="24px" style="font-size: 12px; font-family:Tahoma;font-weight:bold;" rowspan="2" align="center">Product Code</th>
+                                            <th width="25%" height="24px" style="font-size: 12px; font-family:Tahoma;font-weight:bold;" rowspan="2" align="center">Product Description</th>
+                                            <th width="5%" height="24px" style="font-size: 12px; font-family:Tahoma;font-weight:bold;" rowspan="2" align="center">Qty</th>
+                                            <th width="7.5%" height="24px" style="font-size: 12px; font-family:Tahoma;font-weight:bold;" rowspan="2" align="center">Unit</th>
+                                            <th width="7.5%" height="24px" style="font-size: 12px; font-family:Tahoma;font-weight:bold;" rowspan="2" align="center">Total Value</th>
+                                            <th width="7.5%" height="24px" style="font-size: 12px; font-family:Tahoma;font-weight:bold;" rowspan="2" align="center">Discount</th>
+                                            <th width="7.5%" height="24px" style="font-size: 12px; font-family:Tahoma;font-weight:bold;" rowspan="2" align="center">Freight</th>
+                                            <th width="10%" height="24px" style="font-size: 12px; font-family:Tahoma;font-weight:bold;" rowspan="2" align="center">Taxable Value</th>
+                                            <th width="20%" height="24px" style="font-size: 12px; font-family:Tahoma;font-weight:bold;" colspan="3" align="center">Taxes</th>
+                                        </tr>
+                                        <tr>
+                                            <th height="22px" style="font-size: 12px; font-family:Tahoma;font-weight:bold;" align="center">Type</th>
+                                            <th height="22px" style="font-size: 12px; font-family:Tahoma;font-weight:bold;" align="center">Rate</th>
+                                            <th height="22px" style="font-size: 12px; font-family:Tahoma;font-weight:bold;" align="center">Tax Amt.</th>
+                                        </tr>
+                                        <?php foreach ($_items as $_item): ?>
+                                            <?php if (!$_item->getOrderItem()->getParentItem()): ?>
+                                                <tbody>
+                                                    <tr>
+                                            <td style="font-size: 12px; font-family:Tahoma;font-weight:normal;" align="center"><?=$_item->getSku()?></td>
+                                            <td style="font-size: 12px; font-family:Tahoma;font-weight:normal;" align="center">
+                                                <?=$_item->getName()?>
+                                            </td>
+                                            <td style="font-size: 12px; font-family:Tahoma;font-weight:normal;" align="center"> <?=$_item->getQty()?></td>
+                                            <td style="font-size: 12px; font-family:Tahoma;font-weight:normal;" align="center"><?=$_item->getPrice()?></td>
+                                            <td style="font-size: 12px; font-family:Tahoma;font-weight:normal;" align="center"><?=$_item->getPrice()?></td>
+                                            <td style="font-size: 12px; font-family:Tahoma;font-weight:normal;" align="center"></td>
+                                            <td style="font-size: 12px; font-family:Tahoma;font-weight:normal;" align="center"></td>
+                                            <td style="font-size: 12px; font-family:Tahoma;font-weight:normal;" align="center">26,271.18</td>
+                                            <td style="font-size: 12px; font-family:Tahoma;font-weight:normal;" align="center">IGST</td>
+                                            <td style="font-size: 12px; font-family:Tahoma;font-weight:normal;" align="center">18.00</td>
+                                            <td style="font-size: 12px; font-family:Tahoma;font-weight:normal;" align="center">4,728.81</td>
+                                        </tr>
+                                           <tr>
+
+                                            <td colspan="2" style="font-size: 12px; font-family:Tahoma;font-weight:bold;">Total</td>
+                                            <td align="center" style="font-size: 12px; font-family:Tahoma;font-weight:normal;">1</td>
+                                            <td align="center" style="font-size: 12px; font-family:Tahoma;font-weight:normal;"></td>
+                                            <td align="center" style="font-size: 12px; font-family:Tahoma;font-weight:normal;">26,271.18</td>
+                                            <td align="center" style="font-size: 12px; font-family:Tahoma;font-weight:normal;"></td>
+                                            <td align="center" style="font-size: 12px; font-family:Tahoma;font-weight:normal;"></td>
+                                            <td align="center" style="font-size: 12px; font-family:Tahoma;font-weight:normal;">26,271.18</td>
+                                            <td align="center" style="font-size: 12px; font-family:Tahoma;font-weight:normal;"></td>
+                                            <td align="center" style="font-size: 12px; font-family:Tahoma;font-weight:normal;"></td>
+                                            <td align="center" style="font-size: 12px; font-family:Tahoma;font-weight:normal;">4,728.81</td>
+
+                                        </tr>
+                                                </tbody>
+                                            <?php endif; ?>
+                                        <?php endforeach; ?>
+                                       
+                                     
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <table width="100%" border="1" cellpadding="6" style="border-collapse: collapse;" bordercolor="#333">
+                                        <tr>
+                                            <td width="35%" style="font-size: 12px; font-family:Tahoma;font-weight:bold;">Total Invoice Value</td>
+                                            <td width="35%" style="font-size: 12px; font-family:Tahoma;font-weight:bold;" align="center">RUPEES THIRTY-ONE THOUSAND ONLY </td>
+                                            <td width="30%" style="font-size: 12px; font-family:Tahoma;font-weight:bold;" align="right">31,000.00</td>
+                                        </tr>
+                                        <tr>
+                                            <td width="35%" style="font-size: 12px; font-family:Tahoma;font-weight:bold;">Tax Amount subject to Reverse Charge</td>
+                                            <td width="65%" colspan="2"></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="3" style="font-size: 12px; font-family:Tahoma;font-weight:bold;">Received in good condition with MRP sticker (Name/Signature/Date/Seal)</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <table width="100%" border="1" cellpadding="10" style="border-collapse: collapse;">
+                                        <tr>
+                                            <td width="70%" style="font-size: 12px; font-family:Tahoma;font-weight:normal;">
+                                                Terms of Payment : (1) Interest @ 2% p.m.+GST will be payable on payment beyond due date. Penalty for cheque bounce will be Rs1000+GST & Penal interest will also be payable on bounced cheque amount from due date to the date of realization. (2) In case of non payment of invoice by buyer, RP tech India shall exercise the rights of Unpaid Seller w.r.t lien of goods.<br/>
+                                                Warranty : Carry in warranty against manufacturing defects only. Products under warranty will be either repaired or replaced at sole discretion of RP tech India and according to the standard warranty policy of the Manufacturer. Customers are required to approach the ASPs for those products for which manufacturers are Supporting Directly. More details on the warranty can be viewed at our website. www.rptechindia.com. RP tech India reserves the right to reject any material received for warranty without manufacturer's original packing. Goods sold will be accepted for warranty repair/replacement only if they are in good physical condition. Products received with broken/burnt pins, pen/pencil markings, cracks, missing/tampered components or tampered warranty stickers will be rejected and considered warranty void. Goods once sold cannot be returned without a valid RMA(Returned Materials Authorization) issued by RP tech India
+                                            </td>
+                                            <td width="30%">
+                                                <table width="100%" cellpadding="5">
+                                                    <tr>
+                                                        <td align="center" style="font-size: 12px; font-family:Tahoma;font-weight:normal;">For <strong>RP tech India</strong></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>&nbsp;</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>&nbsp;</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td align="center" style="font-size: 12px; font-family:Tahoma;font-weight:normal;">Authorised Signatory</td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <table cellpadding="5" cellspacing="0" width="100%">
+                            <tr>
+                            <table width="100%">
+                                <tr>
+                                    <td width="33.33%" align="left" style="font-size: 12px; font-family:Tahoma;font-weight:normal;">
+                                        E. & O. E
+                                    </td>
+                                    <td width="33.33%" align="center" style="font-size: 12px; font-family:Tahoma;font-weight:normal;">
+                                        Subject to Mumbai Jurisdiction
+                                    </td>
+                                    <td width="33.33%" align="right" style="font-size: 12px; font-family:Tahoma;font-weight:normal;">
+                                        Page 1 of 1
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3" style="font-size: 12px; font-family:Tahoma;font-weight:normal;">This is computer generated invoice & does not require any signature</td>
+                                </tr>
+                            </table>
+
+                </tr>
+            </table>
+        </td>
+    </tr>
+    </table>
+
+
+    </body>
+    </html>
+<?php endforeach; ?>

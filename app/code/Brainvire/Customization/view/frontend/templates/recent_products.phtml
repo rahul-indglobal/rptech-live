@@ -1,0 +1,59 @@
+<?php
+$collection = $block->getMostRecentlyViewed();
+$media = $block->getMediaUrl();
+$store = $block->getStoreUrl();
+$currency = $block->getCurrentCurrencySymbol();
+//$wrapperBlock = $this->getLayout()->createBlock('\Magento\Ui\Block\Wrapper');
+?>
+<div data-bind="css: 'products-list'" class="products-list" id="custom-recent-view">
+	<?php if (count($collection) > 0) : ?>
+		<h3 class="custom-recent-view">
+			<?= __("Recently Viewed"); ?>
+		</h3>
+	<?php endif; ?>
+	<ol class="product-items">
+		<?php foreach ($collection as $_product) { ?>
+			<?php
+			$cats = $_product->getCategoryIds();
+			if(count($cats) && !in_array(375, $cats)) { ?>
+				<li class="product-item product-size" data-repeat-index="0">
+					<?php $productStockBySku = $block->getStockItemBySku($_product->getSku()); ?>
+					<?php $qty = $productStockBySku->getQty(); ?>
+					<?php $objectManager = \Magento\Framework\App\ObjectManager::getInstance();?>
+						<div class="product-item-info">
+							<a class="product-item-photo" href="<?= $_product->getProductUrl() ?>">
+								<div class="product-item-details">
+									<div class="product_image">
+										<img width="240" src="<?= $media.$_product->getImage();?>" />
+									</div>	
+									<span class="product-title-custom" id="product<?= $block->escapeHtml($_product->getId()) ?>">
+										<?= $_product->getName(); ?>
+									</span>
+									<span class="product-sku-custom" style="display: none;" >
+										<?= $_product->getName(); ?>
+									</span>
+								</div>
+							</a>	
+<!--							<span class="price-box">-->
+								<?php //echo $currency.number_format($_product->getPrice(),"2"); ?>
+<!--							</span>-->
+							<?php if($_product->getSellStatus() == "Yes" && $_product->getFinalPrice() > 0 && $_product->getIsSalable() && $qty >0){ ?>
+									<?php $listBlock = $objectManager->get('\Magento\Catalog\Block\Product\ListProduct');
+									  $addToCartUrl =  $listBlock->getAddToCartUrl($_product); ?>
+									  <form data-role="tocart-form" action="<?php echo $addToCartUrl; ?>" method="post"> 
+									    <?php echo $block->getBlockHtml('formkey')?>
+									     <button type="submit" title="Add to Cart" class="action tocart primary">
+									       <span><?= __("Add to Cart");?></span>
+									     </button>
+									 </form>
+								<?php }else{ 
+									if($_product->getSellStatus() == "Yes" && $_product->getFinalPrice() > 0 && $_product->getIsSalable() && $qty >0){ ?>
+								<a class="btn cust-btn-enq" id="product<?= $block->escapeHtml($_product->getId()) ?>"><?= __("Send Enquiry") ?></a>
+						<?php } } ?>
+					</div>
+				</li>
+		<?php }
+		}
+		?>
+	</ol>
+</div>

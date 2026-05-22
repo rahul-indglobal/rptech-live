@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!--
+/** Lalita_Mysmsmodule module xml
+ * @category  Lalita_Mysmsmodule
+ * @package   Lalita_Mysmsmodule
+ * @author    Lalita Rajput 
+ */ 
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
+    <module name="Lalita_Mysmsmodule" setup_version="1.0.1">
+    </module>
+</config>

@@ -1,0 +1,277 @@
+<script type="text/javascript" src="<?php echo $this->getJsUrl('varien/configurable.js'); ?>"></script>
+<aside class="modal-slide " data-role="modal" data-type="slide" tabindex="0" style="z-index: 900;" id="modal-slide">
+    <div data-role="focusable-start" tabindex="0"></div>
+    <div class="modal-inner-wrap" data-role="focusable-scope">
+        <header class="modal-header">
+            <h1 class="modal-title" data-role="title">
+                <?php echo __('Enter Quantity for Product') ?>
+            </h1>
+            <button class="action-close" data-role="closeBtn" type="button" onclick="closeBtn();">
+                <span>Close</span>
+            </button>
+        </header>
+        <div class="modal-content" data-role="content">
+
+            <div id="product_composite_configure" class="product-configure-popup" style="display:none;">
+                <iframe name="product_composite_configure_iframe" id="product_composite_configure_iframe" src="#" style="width:0; height:0; border:0px solid #fff; position:absolute; top:-1000px; left:-1000px" onload="window.productConfigure && productConfigure.onLoadIFrame()"></iframe>
+
+                <div class="entry-edit">
+                    <div id="product_composite_configure_messages" style="display: none;" >
+                        <ul class="messages"><li class="error-msg"></li></ul>
+                    </div>
+                    <div id="product_composite_configure_form_fields" class="content product-composite-configure-inner"></div>
+                    <div id="product_composite_configure_form_additional" style="display:none;"></div>
+                    <div id="product_composite_configure_form_confirmed" style="display:none;"></div>
+                    <div class="buttons-set a-right">
+                        <button type="button" class="scalable" onclick="onCancelBtn();" id="product_composite_configure_form_cancel"><span>Cancel</span></button>
+                        <button type="submit" class="scalable" onclick="onSubmitButton();"><span>OK</span></button>
+                    </div>
+                </div>
+                <input type="hidden" name="as_js_varname" value="iFrameResponse" />
+                <?php echo $this->getBlockHtml('formkey') ?>
+
+                <div id="product_composite_configure_confirmed" style="display:none;"></div>
+
+                <script type="text/javascript">
+                    require([
+                        "jquery",
+                        "mage/mage"
+                    ], function (jQuery) {
+
+                        jQuery('#product_composite_configure_form').mage('form').mage('validation');
+
+                    });
+                </script>
+            </div> 
+
+        </div>
+    </div>
+    <div data-role="focusable-end" tabindex="0"></div>
+</aside>
+
+<div>
+    <div class="main-col-inner">
+        <div id="messages"></div>
+        <div class="entry-edit">
+            <form enctype="multipart/form-data" method="post" action="<?php echo $this->getUrl('inventorysystem/purchaseorders/save'); ?>" id="edit_form">
+                <?php echo $this->getBlockHtml('formkey') ?>
+                <input name="tempid" id="tempid" type="hidden" />  
+                <input name="productid" id="productid"  type="hidden" />  
+                <input name="purchaseordercreate" id="purchaseordercreate" type="hidden" />  
+                <div id="optionsid"></div>
+                <div style="" id="supplier_tabs_form_section_content">
+                    <div class="entry-edit">
+                        <div class="entry-edit-head">
+                            <h4 class="icon-head head-edit-form fieldset-legend">Add Product for Purchase order</h4>
+                            <div class="form-buttons"></div>
+                        </div>
+                        <div class="hor-scroll">
+                            <div id="productgrid"> 
+                                <?php echo $this->getChildHtml('purchase_order_create_grid'); ?>
+                            </div>
+                        </div>
+                        <div class="admin__page-section-item order-totals">
+                            <fieldset id="order-totals" class="admin__fieldset">
+                                <legend class="admin__legend"><span><?php echo __('Order Totals') ?></span></legend>
+                                <table class="admin__table-secondary data-table">
+                                    <tbody>
+                                        <tr class="row-totals">
+                                            <td style="" class="admin__total-mark" colspan="1">
+                                                <?php echo __('Subtotal') ?>
+                                            </td>
+                                            <td style="" class="admin__total-amount">
+                                                <span class="price" id="sub_total"></span>
+                                            </td>
+                                        </tr>
+                                        <tr class="row-totals">
+                                            <td style="" class="admin__total-mark" colspan="1">
+                                                <strong><?php echo __('Grand Total') ?></strong>
+                                            </td>
+                                            <td style="" class="admin__total-amount">
+                                                <strong><span class="price" id="grand_total"></span></strong>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div class="order-totals-bottom">
+                                    <div align="right" style="padding-top: 10px;">
+                                        <button class="scalable save" type="button" onclick="return submition();" id=""><span><span><span>Submit</span></span></span></button>
+                                    </div> 
+                                </div>
+                        </div>
+                    </div>
+
+                </div></form>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    require([
+        "jquery",
+        "mage/mage"
+    ], function (jQuery) {
+        jQuery('#edit_form').mage('form').mage('validation');
+
+    });
+</script>
+<script type="text/javascript">
+    function submition() {
+        if (document.getElementById('productid').value == "") {
+            alert("Please select products");
+            return false;
+        }
+        else {
+            document.forms["edit_form"].submit();
+            return true;
+        }
+    }
+
+    function onSubmitButton() {
+        var tempid = $('tempid').value;
+        var validate = true;
+
+        var name = "productqty[" + tempid + "]";
+        var qty = $('product_composite_configure_input_qty').value;
+        $('optionsid').innerHTML = $('optionsid').innerHTML + "<input type='hidden' id='productqty_" + tempid + "' class='reqQty' name='" + name + "' value= '" + qty + "'/> ";
+        validate = false;
+
+        /* START: update row total whenever qty is changed */
+        var rowTotal = 0;
+        var total = 0;
+        if ($('input_cost_' + tempid).value != '') {
+            rowTotal = $('input_cost_' + tempid).value * $('productqty_' + tempid).value;
+        } else {
+            rowTotal = $('cost_' + tempid).value * $('productqty_' + tempid).value;
+        }
+        $('row_total_' + tempid).value = rowTotal.toFixed(2);
+        $$('.rowTotal').each(function (element) {
+            total += Number(element.value);
+        });
+        if (total)
+        {
+            $('grand_total').innerHTML = "$" + total.toFixed(2);
+            $('sub_total').innerHTML = "$" + total.toFixed(2);
+        }
+        /* END */
+
+        $('modal-slide').removeClassName('_show');
+        $('product_composite_configure').setStyle({display: "none"});
+    }
+
+    function onCancelBtn() {
+        var remove = document.getElementById('tempid').value + ",";
+        var str = document.getElementById('productid').value
+        document.getElementById('productid').value = str.replace(remove, "");
+        document.getElementById(document.getElementById('tempid').value).checked = false;
+        $('modal-slide').removeClassName('_show');
+        $('product_composite_configure').setStyle({display: "none"});
+    }
+
+    function closeBtn() {
+        var remove = document.getElementById('tempid').value + ",";
+        var str = document.getElementById('productid').value
+        document.getElementById('productid').value = str.replace(remove, "");
+        document.getElementById(document.getElementById('tempid').value).checked = false;
+        $('modal-slide').removeClassName('_show');
+        $('product_composite_configure').setStyle({display: "none"});
+    }
+
+    function onTypeChange(counter) {
+        if ($('tracking_status').selectedIndex == 2) {
+            for (var i = 1; i <= counter; i++) {
+                $('prostatus' + i).setValue("2");
+            }
+            $('status').setValue("5");
+        }
+    }
+    function changetextCountry() {
+        this.id = this.value;
+        if (this.checked == false) {
+            var remove = this.value + ",";
+            var str = document.getElementById('productid').value
+            document.getElementById('productid').value = str.replace(remove, "");
+            $('row_total_' + this.value).value = '0.00';
+            $('input_cost_' + this.value).value = '';
+            $('productqty_' + this.value).value = '';
+            $('optionsid').innerHTML = '';
+
+            var total = 0;
+            $$('.rowTotal').each(function (element) {
+                total += Number(element.value);
+            });
+
+            $('grand_total').innerHTML = "$" + total.toFixed(2);
+            $('sub_total').innerHTML = "$" + total.toFixed(2);
+
+            return false;
+        }
+
+        var id = this.value;
+
+        $('tempid').value = this.value;
+        var tempid = $('tempid').value;
+        var add = tempid + ",";  //add = " " + num + ",";
+        var hiddenGuy = document.getElementById('productid');
+
+        var newvalue = hiddenGuy.value + add;
+        hiddenGuy.value = newvalue;
+
+        var response_message = "Thank you for your comment, see ya!"
+        var url = "<?php echo $this->getUrl('sales/order_create/configureProductToAdd/'); ?>?isAjax=true&id=" + id;
+
+        new Ajax.Request(url, {
+            method: 'post',
+            onSuccess: function (transport) {
+                if (transport.status == 200) {
+                    $('modal-slide').addClassName('_show');
+                    $('product_composite_configure_form_fields').innerHTML = "<p>" + transport.responseText + "</p>";
+                    $('product_composite_configure').setStyle({display: "block"});
+                }
+            },
+            parameters: {
+                id1: id,
+                rand: Math.random()
+            }
+        });
+    }
+
+    require([
+        "prototype"
+    ], function (jQuery) {
+        Event.observe(window, 'mousemove', function () {
+            for (var i = 0; i < $$('.checkbox').length; i++) {
+                Event.observe($$('.checkbox')[i], 'click', changetextCountry)
+            }
+        });
+
+        $$('.inpCost').each(function (ele) {
+            ele.observe('change', function (event) {
+                var rowTotal = 0;
+                var total = 0;
+                if ($('productqty_' + ele.getAttribute('item_id')))
+                {
+                    if ($('productqty_' + ele.getAttribute('item_id')).value != '' && ele.value != "") {
+                        rowTotal = $('productqty_' + ele.getAttribute('item_id')).value * ele.value;
+                    } else if (ele.value == '') {
+                        rowTotal = $('cost_' + ele.getAttribute('item_id')).value * $('productqty_' + ele.getAttribute('item_id')).value;
+                    }
+                }
+                $('row_total_' + ele.getAttribute('item_id')).value = rowTotal.toFixed(2);
+
+                $$('.rowTotal').each(function (element) {
+                    total += Number(element.value);
+                });
+
+                if (total)
+                {
+                    $('grand_total').innerHTML = "$" + total.toFixed(2);
+                    $('sub_total').innerHTML = "$" + total.toFixed(2);
+                }
+            });
+            $('row_total_' + ele.getAttribute('item_id')).value = "0.00";
+            $('grand_total').innerHTML = "$0.00";
+            $('sub_total').innerHTML = "$0.00";
+        });
+    });
+</script>

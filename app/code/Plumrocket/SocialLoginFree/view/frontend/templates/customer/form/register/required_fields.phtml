@@ -1,0 +1,41 @@
+<?php
+/**
+ * Plumrocket Inc.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End-user License Agreement
+ * that is available through the world-wide-web at this URL:
+ * http://wiki.plumrocket.net/wiki/EULA
+ * If you are unable to obtain it through the world-wide-web, please
+ * send an email to support@plumrocket.com so we can send you a copy immediately.
+ *
+ * @package     Plumrocket_SocialLoginFree
+ * @copyright   Copyright (c) 2018 Plumrocket Inc. (http://www.plumrocket.com)
+ * @license     http://wiki.plumrocket.net/wiki/EULA  End-user License Agreement
+ */
+?>
+<?php if ($data = $block->getPsloginData()) : ?>
+
+    <?php
+        $emailReadOnly = $block->isFakeMail($data['email']) ? 1 : 0;
+        $dobReadOnly = $data['dob'] === null ? 1 : 0;
+        $genderNotSpecified = \Plumrocket\SocialLoginFree\Model\Account::GENDER_NOT_SPECIFIED;
+    ?>
+
+    <script type="text/javascript">
+        window.psloginFirstNameReadOnly = '<?php echo $data['firstname'] === '-' ? 1 : 0; ?>';
+        window.psloginLastNameReadOnly = '<?php echo $data['lastname'] === '-' ? 1 : 0; ?>';
+        window.psloginDobReadOnly = '<?php echo $dobReadOnly; ?>';
+        window.psloginGenderReadOnly = '<?php echo $data['gender'] === $genderNotSpecified ? 1 : 0; ?>';
+        window.psloginEmailReadOnly = '<?php echo $emailReadOnly; ?>';
+        window.psloginGeneratedPassword = '<?php echo $data['password']; ?>';
+    </script>
+
+    <?php if ($emailReadOnly === 0) : ?>
+        <input type="hidden" name="email" value="<?php echo $data['email']; ?>">
+    <?php endif; ?>
+    <?php if ($dobReadOnly === 0) : ?>
+        <input type="hidden" name="dob" id="dob_hide" value="">
+    <?php endif; ?>
+<?php endif; ?>

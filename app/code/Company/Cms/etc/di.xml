@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+	<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd"> 
+		<preference for="Magento\Theme\Block\Html\Topmenu" type="Company\Cms\Block\Html\Topmenu" />
+		<preference for="Magento\Theme\Controller\Result\MessagePlugin" type="Company\Cms\Controller\Result\MessagePlugin" />
+		<preference for="Magento\Theme\CustomerData\Messages" type="Company\Cms\CustomerData\Messages" />
+                <preference for="Magento\Backend\Block\Dashboard\Grids" type="Company\Cms\Block\Admin\Dashboard\Grids" />
+                <preference for="Magento\Customer\Controller\Account\ForgotPasswordPost" type="Company\Cms\Controller\Customer\Forgotpassword\ForgotPasswordPost" />
+                <preference for="Magento\Checkout\Block\Cart\Crosssell" type="Company\Cms\Block\Customcheckout\Cart\Crosssell" />
+	</config>

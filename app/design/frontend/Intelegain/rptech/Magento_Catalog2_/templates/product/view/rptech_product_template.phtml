@@ -1,0 +1,100 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+// @codingStandardsIgnoreFile
+?>
+<?php /** @var $block \Magento\Catalog\Block\Product\AbstractProduct */ ?>
+<?php
+$product = $block->getProduct();
+$attributeSetId = $product->getAttributeSetId();
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+/** @var  $coll \Magento\Eav\Model\ResourceModel\Entity\Attribute\Collection */
+$groupCollection = $objectManager->create('Magento\Eav\Model\ResourceModel\Entity\Attribute\Group\Collection');
+$groupCollection->addFieldToFilter('attribute_set_id', $attributeSetId);
+$groupCollection->addFieldToFilter('tab_group_code', array('null' => true));
+
+$groupCollection->setOrder('sort_order', 'ASC');
+
+
+$priceHelper = $objectManager->create('Magento\Framework\Pricing\Helper\Data'); // Instance of Pricing Helper
+
+$customerSession = $objectManager->create('Magento\Customer\Model\Session');
+?>
+
+<?php if($product->getTypeId()!="bundle") { ?>
+<span style="display: none" id="prosku"><?php echo $product->getSku(); ?></span>
+<!-- Remove title hyper link 
+	<div class="para"><?= $product->getDescription() ?></div> -->
+<h1 class="product-title"><!-- <a href="<?= $block->escapeUrl($block->getProductUrl($product)) ?>"> -->
+		<?= $block->escapeHtml($product->getName()) ?>
+	</a></h1>
+
+<div class="custom-rating-review">
+	<?php
+	echo $this->getLayout()
+		->createBlock('Magento\Catalog\Block\Product\View')
+		->setTemplate('Magento_Catalog::product/view/review.phtml')
+		->toHtml();
+	?>
+</div>
+<div class="price">
+	<span class="rs"> <?php
+		if ($product->getTypeId() == 'configurable') {
+			$_configChild = $product->getTypeInstance()->getUsedProducts($product);
+			$getChildId = array();
+			$i = 0;
+			foreach ($_configChild as $child) {
+				$getChildId[] = $child->getSku();
+				if ($i > 0) {
+					$style = 'style="display:none;"';
+				}else{
+					$style = '';
+				}
+				?>
+				<span class="<?php echo $child->getSku(); ?> price<?php echo $child->getId(); ?> configPrice" <?php echo $style; ?>>
+					<?php
+					if ($customerSession->isLoggedIn() && $customerSession->getCustomer()->getGroupId()==4 ){
+						echo $priceHelper->currency($product->getData('b2bproductprice'), true, false);
+					}else{
+						echo $block->getProductPriceHtml(
+							$child, \Magento\Catalog\Pricing\Price\FinalPrice::PRICE_CODE, \Magento\Framework\Pricing\Render::ZONE_ITEM_VIEW, [
+						    'price_id_suffix' => '_clone'
+							]
+						);
+					}
+					
+					?>
+				</span>
+				<?php
+				$i++;
+			}
+		} else { ?>
+		
+		<span class="configPrice" >
+			<?php
+			echo $block->getProductPriceHtml(
+				$product, \Magento\Catalog\Pricing\Price\FinalPrice::PRICE_CODE, \Magento\Framework\Pricing\Render::ZONE_ITEM_VIEW, [
+			    'price_id_suffix' => '_clone'
+				]
+			);?>
+			</span>
+		<?php }
+		?></span>
+	
+	<span class="rs2">
+		<?php if ($product->getIsSalable()): ?>
+			<?= /* @escapeNotVerified */ __('In stock') ?>
+		<?php else: ?>
+			<strike><?= /* @escapeNotVerified */ __('Out of stock') ?></strike>
+		<?php endif; ?>
+
+	</span>
+</div>
+ <!-- <div class="para"><?= $product->getDescription() ?></div>
+<div class="para"><?= $product->getShortDescription() ?></div>-->
+<?php } ?>
+
+<!--<p class="mar-bot">  <b>Pay on Delivery(Cash/Card) </b> eligible <a href="#"> What is this?</a></p>-->
+

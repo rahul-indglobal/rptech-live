@@ -1,0 +1,21 @@
+{
+    "name": "rptech/general",
+    "description": "To set various general options",
+    "require": {
+        "php": "^7.1.0"
+    },
+    "suggest": {},
+    "type": "magento2-module",
+    "version": "1.0.0",
+    "license": [
+        "Commercial"
+    ],
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Rptech\\General\\": ""
+        }
+    }
+}

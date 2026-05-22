@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!--
+/** Grid menu xml
+ * @category  Leaders 
+ * @package   Manageleaders_Leaders
+ * @author    Lalita Rajput
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+<!--        <add id="Manageleaders_Leaders::manager" title="Leadership Management" module="Manageleaders_Leaders" sortOrder="10" resource="Manageleaders_Leaders::manager" />
+        <add id="Manageleaders_Leaders::add_row" title="Leadership Page Management" module="Manageleaders_Leaders" sortOrder="20" parent="Manageleaders_Leaders::manager" action="leaders/grid" resource="Manageleaders_Leaders::add_row"/>-->
+    </menu>
+</config>

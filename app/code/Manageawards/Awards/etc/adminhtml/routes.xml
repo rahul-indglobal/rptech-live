@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!--
+/** Manageawards_Awards adminhtml routes xml
+ * @category  Manageawards_Awards 
+ * @package   Manageawards_Awards
+ * @author    Lalita Rajput
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:App/etc/routes.xsd">
+    <router id="admin">
+        <route id="awards" frontName="awards">
+            <module name="Manageawards_Awards" />
+        </route>
+    </router>
+</config>

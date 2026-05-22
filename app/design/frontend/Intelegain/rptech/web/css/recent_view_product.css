@@ -1,0 +1,99 @@
+#custom-recent-view {
+    background: #fff;
+    padding: 10px;
+    margin-top: 15px;
+    display: inline-block;
+    width: 100%;
+}
+#custom-recent-view a {
+    outline: none;
+}
+#custom-recent-view .custom-recent-view {
+    padding: 10px 10px 25px;
+    margin: 0;
+    font-family: roboto;
+}
+
+#custom-recent-view .product-item-info {
+    text-align: center;    
+}
+#custom-recent-view .product_image {
+    height: 300px;
+    display: flex;
+    align-items: center;
+}
+#custom-recent-view .product_image img {
+    margin: 0 auto;
+}
+#custom-recent-view .product-title-custom {
+    font-size: 1em;
+    font-weight: 500;
+    display: block;    
+    color: #000;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    height: 40px;
+}
+#custom-recent-view .price-box {
+    color: #ff0000;
+    font-size: 15px;
+    clear: both;
+    margin: .5em 0;
+    display: block;
+}
+#custom-recent-view .product-item-info .tocart.primary {
+    display: inline-block;
+    font-size: 1em;
+    color: #fff;
+    background-color: #522663;
+    padding: 0.24em .75em;
+    font-weight: 400;
+    outline: none;
+    border-radius: 5px;
+    border: 0;
+}
+
+#custom-recent-view .product-item-info .cust-btn-enq {
+    box-shadow: none;
+    display: inline-block;
+    font-size: 1em;
+    color: #fff;
+    background-color: #a02a80;
+    padding: 0.24em .75em;
+    font-weight: 400;
+    outline: none;
+    border-radius: 5px;    
+    border: 0;
+}
+
+#custom-recent-view li.product-item {
+    float: left;
+}
+#custom-recent-view li.product-size {
+    width: 300px;
+}
+@media(max-width: 1024px) {
+    #custom-recent-view li.product-size {
+        width: 180px;
+    }
+}
+
+@media(max-width: 767px) {
+    #custom-recent-view li.product-size {
+        width: 235px;
+    }
+}
+
+@media(max-width: 640px) {
+    #custom-recent-view li.product-size {
+        width: 288px;
+    }
+}
+
+@media(max-width: 480px) {
+    #custom-recent-view li.product-size {
+        width: 425px;
+    }
+}

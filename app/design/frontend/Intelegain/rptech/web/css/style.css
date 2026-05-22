@@ -1,0 +1,439 @@
+.bg-f0eeee{
+    background-color: #f0eeee;
+    font-family: roboto;
+}
+.bg-white{
+    background-color: white;
+}
+.highlighter{
+    color: #e85302;
+}
+.navigator{
+    margin-top: 15px;
+    font-size: 14px;
+    color: #555555;
+    display: block;
+    border-bottom: 1px solid #cac9c8;
+    padding-bottom: 10px;
+}
+.head-grid{
+    color: #009ccf;
+    font-size: 16px;
+    font-weight: 700;
+}
+.list-start{
+    margin-top: 30px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #e4e4e3;
+    text-align: center;
+}
+.divider-1{
+    margin-top: 30px;
+    padding-bottom: 20px;
+    text-align: center;
+    border-bottom: 1px solid #e4e4e3;
+}
+.name-desc{
+    font-size: 16px;
+}
+.price-avail{
+    margin-top: 30px;
+    font-size: 24px;
+    font-weight: 700;
+}
+.cart-show{
+    padding-top: 33px;
+}
+.product{
+    border: 1px solid #b7b7b7;
+}
+.divider-2{
+    position: relative;
+}
+.x-close {
+    position: absolute;
+    top: -30px;right: 0;
+    padding: 3px;
+    height: 40px;width: 40px;
+    background-color: #dedcdc;
+    color: #000;
+    font-size: 35px;
+    opacity: 1;
+    line-height: 1;
+}
+.x-close:hover,
+.x-close:focus {
+    color: #fd2020;
+    cursor: pointer;
+}
+.divider-3{
+    margin-bottom: 150px;
+}
+.price-avail-sibl{
+    display: none;
+}
+.name-desc-sibl{
+    display: none;
+}
+.cart-hover{
+    display: none;
+}
+@media (max-width:991px){
+    .product{
+        float: left;
+        height: 130px;
+    }
+    .price-avail{
+       /* margin-top: 15px;
+        margin-left: 160px;*/
+    }
+    .list-start{
+        display: none;
+    }
+    .divider-1{
+        text-align: left;
+        border: 1px solid #e4e4e3;
+        padding: 10px;
+        position: relative;
+    }
+    .cart-show{
+        display: none;
+    }
+    .name-desc{
+        /*margin-left: 10px;
+        margin-top: -2px;;*/
+    }
+    .price-avail-sibl{
+        display: block;
+        /*margin-left: 140px;
+        margin-bottom: -16px;*/
+        color: #009ccf;
+        font-size: 16px;
+    }
+    .name-desc-sibl{
+        display: block;
+        color: #009ccf;
+        font-size: 16px;
+    }
+    .cart-hover{
+        display: block;
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background-color: #dedcdc;
+        padding: 9px;
+        border-radius: 8px;
+    }
+    .cart-hover:hover{
+        box-shadow: 0px 0px 1px 1px #bcb8b8;
+    }
+    .cart-moveable{
+        top: 0px;
+        right: 60px;
+        border-radius: 0px 0px 8px 8px;
+    }
+    .x-close{
+        top: 0;
+        line-height: 0.5;
+        padding: 10px;
+    }
+}
+/*@media (max-width:479px){
+    .product{
+        float: left;
+        height: 108px;
+    }
+    .price-avail-sibl{
+        margin-left: 120px;
+        font-size: 14px;
+    }
+    .price-avail{
+        margin-left: 140px;
+        font-size: 20px;
+    }
+    .name-desc-sibl{
+        font-size: 14px;
+    }
+    .name-desc{
+        font-size: 14px;
+    }
+    .divider-1{
+        padding: 5px;
+    }
+    .cart-hover{
+        top: 5px;
+        right: 5px;
+        padding: 6px;
+    }
+    .cart-moveable{
+        top: 45px;
+        right: 0;
+        border-radius: 8px 0px 0px 8px;
+        padding: 4px;
+    }
+}*/
+
+
+
+/*======================Start---Product_1===========================================*/
+
+
+.slider {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 5px;
+    border-radius: 5px;
+    background: #ccc;
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+}
+
+.slider:hover {
+    opacity: 1;
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 23px;
+    height: 24px;
+    border: 0;
+    background: url('contrasticon.png');
+    cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+    width: 23px;
+    height: 24px;
+    border: 0;
+    background: url('contrasticon.png');
+    cursor: pointer;
+}
+
+.slidecontainer {
+    width: 100%;
+}
+
+.slider {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 10px;
+    border-radius: 5px;
+    background: #d3d3d3;
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+}
+
+.slider:hover {
+    opacity: 1;
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 25px;
+    height: 25px;
+    border-radius:25px;
+    background: #4CAF50;
+    cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+    width: 23px;
+    height: 24px;
+    border: 0;
+    background: url('contrasticon.png');
+    cursor: pointer;
+}
+    
+    .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default{
+        border-radius: 14px;
+        background-color: #fff;
+        background-image: none;
+        top: -10px;
+    }
+    .ui-widget-header{background-color: #2874f0;background-image: none;}
+.custom-select-my {
+  position: relative;
+  width: 100%;
+}
+.custom-select-my select {
+  display: none;
+  color: black;
+}
+.select-selected-my {
+  background-color: #f3f3f3;
+}
+/*style the arrow inside the select element:*/
+.select-selected-my:after {
+  position: absolute;
+  content: "\f107";
+  font-family: fontawesome;    
+  top: 14px;
+  right: 20px;
+  width: 10px;
+  height: 10px;
+  
+}
+/*point the arrow upwards when the select box is open (active):*/
+.select-selected-my.select-arrow-active-my:after {
+  content: "\f106";
+  font-family: fontawesome;
+  top: 7px;
+}
+/*style the items (options), including the selected item:*/
+
+.select-items-my div,.select-selected-my {
+  color: #9a9a9a;
+  padding: 12px 8px 8px 12px;
+  border: 1px solid transparent;
+  border-color: #d7d5d5;
+  cursor: pointer;
+  user-select: none;
+}
+/*style items (options):*/
+.select-items-my {
+  position: absolute;
+  background-color: #f3f3f3;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 99;
+}
+/*hide the items when the select box is closed:*/
+.select-hide-my {
+  display: none;
+}
+.select-items-my div:hover, .same-as-selected-my {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+.products-sub{
+    margin-top: 100px;
+}
+.info-liner{
+    font-size: 20px;
+}
+.product-boxes-text{
+    font-size: 17px;
+}
+.price-box{
+    font-size: 22px;
+    color: #ff0000;
+}
+.four-side-wrap{
+    text-align: left;
+}
+.product-boxes-text{
+    margin-top: 0;
+}
+.wrapper-box{
+    padding: 20px;
+}
+.product_1-details{
+    margin-top: 0;
+    width: 50%;
+    float: left;
+    font-size: 18px;
+    text-align: center;
+}
+.product_2-details{
+    float: left;
+    width: 50%;
+    height: 56px;
+    background-color: #0684d0;
+    line-height: 56px;
+    font-family: roboto;
+    font-size: 18px;
+    color: white;
+    text-align: center;
+}
+.wishlist{
+    top: 15px;
+    right: 0;
+    z-index: 0;
+}
+.product-images {
+    margin-top: 53px;
+    margin-left: 22px;
+}
+.four-side-wrap{
+    padding: 20px;
+}
+.custom-select-my{
+    width: 20%;
+}
+.product-headline{
+    color: #000;
+    margin-top: 30px;
+}
+.checkout{
+    background-color: #025283;
+}
+/* Full-width input fields */
+.form-control-1 {
+    width: 545px;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: block;
+    border: none;
+    border-bottom: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+/* Set a style for all buttons */
+
+
+/* Extra styles for the cancel button */
+
+
+/* Center the image and position the close button */
+
+.container-1{
+    padding: 30px;
+}
+@media (max-width:1300px){
+    .brand-para{
+        font-size: 20px;
+    }
+    .product-headline{
+        font-size: 33px;
+    }
+}
+@media (max-width:720px){
+    .product-sub-boxes{
+        width: 100%;
+    }
+}
+/*======================End---Product_1===========================================*/
+
+
+
+
+
+/*======================Start---E-waste======================================*/
+.headline-ewaste{
+    text-align: center;
+    font-size: 20px;
+}
+.wraper-ewaste{
+    padding-left: 20px;
+    padding-right: 20px;
+    border: 3px solid #000;
+}
+.unorder,  .list{
+    list-style: disc;
+    padding-left: 20px;
+}
+.design-style{
+    color: green;
+}
+.image-ewaste{
+    float: left;
+}
+/*======================End---E-waste===========================================*/
+
+.disNone{ display: none !important; }

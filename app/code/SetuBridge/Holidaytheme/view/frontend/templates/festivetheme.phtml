@@ -1,0 +1,210 @@
+<?php
+/**
+* Setubridge Technolabs
+* http://www.setubridge.com/
+* @author SetuBridge
+* @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+**/
+?>
+<?php 
+$_configHelper=$this->helper('SetuBridge\Holidaytheme\Helper\Data') ?>
+
+<?php if($_configHelper->isActive() && $_configHelper->isAllowedPage()): 
+
+    $fromDate=$_configHelper->getConfig('setubridge_holidaytheme/general/festivedatestart');
+
+    $toDate=$_configHelper->getConfig('setubridge_holidaytheme/general/festivedateend');
+
+    $result=$_configHelper->isActiveForDate($fromDate,$toDate); 
+
+    if($result): 
+
+      
+        $getchristmasimagesoathfooter =  $block->getMediaurl() . "festivethemebackgroundimage/";
+
+        $getchristmasimagesoathheaderr = $block->getViewFileUrl('SetuBridge_Holidaytheme::images/festivethemebackgroundimage/footer/background/footer_patterns/'.$_configHelper->getConfig('setubridge_holidaytheme/footerimageconfiguration/footerimageselect'));
+
+
+
+        if($_configHelper->getConfig('setubridge_holidaytheme/footerimageconfiguration/footerimageactive')): 
+
+            $get_footerbg_image = $_configHelper->getConfig('setubridge_holidaytheme/footerimageconfiguration/footerimagebrowse');  
+
+            if ($get_footerbg_image) {
+                $get_footerbg_image = $_configHelper->getConfig('setubridge_holidaytheme/footerimageconfiguration/footerimagebrowse');
+                $get_finalfooterbg_image = $getchristmasimagesoathfooter . $get_footerbg_image;
+            }else{
+                if($_configHelper->getConfig('setubridge_holidaytheme/footerimageconfiguration/footerimageactive')):
+                    $get_footerbg_image = $_configHelper->getConfig('setubridge_holidaytheme/footerimageconfiguration/footerimageselect');
+
+                    if($get_footerbg_image=="none")$get_footerbg_image="";
+                    $get_finalfooterbg_image = $getchristmasimagesoathheaderr;
+                    endif;  
+            } if($get_footerbg_image){
+                ?>
+                <?php 
+                
+                list($lwidth, $lheight) = getimagesize($get_finalfooterbg_image);?>
+                <script type="text/javascript">
+                    require(['jquery'], function ($) {   
+                        $(document).ready(function(){
+                            $('.page-footer').append('<div class="xmas_bgimage"></div>');
+                            $('.xmas_bgimage').css("background-image","url('<?php echo $get_finalfooterbg_image ?>')");
+                            $('.xmas_bgimage').css("height","<?php echo $lheight ?>px");
+                            $('.xmas_bgimage').css("width","100%");
+
+                        });    
+                    });
+                </script>
+
+                <style>
+                    .christmas-tree {bottom: <?php echo $lheight; ?>px;}
+                    .christmas-tree-right {bottom: <?php echo $lheight; ?>px;}
+                </style> 
+                <?php }  endif;
+        if($_configHelper->getConfig('setubridge_holidaytheme/backgroundimageconfig/backgroundactive')):
+
+            $get_fullbackground_image = $_configHelper->getConfig('setubridge_holidaytheme/backgroundimageconfig/backgroundimg');
+            $bgimage = $block->getMediaurl(). "festivethemebackgroundimage/".$get_fullbackground_image;
+
+            ?>
+
+            <?php if($get_fullbackground_image) : ?>
+                <style>
+                    .page-wrapper {background-image: url( <?php echo $bgimage?> )!important;background-size: 100% 100%;
+
+
+                    }
+                    .page-footer{
+                        background: none;
+                    }
+
+                </style>                                
+                <?php endif; ?>
+            <?php endif; 
+
+
+       
+        $snowfall=$_configHelper->getConfig('setubridge_holidaytheme/snowfallsconfig/snowfallsactive');
+        if($snowfall){
+            $snowfalldesign =$_configHelper->getConfig('setubridge_holidaytheme/snowfallsconfig/snowfallsdesignpattern');
+             $dta = explode(",",$snowfalldesign);
+            ?>
+            
+            <div id="festivethemeflakes"></div>
+          
+            <script type="text/javascript">
+                require(['jquery','SetuBridge_Holidaytheme/js/prototype','SetuBridge_Holidaytheme/js/festivetheme'],function($,prototype,snowflakes){
+
+                    $(document).ready(function(){
+                        var Snow = new sbSnowflakes({
+                    // min size of element (default: 20)
+                    minSize: <?php echo $_configHelper->getConfig('setubridge_holidaytheme/snowfallsconfig/snowfallselementminspeed')?>,
+                    
+                    // max size of element (default: 50)
+                    maxSize: <?php echo $_configHelper->getConfig('setubridge_holidaytheme/snowfallsconfig/snowfallselementmaxspeed')?>,
+                    
+                    // flake fall time multiplier (default: 20)
+                    fallTimeMultiplier: 20, 
+                    
+                    // flake fall time difference (default: 10000)
+                    fallTimeDifference: <?php echo $_configHelper->getConfig('setubridge_holidaytheme/snowfallsconfig/snowfallsfallanimatespeed')?>, 
+                    
+                    // interval (miliseconds) between new element spawns (default: 500)
+                    spawnInterval: 20, 
+                    
+                    // jQuery element to apply snow effect on (should work on any block element) (default: body)
+                    target: jQuery("#festivethemeflakes"),
+                    
+                    //elements to use in generating snow effect
+                    elements	: [
+                                <?php
+                                $dta = explode(",",$snowfalldesign);
+                                 for ($row = 0; $row < count($dta); $row++) {
+                                ?>
+                                { 
+                                  
+                                    <?php  if (strpos($dta[$row],'|') !== false)  { 
+                                        $dtaf = explode("|",$dta[$row]);  
+                                       
+                                    ?>
+                                        html: '<span><?php echo $dtaf['0']; ?></span>',
+                                        color: '<?php echo $dtaf['1']; ?>'
+                                    <?php } else { ?>
+                                            html: '<span><?php echo $dta[$row]; ?></span>',
+                                    <?php }?>
+                                },
+                                <?php } ?>
+                    ]
+                    });
+
+                        // setTimeout(function(){
+                        //     Snow.start();
+                        //     },500);
+
+                    });
+
+                });
+
+            </script>
+
+            <?php }  endif; ?>   
+    <?php
+
+    $result1=$_configHelper->isActiveForDate($fromDate,$toDate); 
+
+    if($result1):
+
+        $getchristmasimagesoathheader = $block->getMediaurl() . "festivethemebackgroundimage/";
+        $getchristmasimagesoathheaderr = $block->getViewFileUrl('SetuBridge_Holidaytheme::images/festivethemebackgroundimage/header/header_patterns/'.$_configHelper->getConfig('setubridge_holidaytheme/headerimageconfiguration/headerimageselect'));
+
+
+        if ($_configHelper->getConfig('setubridge_holidaytheme/headerimageconfiguration/headerimageactive')):
+            $final_header_image="";
+
+            $left_header_image = $block->getViewFileUrl('festivethemebackgroundimage/images/heartball.png');
+
+            $defaultpath = $block->getMediaurl() . "festivethemebackgroundimage/" . "default/";
+
+
+            $get_header_image = $_configHelper->getConfig('setubridge_holidaytheme/headerimageconfiguration/headerimagebrowse');
+
+            if ($get_header_image)
+            {
+                $get_header_image = $_configHelper->getConfig('setubridge_holidaytheme/headerimageconfiguration/headerimagebrowse');
+                $final_header_image = $getchristmasimagesoathheader . $get_header_image;
+
+            }
+            else{
+                if($_configHelper->getConfig('setubridge_holidaytheme/headerimageconfiguration/headerimageactive')):
+                    $get_header_image = $_configHelper->getConfig('setubridge_holidaytheme/headerimageconfiguration/headerimageselect');
+
+                    if($get_header_image=="none")$get_header_image="";
+                    $final_header_image = $getchristmasimagesoathheaderr;
+                    endif;  
+            }
+
+            if($get_header_image)
+            {
+                ?>
+                <?php
+
+                list($lwidth, $lheight) = getimagesize($final_header_image);?>
+                <script type="text/javascript">
+                    require(['jquery'], function ($) {   
+                        $(document).ready(function(){
+                            $('.page-header').append('<div class="lights-head"></div>');
+                            $('.lights-head').css("background-image","url('<?php echo $final_header_image ?>')");        
+                            $('.lights-head').css("height","<?php echo $lheight ?>px");
+                            $('.lights-head').css("width","100%");        
+                        });  
+                    });
+                </script> 
+                <?php } endif; ?>
+        <style> 
+            .footer {margin: 0 auto; position: relative; z-index: 9;padding: 10px 10px 110px}
+        </style>
+
+        <?php  endif; endif;?>  
+
+

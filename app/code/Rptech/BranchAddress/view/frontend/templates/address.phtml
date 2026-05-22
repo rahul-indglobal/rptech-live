@@ -1,0 +1,57 @@
+<?php
+/**
+ * @var \Rptech\BranchAddress\Block\BranchAddress $block
+ */
+?>
+<?php $branchCollection = $block->getBranchCollection(); ?>
+<div class="col col-sm-5">
+    <div class="col-inner">
+        <div class="branches-wrapper">
+            <div class="form-group" style="margin-top: 35px;">
+                <label><?= __("Select Location :") ?></label>
+                <select id="branch_form" class="form-control" name="branch_form">
+                    <?php foreach ($branchCollection as $location): ?>
+                        <option value="<?= $location->getEntityId() ?>"><?= $location->getBranchLocation() ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col col-sm-4">
+    <div class="col-inner">
+        <div class="select-address" style="margin-top: 35px;">
+            <h4><?= __("Address") ?></h4>
+            <div id="branch_location_address">
+                <?= $branchCollection->getData()[0]["branch_address"] ?? "" ?>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    require([
+        'jquery',
+        'Magento_Ui/js/modal/modal'
+    ], function ($, modal) {
+        $(document).ready(function () {
+            $("#branch_form").on("change", function () {
+                var branch_id = $(this).val();
+                console.log('fsdfsfs');
+                $.ajax({
+                    url: "<?= $block->getUrl('branchaddress/branch/address') ?>",
+                    type: "GET",
+                    data: {
+                        branch_id: branch_id
+                    },
+                    showLoader: true
+                }).done(function (data) {
+                    if (data.success) {
+                        $("#branch_location_address").html(data.data.branch_address);
+                    } else {
+                        console.log(data);
+                    }
+                });
+            })
+        });
+    });
+</script>

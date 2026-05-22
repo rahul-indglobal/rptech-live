@@ -1,0 +1,48 @@
+<?php
+/**
+ * Copyright Â© Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+// @codingStandardsIgnoreFile
+?>
+<?php
+/**
+ * Category layered navigation
+ *
+ * @var $block \Magento\LayeredNavigation\Block\Navigation
+ */
+?>
+<?php if ($block->canShowBlock()): ?>
+       
+	<div class="col-lg-3 col-md-3 filters-wrapper">
+            <div class="filter-result">
+                    <?= $block->getChildHtml('state') ?>
+                    <?php if ($block->getLayer()->getState()->getFilters()): ?>
+                            <div class="block-actions filter-actions">
+                                    <a href="//<?= /* @escapeNotVerified */ $block->getClearUrl() ?>" class="action clear filter-clear"><span><?= /* @escapeNotVerified */ __('Clear All') ?></span></a>
+                            </div>
+                    <?php endif; ?>
+                </div>
+                <div class="filter-options">
+                    <div class="filter-mb-header">
+                        <h4 class="heading">Shopping Options <button class="btn btn-filter-close fa fa-times"></button></h4>
+                    </div>
+                    <?php foreach ($block->getFilters() as $filter): ?>
+                            <?php if ($filter->getItemsCount()): ?>
+                    <div class="filter-option-list">
+                                    <a href="javascript:void(0)" class="brand-function toggle-filter">
+                                            <div class="product-brand">
+                                                    <span><?= $block->escapeHtml(__($filter->getName())) ?></span>
+                                                    <i class="fa fa-chevron-down"></i>
+                                            </div>
+                                    </a>
+                                    <div class="mydiv">
+                                            <?= /* @escapeNotVerified */ $block->getChildBlock('renderer')->render($filter) ?>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
+                    <?php endforeach; ?>
+                </div>
+
+	</div>
+<?php endif; ?>

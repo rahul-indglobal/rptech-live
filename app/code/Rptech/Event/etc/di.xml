@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Rptech\Event\Api\EventRepositoryInterface"
+                type="Rptech\Event\Model\EventRepository" />
+
+    <!-- Image Uploader -->
+    <virtualType name="VirtualTypeName" type="Rptech\Event\Model\ImageUploader">
+        <arguments>
+            <argument name="baseTmpPath" xsi:type="string">event/images</argument>
+            <argument name="basePath" xsi:type="string">event/images</argument>
+            <argument name="allowedExtensions" xsi:type="array">
+                <item name="jpg" xsi:type="string">jpg</item>
+                <item name="jpeg" xsi:type="string">jpeg</item>
+                <item name="gif" xsi:type="string">gif</item>
+                <item name="png" xsi:type="string">png</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <type name="Rptech\Event\Controller\Adminhtml\Admin\Upload">
+        <arguments>
+            <argument name="imageUploader" xsi:type="object">VirtualTypeName</argument>
+        </arguments>
+    </type>
+    <!-- End Image Uploader -->
+
+    <!--Admin GRID -->
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="event_grid_listing_data_source" xsi:type="string">
+                    Rptech\Event\Model\ResourceModel\Event\Grid\Collection
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <virtualType name="Rptech\Event\Model\ResourceModel\Event\Grid\Collection"
+                 type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">event</argument>
+            <argument name="resourceModel" xsi:type="string">Rptech\Event\Model\ResourceModel\Event</argument>
+        </arguments>
+    </virtualType>
+    <!--End Admin GRID -->
+
+    <type name="Magento\Framework\Console\CommandList">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="import_csv_data" xsi:type="object">Rptech\Event\Console\Import</item>
+            </argument>
+        </arguments>
+    </type>
+
+</config>

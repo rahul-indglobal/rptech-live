@@ -1,0 +1,23 @@
+{
+    "name": "rptech/sms",
+    "description": "To send text message on order place and shipment",
+    "require": {
+        "php": "^7.1.0",
+        "magecomp/magento-2-mobile-login": "~2.1.1",
+        "rptech/general": "^1.0.0"
+    },
+    "suggest": {},
+    "type": "magento2-module",
+    "version": "1.0.0",
+    "license": [
+        "Commercial"
+    ],
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Rptech\\SMS\\": ""
+        }
+    }
+}

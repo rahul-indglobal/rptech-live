@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!--
+/** Grid menu xml
+ * @category  Leaders 
+ * @package   Manageleaders_Leaders
+ * @author    Lalita Rajput
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+<!--        <add id="Managefaq_Faq::manager" title="FAQ Management" module="Managefaq_Faq" sortOrder="10" resource="Managefaq_Faq::manager" />
+        <add id="Managefaq_Faq::add_row" title="FAQ List" module="Managefaq_Faq" sortOrder="20" parent="Managefaq_Faq::manager" action="faq/grid" resource="Managefaq_Faq::add_row"/>-->
+    </menu>
+</config>

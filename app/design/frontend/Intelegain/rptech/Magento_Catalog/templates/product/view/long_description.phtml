@@ -1,0 +1,11 @@
+<?php
+/** @var \Magento\Catalog\Block\Product\View $block */
+$product = $block->getProduct();
+$longDescription = $product->getDescription(); // Long Description
+?>
+
+<?php if ($longDescription): ?>
+	<div class="product-long-description">
+		<?= /* @noEscape */ $longDescription ?>
+	</div>
+<?php endif; ?>

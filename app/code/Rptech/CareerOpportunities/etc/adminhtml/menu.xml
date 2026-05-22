@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add
+                id="Rptech_CareerOpportunities::career"
+                title="Career Opportunities"
+                module="Rptech_Feedback"
+                sortOrder="10"
+                action="career/index/index"
+                resource="Rptech_CareerOpportunities::career"
+                parent="Rptech_ServiceAddress::main"
+        />
+    </menu>
+</config>

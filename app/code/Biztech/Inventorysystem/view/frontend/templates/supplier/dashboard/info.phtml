@@ -1,0 +1,55 @@
+<div class="col2-set">
+    <div class="col-1">
+        <div class="box">
+            <div class="box-title">
+                <h3><?php echo __('Contact Information') ?></h3>
+                <a href="<?php echo $block->getUrl('inventorysystem/supplierlogin/editinfo') ?>"><?php echo __('Edit') ?></a>
+            </div>
+            <div class="box-content">
+                <p>
+                    <?php echo $block->escapeHtml($block->getSupplierName()) ?><br />
+                    <?php echo $block->escapeHtml($block->getSupplierEmail()) ?><br />
+                    <?php echo $block->escapeHtml($block->getSupplierCompany()) ?><br />
+                </p>
+            </div>
+        </div>
+    </div>    
+    <div class="col-2">
+        <div class="box">
+            <div class="box-title">
+                <h3><?php echo __('Address') ?></h3>
+                <a href="<?php echo $block->getUrl('inventorysystem/supplierlogin/editaddrinfo') ?>"><?php echo __('Edit') ?></a>
+            </div>
+            <div class="box-content">
+                <div>
+                    <?php $supAddr = $block->getSupplierAddressData1(); ?>
+                    <address>
+                        <?php echo $supAddr['first_name'] . " " . $supAddr['last_name']; ?><br />
+                        <?php echo $supAddr['address_line']; ?><br />
+                        <?php //$region = Mage::getModel('directory/region')->loadByCode('CA', 'US'); ?>
+                        <?php                        
+                        if ($supAddr['state'] != '') {
+                            $region = $block->getRegion()->load($supAddr['state']);
+                            $name = $region->getName();
+                            if(isset($name)) {
+                                $regionName = $region->getName();    
+                            } else {
+                                $regionName = $supAddr['state'];
+                            }
+                        }else {
+                            $regionName = ""; 
+                        }                    
+                        ?>
+                        <?php echo $supAddr['city'] . ", " . $regionName . ", " . $supAddr['postal_code']; ?><br /                        
+                        <?php if($supAddr['country']!=='') {                    
+                           $country = $block->getCountry()->loadByCode($supAddr['country']); 
+                           echo $country->getName(); ?><br />                            
+                        <?php } ?>
+                        <?php echo "T: " . $supAddr['telephone']; ?><br />
+                        <?php echo "Fax :". $supAddr['fax']; ?><br />
+                    </address>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

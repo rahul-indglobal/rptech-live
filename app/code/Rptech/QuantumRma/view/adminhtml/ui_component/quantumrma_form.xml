@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd"
+      name="quantumrma_form">
+
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">quantumrma_form.quantumrma_form_data_source</item>
+            <item name="deps" xsi:type="string">quantumrma_form.quantumrma_form_data_source</item>
+        </item>
+        <item name="label" xsi:type="string" translate="true">Quantum RMA</item>
+    </argument>
+
+    <dataSource name="quantumrma_form_data_source">
+        <argument name="dataProvider" xsi:type="configurableObject">
+            <argument name="class" xsi:type="string">Rptech\QuantumRma\Model\QuantumRma\DataProvider</argument>
+            <argument name="name" xsi:type="string">quantumrma_form_data_source</argument>
+            <argument name="primaryFieldName" xsi:type="string">id</argument>
+            <argument name="requestFieldName" xsi:type="string">id</argument>
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="submit_url" xsi:type="url" path="quantum-support/quantumrma/save"/>
+                </item>
+            </argument>
+        </argument>
+    </dataSource>
+
+    <fieldset name="general">
+        <settings>
+            <label translate="true">RMA Information</label>
+        </settings>
+
+        <field name="status" formElement="select">
+            <argument name="data" xsi:type="array">
+                <item name="options" xsi:type="array">
+                    <item name="pending" xsi:type="array">
+                        <item name="value" xsi:type="string">pending</item>
+                        <item name="label" xsi:type="string" translate="true">Pending</item>
+                    </item>
+                    <item name="canceled" xsi:type="array">
+                        <item name="value" xsi:type="string">canceled</item>
+                        <item name="label" xsi:type="string" translate="true">Canceled</item>
+                    </item>
+                    <item name="completed" xsi:type="array">
+                        <item name="value" xsi:type="string">completed</item>
+                        <item name="label" xsi:type="string" translate="true">Completed</item>
+                    </item>
+                </item>
+            </argument>
+            <settings>
+                <dataType>select</dataType>
+                <label translate="true">Status</label>
+                <dataScope>status</dataScope>
+                <required>true</required>
+            </settings>
+        </field>
+
+        <field name="date_time" formElement="date">
+            <settings>
+                <dataType>date</dataType>
+                <label translate="true">Date &amp; Time</label>
+                <dataScope>date_time</dataScope>
+                <validation>
+                    <rule name="validate-date" xsi:type="boolean">true</rule>
+                </validation>
+                <options>
+                    <option name="dateFormat" xsi:type="string">yyyy-MM-dd</option>
+                    <option name="timeFormat" xsi:type="string">HH:mm:ss</option>
+                </options>
+            </settings>
+        </field>
+
+        <field name="user" formElement="text">
+            <settings>
+                <dataType>text</dataType>
+                <label translate="true">User ID</label>
+                <dataScope>user</dataScope>
+                <notice translate="true">Logged-in Admin User ID</notice>
+            </settings>
+        </field>
+
+        <field name="remarks" formElement="textarea">
+            <settings>
+                <dataType>text</dataType>
+                <label translate="true">Remarks</label>
+                <dataScope>remarks</dataScope>
+            </settings>
+        </field>
+    </fieldset>
+</form>

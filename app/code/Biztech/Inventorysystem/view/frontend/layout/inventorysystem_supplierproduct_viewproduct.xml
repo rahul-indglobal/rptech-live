@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Biztech, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="2columns-left" xsi:noNamespaceSchemaLocation="../../../../../../../lib/internal/Magento/Framework/View/Layout/etc/page_configuration.xsd">
+     <body>		
+
+        <referenceBlock name="top.links">
+            <referenceBlock name="authorization-link-login" remove="true" />      
+            <referenceBlock name="wish-list-link" remove="true" />          
+            <referenceBlock name="my-account-link" remove="true" />         
+        </referenceBlock>
+        <referenceBlock name="header.links">
+            <block class="Magento\Framework\View\Element\Html\Link" name="logout-inventory-link">
+            <arguments>
+                <argument name="label" xsi:type="string">Sign Out Supplier</argument>
+                <argument name="path" xsi:type="string">inventorysystem/managesupplier/supplierlogout</argument>
+            </arguments>
+            </block>
+        </referenceBlock>
+        
+     	 <referenceContainer name="sidebar.additional">
+                <block class="Biztech\Inventorysystem\Block\ManageSupplier\Dashboard\Sidebar" name="sps.sidebar.custom" template="Biztech_Inventorysystem::supplier/dashboard/sidebar.phtml" before="-">
+                        <action method="addLink">
+                            <argument name="name" xsi:type="string">account</argument>
+                            <argument name="path" xsi:type="string">inventorysystem/managesupplier/supplierdashboard</argument>
+                            <argument name="label" xsi:type="string">Dashboard</argument>
+
+                        </action> 
+                        <action method="addLink">
+                            <argument name="name" xsi:type="string">account_edit</argument>
+                            <argument name="path" xsi:type="string">inventorysystem/supplierlogin/editinfo/</argument>
+                            <argument name="label" xsi:type="string">Account Information</argument>
+
+                        </action>
+                        <action method="addLink">
+                        <argument name="name" xsi:type="string">address_edit</argument>
+                        <argument name="path" xsi:type="string">inventorysystem/supplierlogin/editaddrinfo/</argument>
+                        <argument name="label" xsi:type="string">Address Information</argument>
+
+                        </action>
+                        <action method="addLink">
+                            <argument name="name" xsi:type="string">supplier_product</argument>
+                            <argument name="path" xsi:type="string">inventorysystem/supplierproduct/viewproduct/</argument>
+                            <argument name="label" xsi:type="string">My Products</argument>
+                        </action>
+                        <action method="addLink">
+                            <argument name="name" xsi:type="string">supplier_create_product</argument>
+                            <argument name="path" xsi:type="string">inventorysystem/supplierproduct/createproduct/</argument>
+                            <argument name="label" xsi:type="string">Create Product</argument>
+
+                        </action>
+                        <action method="addLink">
+                            <argument name="name" xsi:type="string">supplier_purchaseorder_view</argument>
+                            <argument name="path" xsi:type="string">inventorysystem/supplierorder/vieworder/</argument>
+                            <argument name="label" xsi:type="string">My Orders</argument>
+
+                        </action>
+                </block>
+         </referenceContainer>
+            <!-- <referenceContainer name="content">         
+                <block class="Biztech\Inventorysystem\Block\ManageSupplier\Form\Product" name="index_supplierproduct" template="supplier/form/viewproduct.phtml">
+                </block>
+            </referenceContainer> -->
+            
+            <referenceContainer name="content">
+            <block class="Biztech\Inventorysystem\Block\ManageSupplier\Form\Product" name="index_supplierproduct" after="supplier_account_dashboard_hello" template="Biztech_Inventorysystem::supplier/form/viewproduct.phtml" cacheable="false" />           
+        </referenceContainer> 
+        </body>
+</page>
+

@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!--
+/** Manageawards_Awards module xml
+ * @category  Manageawards_Awards 
+ * @package   Manageawards_Awards
+ * @author    Lalita Rajput
+ */
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
+    <module name="Manageawards_Awards" setup_version="1.0.0">
+    </module>
+</config>

@@ -1,0 +1,142 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+// @codingStandardsIgnoreFile
+
+/** @var $block \Magento\Checkout\Block\Cart\Item\Renderer */
+$_item = $block->getItem();
+
+$product = $_item->getProduct();
+$isVisibleProduct = $product->isVisibleInSiteVisibility();
+/** @var \Magento\Msrp\Helper\Data $helper */
+$helper = $this->helper('Magento\Msrp\Helper\Data');
+$canApplyMsrp = $helper->isShowBeforeOrderConfirm($product) && $helper->isMinimalPriceLessMsrp($product);
+?>
+
+
+
+<div class="cart-item">
+    <div class="cart-row">
+        <div class="item-left col-sm-3 col-xs-4">
+            <a href="#" class="cart-img">
+<!--                                                <img src="images/products/17.png" alt="product image" class="img-responsive">-->
+                <?php if ($block->hasProductUrl()): ?>
+                    <a href="<?= /* @escapeNotVerified */ $block->getProductUrl() ?>"
+                       title="<?= $block->escapeHtml($block->getProductName()) ?>"
+                       tabindex="-1"
+                       class="product-item-photo">
+                       <?php else: ?>
+
+                    <?php endif; ?>
+                    <?= $block->getImage($block->getProductForThumbnail(), 'cart_page_product_thumbnail')->toHtml() ?>
+                    <?php if ($block->hasProductUrl()): ?>
+                    <?php else: ?>
+
+                    <?php endif; ?>
+
+                </a>
+            </a>
+        </div>
+        <div class="item-right col-sm-9 col-xs-8">
+            <div class="item-header clearfix">
+                <div class="col-sm-8 heading">
+                    <h4 class="product-title"><?php if ($block->hasProductUrl()): ?>
+                         <?php if ($_item->getProduct()->getTypeId() != "bundle") { ?>
+                               <a href="<?= /* @escapeNotVerified */ $block->getProductUrl() ?>"><?= $block->escapeHtml($block->getProductName()) ?></a>
+                         <?php } else { ?>
+                              <a href="<?= /* @escapeNotVerified */ $block->getProductUrl() ?>">Gaming Configurator</a>
+                       <?php  }?>
+                        <?php else: ?>
+                            <?= $block->escapeHtml($block->getProductName()) ?>
+                        <?php endif; ?></h4>
+                       <p class="description txt-small">
+
+
+                        <?php
+                        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+                        $product1 = $objectManager->get('Magento\Catalog\Model\Product')->load($_item->getProductId());
+                        echo $product1->getAttributeText('battery');
+                        echo $product1->getAttributeText('color');
+                        //echo $_item->getProduct()->getAttributeText('color');
+                        ?>
+                                       <?php if ($_options = $block->getOptionList()): ?>
+                <dl class="item-options">
+                    <?php foreach ($_options as $_option) : ?>
+                        <?php $_formatedOptionValue = $block->getFormatedOptionValue($_option) ?>
+                        <dt><?= $block->escapeHtml($_option['label']) ?></dt>
+                        <dd>
+                            <?php if (isset($_formatedOptionValue['full_view'])): ?>
+                                <?= /* @escapeNotVerified */ $_formatedOptionValue['full_view'] ?>
+                            <?php else: ?>
+                                <?= /* @escapeNotVerified */ $_formatedOptionValue['value'] ?>
+                            <?php endif; ?>
+                        </dd>
+                    <?php endforeach; ?>
+                </dl>
+            <?php endif; ?>
+                        <?php if ($messages = $block->getMessages()): ?>
+                    <?php foreach ($messages as $message): ?>
+                        <div class="cart item message <?= /* @escapeNotVerified */ $message['type'] ?>"><div><?= $block->escapeHtml($message['text']) ?></div></div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+                <?php $addInfoBlock = $block->getProductAdditionalInformationBlock(); ?>
+                <?php if ($addInfoBlock): ?>
+                    <?= $addInfoBlock->setItem($_item)->toHtml() ?>
+                <?php endif;?>
+                    </p>
+                </div>
+            </div>
+            <?php 
+            if ($_item->getProduct()->getTypeId() != "bundle") { 
+                ?>
+                <div class="item-info clearfix">
+                    <p class="price-tag"><span class="price"> <?= $block->getUnitPriceHtml($_item) ?></span>
+
+                    <?php if ($_item->getProduct()->getSpecialPrice() && (strtotime($_item->getProduct()->getSpecialFromDate()) <= strtotime(date('Y-m-d')) && strtotime($_item->getProduct()->getSpecialTodate()) >= strtotime(date('Y-m-d')) )) { 
+                        $calculateDiscountPerce = (($_item->getProduct()->getPrice() - $_item->getProduct()->getSpecialPrice()) / $_item->getProduct()->getPrice() ) * 100;
+                    ?>
+                    <strike><?= ($_item->getProduct()->getSpecialPrice()) ? $objectManager->create('Magento\Framework\Pricing\Helper\Data')->currency($_item->getProduct()->getPrice()) : ""; ?></strike>
+                    <strong class="txt-red"><span class="offers"><?= ($calculateDiscountPerce) ? round($calculateDiscountPerce) : ""; ?> % Off</span></strong>
+                    <?php }?>
+                    </p>
+                   <!-- short discription hide 
+                    <p class="txt txt-green"> <?php echo strip_tags($product1->getShortDescription()); ?> </p> -->
+                </div>
+            <?php } ?>
+        </div>
+    </div>
+    <div class="cart-row">
+        <div class="item-left col-sm-3 col-xs-4">
+            <div class="quantity qty">
+                <!--                <button class="btn btn-minus">-</button>-->
+                <button type="button"   id="<?= /* @escapeNotVerified */ $_item->getId() ?>-dec"  class="btn decreaseQty">-</button>
+                <input id="cart-<?= /* @escapeNotVerified */ $_item->getId() ?>-qty"AZ
+                       name="cart[<?= /* @escapeNotVerified */ $_item->getId() ?>][qty]"
+                       data-cart-item-id="<?= $block->escapeHtml($_item->getSku()) ?>"
+                       value="<?= /* @escapeNotVerified */ $block->getQty() ?>"
+                       type="text"
+                       size="4"
+                       title="<?= $block->escapeHtml(__('Qty')) ?>"
+                       class="input-text qty form-control"
+                       data-validate="{required:true,'validate-greater-than-zero':true}"
+                       data-role="cart-item-qty" readonly="true"/>
+                <!--                <button class="btn btn-plus">+</button>-->
+                <button type="button"  id="<?= /* @escapeNotVerified */ $_item->getId() ?>-upt" class="btn increaseQty">+</button>
+            </div>
+        </div>
+        <div class="item-right col-sm-9 col-xs-8">
+            <div class="btns-wrapper clearfix">
+                <!--                <a href="#" class="btn btn-save-later">save for later</a>-->
+                <?= $block->getActions($_item) ?>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+

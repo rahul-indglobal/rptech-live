@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+	<menu>
+		<add
+				id="Lalita_Mysmsmodule::enquries"
+				title="Enquries"
+				module="Lalita_Mysmsmodule"
+				sortOrder="200"
+				action="mysmsmodul/enquiry/index"
+				resource="Lalita_Mysmsmodule::enquries"
+				parent="Rptech_ServiceAddress::main"
+		/>
+	</menu>
+</config>

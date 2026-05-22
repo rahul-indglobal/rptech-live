@@ -1,0 +1,18 @@
+<?php
+/**
+ * @var \Rptech\Brand\Block\Brand\Index $block
+ */
+
+$brands = $block->getBrands();
+?>
+
+<?php if (!empty($brands) && $brands->getSize()) :?>
+    <?php foreach ($brands as $brand) :?>
+        <li class="col-sm-6 col-sm-6-rpt">
+            <a href="<?php echo __($brand->getLink())?>" target="_blank"><?php echo __($brand->getTitle())?></a>
+        </li>
+    <?php endforeach; ?>
+<?php endif; ?>
+
+
+

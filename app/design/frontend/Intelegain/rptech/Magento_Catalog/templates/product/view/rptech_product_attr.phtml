@@ -1,0 +1,278 @@
+<style>
+	table {
+		font-family: arial, sans-serif;
+		border-collapse: collapse;
+		width: 100%;
+	}
+
+	td,
+	th {
+		border: 1px solid #dddddd;
+		text-align: left;
+		padding: 8px;
+	}
+
+	/* Updated Tab */
+
+	/* Style the tab */
+	.tab {
+		overflow: hidden;
+		/* border: 1px solid #ccc;
+		background-color: #f1f1f1; */
+		/* width: 402px; */
+	}
+
+	/* Style the buttons inside the tab */
+	.tab button {
+		background-color: inherit;
+		float: left;
+		border: none;
+		outline: none;
+		cursor: pointer;
+		padding: 14px 16px;
+		transition: 0.3s;
+		font-size: 17px;
+		width: 200px;
+		background-color: #eee;
+	}
+
+	/* Change background color of buttons on hover */
+	.tab button:hover {
+		background-color: #c1c0c0;
+	}
+
+	/* Create an active/current tablink class */
+	.tab button.active {
+		background-color: #ccc;
+	}
+
+	/* Style the tab content */
+	.tabcontent {
+		display: none;
+		padding: 24px 0px 0px 0px;
+		border: 1px solid #ccc;
+		/* border-top: none; */
+	}
+
+	.tabcontent2 {
+		display: none;
+		padding: 0px 0px 0px 10px;
+		border: 1px solid #ccc;
+		/* border-top: none; */
+	}
+
+	.tabContainer {
+		margin-top: 0px;
+	}
+	.product-detail .main-content table.configurable,
+	.product-detail .main-content table.config_child {
+		margin-top: 0;
+	}
+</style>
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+// @codingStandardsIgnoreFile
+?>
+<?php /** @var $block \Magento\Catalog\Block\Product\AbstractProduct */ ?>
+<?php
+$product = $block->getProduct();
+$attributeSetId = $product->getAttributeSetId();
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+/** @var  $coll \Magento\Eav\Model\ResourceModel\Entity\Attribute\Collection */
+$groupCollection = $objectManager->create('Magento\Eav\Model\ResourceModel\Entity\Attribute\Group\Collection');
+$groupCollection->addFieldToFilter('attribute_set_id', $attributeSetId);
+$groupCollection->addFieldToFilter('tab_group_code', array('null' => true));
+$groupCollection->addFieldToFilter('attribute_group_code', array('neq' => 'magemob-inventory'));
+$groupCollection->addFieldToFilter('attribute_group_code', array('neq' => 'gift-options'));
+$groupCollection->addFieldToFilter('attribute_group_code', array('neq' => 'bundle-items'));
+$groupCollection->addFieldToFilter('attribute_group_code', array('neq' => 'amasty-gift-card-prices'));
+$groupCollection->addFieldToFilter('attribute_group_code', array('neq' => 'gift-card-information'));
+$groupCollection->setOrder('sort_order', 'ASC');
+$priceHelper = $objectManager->create('Magento\Framework\Pricing\Helper\Data'); // Instance of Pricing Helper
+?>
+<div class="fb_custom_class">
+	<?php echo $this->getLayout()->createBlock("Swissup\Fblike\Block\Product\Button")->setTemplate("Swissup_Fblike::button.phtml")->toHtml();?>
+</div>
+
+<?php if ($product->getTypeId() != "bundle") { ?>
+	<?php echo $this->getLayout()->createBlock("Magento\Framework\View\Element\Template")->setTemplate("Rptech_Pincode::checker.phtml")->toHtml();?>
+
+	<div class="tab">
+		<?php
+		$i = 0;
+		foreach ($groupCollection as $gp) {
+			$group = $gp->getData();
+			$group_id = $group['attribute_group_id'];
+			?>
+			<button class="tablinks <?php if ($i == 0) {echo 'active';} ?>" onclick="openTab(event, '<?php echo $group['attribute_group_name']; ?>')"><?php echo $group['attribute_group_name']; ?></button>
+			<?php
+			$i++;
+		} ?>
+	</div>
+
+	<div class="tabContainer">
+		<?php
+		$i = 0;
+		$prod_type = $product->getTypeId();
+		$productAttributes = $product->getAttributes();
+
+		foreach ($groupCollection as $gp) {
+			$group = $gp->getData();
+			$group_id = $group['attribute_group_id'];
+			$attrs = array();
+			//echo '<pre>';
+			foreach ($productAttributes as $attribute) {
+				//print_r($attribute);
+				if (($attribute->isInGroup($attributeSetId, $group_id) && $attribute->getFrontend()->getValue($product) != '') || $attribute->getFrontend()->getLabel() == 'Processor Specifications') {
+					$attrs[] = $attribute->getFrontend();
+				}
+			}
+			//echo '</pre>';
+			?>
+
+			<?php
+			if ($i == 0) {
+				$style=' style="display: block;"';
+			} else {
+				$style=' style="padding-left: 10px; padding-top: 0px;"';
+			}
+			?>
+			<div id="<?php echo $group['attribute_group_name']; ?>" class="tabcontent" <?= $style; ?>>
+				<table class="<?= $prod_type; ?>">
+					<?php
+					foreach ($attrs as $single) {
+						if($single->getLabel() != 'Sale' && $single->getLabel() != 'sale'):
+					?>
+                        <?php if(!empty($single->getValue($product))): ?>
+						<tr>
+							<td width="200px"><?php echo '<b>' . $single->getLabel() . ':</b>'; ?></td>
+							<th><?php echo $single->getValue($product); ?></th>
+						</tr>
+                        <?php endif; ?>
+					<?php endif;
+					}
+					?>
+				</table>
+				<?php
+				if($prod_type == "configurable") {
+					$_configChild = $product->getTypeInstance()->getUsedProducts($product);
+		            foreach ($_configChild as $child) {
+		            	$attrs = array();
+		                $childProductId = $child->getId();
+		                $childProductSku = $child->getSku();
+		    			$childProductAttributes = $child->getAttributes();
+		    			$childProduct = $objectManager->create('Magento\Catalog\Model\Product')->load($childProductId);
+		    			foreach ($childProductAttributes as $attribute) {
+		    				if (($attribute->isInGroup($attributeSetId, $group_id) &&
+								 $attribute->getFrontend()->getValue($childProduct) != '') ||
+								$attribute->getFrontend()->getLabel() == 'Processor Specifications') {
+								$attrs[] = $attribute->getFrontend();
+							}
+						}
+						echo "<table class='configurable' id='config_specs_child_".$childProductId."' style='display:none;'>";
+						foreach($attrs as $single) {
+							echo "<tr><td width='200px'><b>".$single->getLabel().":</b></td><th>".$single->getValue($childProduct)."</th></tr>";
+						}
+						echo "</table>";
+					}
+				}
+				?>
+			</div>
+
+		<?php $i++;
+		}
+		?>
+	</div>
+	<script>
+		function openTab(evt, cityName) {
+			var i, tabcontent, tablinks;
+			tabcontent = document.getElementsByClassName("tabcontent");
+			for (i = 0; i < tabcontent.length; i++) {
+				tabcontent[i].style.display = "none";
+			}
+			tablinks = document.getElementsByClassName("tablinks");
+			for (i = 0; i < tablinks.length; i++) {
+				tablinks[i].className = tablinks[i].className.replace(" active", "");
+			}
+			document.getElementById(cityName).style.display = "block";
+			evt.currentTarget.className += " active";
+		}
+	</script>
+
+	<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true" style="display: none;">
+		<?php
+		$i = 0;
+		$productAttributes = $product->getAttributes();
+
+		foreach ($groupCollection as $gp) {
+			$group = $gp->getData();
+			$group_id = $group['attribute_group_id'];
+			$attrs = array();
+			//echo '<pre>';
+			foreach ($productAttributes as $attribute) {
+				//print_r($attribute);
+				if (($attribute->isInGroup($attributeSetId, $group_id) && $attribute->getFrontend()->getValue($product) != '') || $attribute->getFrontend()->getLabel() == 'Processor Specifications') {
+					$attrs[] = $attribute->getFrontend();
+				}
+			}
+			//echo '</pre>';
+			?>
+			<div class="panel panel-default abc2">
+				<a class="ext" role="button" data-toggle="collapse" data-parent="#accordion" href="#<?php echo $group['attribute_group_code']; ?>" aria-expanded="true" aria-controls="<?php echo $group['attribute_group_name']; ?>" style="text-decoration: none;">
+					<div class="panel-heading" role="tab" id="heading<?php echo $group_id; ?>" style="color: black;">
+						<h4 class="panel-title"><?php echo $group['attribute_group_name']; ?></h4>
+					</div>
+				</a>
+				<div id="<?php echo $group['attribute_group_code']; ?>" class="panel-collapse collapse <?php echo ($i == 0) ? 'in' : ''; ?> " role="tabpanel" aria-labelledby="heading<?php echo $group_id; ?>">
+					<div class="panel-body">
+						<?php if (count($attrs) > 1) { ?>
+							<table>
+								<?php
+								foreach ($attrs as $single) {
+								?>
+									<tr>
+										<td width="200px">
+											<?php
+											echo '<b>' . $single->getLabel() . ':</b>';
+											?>
+										</td>
+										<th><?php
+											$val = $single->getValue($product);
+											echo $val;
+											?></th>
+									</tr>
+								<?php
+								}
+								?>
+							</table>
+							<?php
+						} else {
+							foreach ($attrs as $single) {
+							?>
+								<tr>
+									<td width="200px">
+										<?php
+										echo '<b>' . $single->getLabel() . ':</b>';
+										?>
+									</td>
+									<th><?php
+										$val = $single->getValue($product);
+										echo $val;
+										?></th>
+								</tr>
+						<?php
+							}
+						}
+						?>
+					</div>
+				</div>
+			</div>
+		<?php
+			$i++;
+		}
+		?>
+	</div>
+<?php }

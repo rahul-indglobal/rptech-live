@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Ulmod. All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <head>
+		 <css src="Ulmod_ScrollToTop::css/font-awesome.css"/>		 
+    </head>
+    <body>	
+        <referenceContainer name="content">
+            <block class="Ulmod\ScrollToTop\Block\ScrollToTop" name="um-scrolltotop"
+				template="scrolltotop_default.phtml" after="-" />
+        </referenceContainer>
+    </body>
+</page>

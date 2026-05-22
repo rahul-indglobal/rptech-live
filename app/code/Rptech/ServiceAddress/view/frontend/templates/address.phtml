@@ -1,0 +1,52 @@
+<?php
+/**
+ * @var \Rptech\ServiceAddress\Block\ServiceAddress $block
+ */
+?>
+<?php $cityCollection = $block->getCityCollection(); ?>
+<div class="col-inner">
+    <div class="logo-top">
+        <img src="https://portal.rptechindia.com/assets/images/carecenter-logo.jpg">
+    </div>
+    <div class="branches-wrapper">
+        <div class="form-group">
+            <label>Select City :</label>
+            <select id="service_city" name="city" class="form-control">
+                <?php foreach ($cityCollection as $city): ?>
+                    <option value="<?= $city->getId() ?>"><?= $city->getCityName() ?></option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+        <div class="address-wrap" id="display_address">
+            <?= $cityCollection->getData()[0]["address"] ?? "" ?>
+        </div>
+    </div>
+</div>
+
+<script>
+    require([
+        'jquery',
+        'Magento_Ui/js/modal/modal'
+    ], function ($, modal) {
+        $(document).ready(function () {
+            $("#service_city").on("change", function () {
+                var cityId = $(this).val();
+                $.ajax({
+                    url: "<?= $block->getUrl('serviceaddress/city/index') ?>",
+                    type: "GET",
+                    data: {
+                        city_id:cityId
+                    },
+                    showLoader: true
+                }).done(function (data) {
+                    if(data.success){
+                        $("#display_address").html(data.data.address);
+                    }
+                    else{
+                        console.log(data);
+                    }
+                });
+            })
+        });
+    });
+</script>

@@ -1,0 +1,170 @@
+<?php
+/**
+ * @var \Rptech\FinancialReport\Block\FinancialReport $block
+ * @var \Rptech\FinancialReport\Block\Adminhtml\ImageBlock $fileblock
+ * @var \Rptech\FinancialReport\Model\FinancialReport $financialReport
+ */
+$collection = $block->getFinancialReportCollection();
+?>
+<section id="financial-reports">
+    <div class="row select-section">
+        <center>
+            <h2>Financials &amp; Reports</h2>
+            <form action="">
+                <select onchange="myFunction(this)" class="form-control fields">
+                    <option value="2024">FY-2024</option>
+                    <option value="2023">FY-2023</option>
+                    <option value="2022">FY-2022</option>
+                    <option value="2021">FY-2021</option>
+                    <option value="2020">FY-2020</option>
+                    <option value="2019">FY-2019</option>
+                    <option value="2018">FY-2018</option>
+                    <option value="2017">FY-2017</option>
+                    <option value="2016">FY-2016</option>
+                    <option value="2015">FY-2015</option>
+                    <option value="2014">FY-2014</option>
+                    <option value="2013">FY-2013</option>
+                    <option value="2012">FY-2012</option>
+                    <option value="2011">FY-2011</option>
+                    <option value="2010">FY-2010</option>
+                    <option value="2009">FY-2009</option>
+                    <option value="2008">FY-2008</option>
+                    <option value="2007">FY-2007</option>
+                </select>
+            </form>
+        </center>
+    </div>
+    <?php if(!empty($collection->getData())): ?>
+        <div class="result-section">
+            <div id="fy-2024" class="selected">
+                <div class="owl-carousel owl-theme owl-loaded owl-drag">
+                    <div class="owl-stage-outer">
+                        <div class="owl-stage" style="transform: translate3d(0px, 0px, 0px); transition: all 0.25s ease 0s; width: 1416px;">
+                            <?php foreach($collection as $financialReport) : ?>
+                            <div class="owl-item active" style="width: 226px; margin-right: 10px;">
+                                <div class="item">
+                                    <div class="item_block">
+                                        <div class="inside_shape">
+                                            <div class="title"><?= __($financialReport->getTitle()) ?></div>
+                                            <div class="annual-finan-sub"><?= __($financialReport->getSubTitle()) ?></div>
+                                        </div>
+                                    </div>
+                                    <?php if(!empty($financialReport->getDocItems()))?>
+                                        <div class="invest-report-finance-bot">
+                                            <?php foreach ($financialReport->getDocItems() as $docItem):?>
+                                                <p class="pt-4"><a target="_blank" href="<?= $block->getMediaPath().$docItem['document'] ?>"><?= $docItem['document'] ?> </a> <br> </p>
+                                            <?php endforeach;?>
+                                        </div>
+                                    <?php ?>
+                                </div>
+                            </div>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                    <div class="owl-nav"><button type="button" role="presentation" class="owl-prev disabled"><span aria-label="Previous">‹</span></button><button type="button" role="presentation" class="owl-next"><span aria-label="Next">›</span></button></div>
+                    <div class="owl-dots disabled"></div>
+                </div>
+            </div>
+            <div id="fy-2023" style="display:none">
+                <div class="owl-carousel owl-theme owl-loaded owl-drag">
+                    <div class="owl-stage-outer">
+                        <div class="owl-stage" style="transform: translate3d(0px, 0px, 0px); transition: all 0s ease 0s;">
+                            <div class="owl-item">
+                                <div class="item">
+                                    <div class="item_block">
+                                        <div class="inside_shape">
+                                            <div class="title">Slide</div>
+                                            <div class="annual-finan-sub">1</div>
+                                        </div>
+                                    </div>
+                                    <div class="invest-report-finance-bot">
+                                        <p class="pt-4"><a target="_blank" href="#">Annual Report </a> <br> </p>
+                                        <p class="pt-4"><a target="_blank" href="#">Subsidiaries Financials (Part -1)</a> <br> </p>
+                                        <p class="pt-4"><a target="_blank" href="#">Subsidiaries Financials (Part -2)</a> <br> </p>
+                                        <p class="pt-4"><a target="_blank" href="#">Subsidiaries Financials (Part -3)</a> <br> </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="owl-item">
+                                <div class="item">
+                                    <div class="item_block">
+                                        <div class="inside_shape">
+                                            <div class="title">Slide</div>
+                                            <div class="annual-finan-sub">2</div>
+                                        </div>
+                                    </div>
+                                    <div class="invest-report-finance-bot">
+                                        <p class="pt-4"><a target="_blank" href="#">Annual Report </a> <br> </p>
+                                        <p class="pt-4"><a target="_blank" href="#">Subsidiaries Financials (Part -1)</a> <br> </p>
+                                        <p class="pt-4"><a target="_blank" href="#">Subsidiaries Financials (Part -2)</a> <br> </p>
+                                        <p class="pt-4"><a target="_blank" href="#">Subsidiaries Financials (Part -3)</a> <br> </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="owl-nav disabled"><button type="button" role="presentation" class="owl-prev disabled"><span aria-label="Previous">‹</span></button><button type="button" role="presentation" class="owl-next disabled"><span aria-label="Next">›</span></button></div>
+                    <div class="owl-dots disabled"></div>
+                </div>
+            </div>
+            <div id="fy-2022" style="display:none">
+                <div class="owl-carousel owl-theme owl-loaded owl-drag">
+                    <div class="owl-stage-outer">
+                        <div class="owl-stage" style="transform: translate3d(0px, 0px, 0px); transition: all 0s ease 0s;">
+                            <div class="owl-item">
+                                <div class="item">
+                                    <div class="item_block">
+                                        <div class="inside_shape">
+                                            <div class="title">Slide</div>
+                                            <div class="annual-finan-sub">1</div>
+                                        </div>
+                                    </div>
+                                    <div class="invest-report-finance-bot">
+                                        <p class="pt-4"><a target="_blank" href="#">Annual Report </a> <br> </p>
+                                        <p class="pt-4"><a target="_blank" href="#">Subsidiaries Financials (Part -1)</a> <br> </p>
+                                        <p class="pt-4"><a target="_blank" href="#">Subsidiaries Financials (Part -2)</a> <br> </p>
+                                        <p class="pt-4"><a target="_blank" href="#">Subsidiaries Financials (Part -3)</a> <br> </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="owl-item">
+                                <div class="item">
+                                    <div class="item_block">
+                                        <div class="inside_shape">
+                                            <div class="title">Slide</div>
+                                            <div class="annual-finan-sub">2</div>
+                                        </div>
+                                    </div>
+                                    <div class="invest-report-finance-bot">
+                                        <p class="pt-4"><a target="_blank" href="#">Annual Report </a> <br> </p>
+                                        <p class="pt-4"><a target="_blank" href="#">Subsidiaries Financials (Part -1)</a> <br> </p>
+                                        <p class="pt-4"><a target="_blank" href="#">Subsidiaries Financials (Part -2)</a> <br> </p>
+                                        <p class="pt-4"><a target="_blank" href="#">Subsidiaries Financials (Part -3)</a> <br> </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="owl-item">
+                                <div class="item">
+                                    <div class="item_block">
+                                        <div class="inside_shape">
+                                            <div class="title">Slide</div>
+                                            <div class="annual-finan-sub">3</div>
+                                        </div>
+                                    </div>
+                                    <div class="invest-report-finance-bot">
+                                        <p class="pt-4"><a target="_blank" href="#">Annual Report </a> <br> </p>
+                                        <p class="pt-4"><a target="_blank" href="#">Subsidiaries Financials (Part -1)</a> <br> </p>
+                                        <p class="pt-4"><a target="_blank" href="#">Subsidiaries Financials (Part -2)</a> <br> </p>
+                                        <p class="pt-4"><a target="_blank" href="#">Subsidiaries Financials (Part -3)</a> <br> </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="owl-nav disabled"><button type="button" role="presentation" class="owl-prev disabled"><span aria-label="Previous">‹</span></button><button type="button" role="presentation" class="owl-next disabled"><span aria-label="Next">›</span></button></div>
+                    <div class="owl-dots disabled"></div>
+                </div>
+            </div>
+        </div>
+    <?php endif; ?>
+</section>

@@ -1,0 +1,422 @@
+<?php
+
+$poID = $this->getRequest()->getParam('porder_id');
+$poCollection = $this->loadPurchaseOrder($poID);
+$poData = $poCollection->getData();
+$poiData = $this->getPOModel()->getProducts($poCollection);
+
+$priceHelper = $block->getPriceingHelper();
+$currencyCode = $block->getCurrentStore()->getCurrentCurrencyCode();
+$_localeCurrency = $block->getCurrencyInterface();
+$currencySymbol = $_localeCurrency->getCurrency($currencyCode)->getSymbol();
+$_bizHelper = $block->getBizHelper();
+$supName = $block->getSupplierFullName($poData['supplier_id']);
+?>
+<?php if ($_bizHelper->isEnable()) : ?>
+<form enctype="multipart/form-data" method="post"
+action="<?php echo $this->getUrl('inventorysystem/purchaseorders/saveStockReceived'); ?>" id="stockreceive_form"
+data-hasrequired="<?php /* @escapeNotVerified */
+echo __('* Required Fields') ?>"
+data-mage-init='{"validation": {}}'
+class="form">
+<?php echo $this->getBlockHtml('formkey') ?>
+<input id="po_incr_id" name="po_incr_id" type="hidden" value="<?php echo $poData['purchase_order_id']; ?>"/>
+<input id="po_id" name="po_id" type="hidden" value="<?php echo $poID; ?>"/>
+<section class="admin__page-section">
+    <div class="admin__page-section-content">
+        <div class="admin__page-section-title">
+            <span class="title"> <?php echo __('Purchase Order Items') ?> </span>
+        </div>
+        <div class="admin__control-table-wrapper">
+            <table cellspacing="0" class="admin__control-table data-table" width="100%">
+                <thead>
+                    <tr class="headings">
+                        <th class="col-thumbnail"><?php echo __('Image'); ?></th>
+                        <th class="col-name"><?php echo __('Name') ?></th>
+                        <th class="col-sku"><?php echo __('SKU'); ?></th>
+                        <th class="col-supplier"><?php echo __('Supplier'); ?></th>
+                        <?php if ($_bizHelper->isModuleEnabled('Biztech_Inventorysystemadvance')): ?>
+                            <th class="col-warehouse"><?php echo __('Warehouse'); ?></th>
+                        <?php endif; ?>
+                        <th class="biz-fixed-width col-price"><?php echo __('Unit Cost'); ?></th>
+                        <th class="biz-col-qty col-qty"><?php echo __('Quantity Purchased'); ?></th>
+                        <th class="biz-fixed-width col-qty"><?php echo __('Quantity Received'); ?></th>
+                        <th class="col-row-total"><?php echo __('Row Total'); ?></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    foreach ($poiData as $key => $data) { ?>
+                    <tr>
+                        <td class="col-thumbnail"><?php echo $this->getProductImage($data['product_id']) ?></td>
+                        <td class="col-product">
+                            <div class="admin__field-control control">
+                                <?php echo $data['product_name'] ?>
+                                <input type="hidden" id="product_id" name="product_id[]"
+                                value="<?php echo $data['product_id']; ?>"/>
+                                <input type="hidden" id="name" name="name[]"
+                                value="<?php echo htmlspecialchars($data['product_name']); ?>"/>
+                            </div>
+                        </td>
+                        <td class="col-sku">
+                            <div class="admin__field-control control">
+                                <?php echo $data['product_sku'] ?>
+                                <input type="hidden" id="sku" name="sku[]"
+                                value="<?php echo htmlspecialchars($data['product_sku']); ?>"/>
+                            </div>
+                        </td>
+                        <td class="col-supplier">
+                            <div class="admin__field-control control">
+                                <?php echo $supName ?>
+                                <input type="hidden" id="supplier" name="supplier[]"
+                                value="<?php echo $poData['supplier_id']; ?>"/>
+                            </div>
+                        </td>
+                        <?php if ($_bizHelper->isModuleEnabled('Biztech_Inventorysystemadvance')): ?>
+                        <?php $warehouseID = isset($data['warehouse_id']) ? $data['warehouse_id'] : null; ?>
+                        <td class="col-warehouse">
+                            <div class="admin__field-control control">
+                                <?php echo $this->getWareHouseName($data['product_id'], $warehouseID) ?>
+                            </div>
+                        </td>
+                        <?php endif; ?>
+                        <td class="col-price">
+                            <div class="admin__field">
+                                <?php
+                                if ($data['cost']) {
+                                    echo $priceHelper->currency($data['cost'], true, true);
+                                } else {
+                                    echo $priceHelper->currency(0.00, true, false);
+                                }
+                                ?>
+                                <input type="hidden" class="reqQtyCost" name="cost[]"
+                                id="cost_<?php echo $data['product_id']; ?>"
+                                value="<?php echo !empty($data['cost']) ? $priceHelper->currency($data['cost'], false, false) : 0; ?>">
+                                <input type="text" class="admin__control-text reqQtyInpCost" size="5"
+                                id="input_cost_<?php echo $data['product_id']; ?>" name="input_cost[]"
+                                data-id="<?php echo $data['product_id']; ?>"
+                                value="" 
+                                data-validate="{'validate-greater-than-zero': true, 'validate-not-negative-number': true, 'validate-number': true}"/>
+                            </div>
+                        </td>
+                        <td class="col-qty">
+                            <div class="admin__field">
+                                <?php echo $data['qty_purchased'] ?>
+                                <input type="hidden" id="qty_purchased_<?php echo $data['product_id']; ?>"
+                                name="qty_purchased[]" value="<?php echo $data['qty_purchased']; ?>"
+                                />
+                            </div>
+                        </td>
+                        <td class="col-qty">
+                            <div class="admin__field">
+                                <span
+                                class="item-qty"><?php echo !is_null($data['qty_received']) ? $data['qty_received'] : 0 ?></span>
+                                <input type="hidden" id="rec_qty_<?php echo $data['product_id']; ?>"
+                                name="rec_qty[]"
+                                value="<?php echo $data['qty_received']; ?>"/>
+                                <input id="qty_received_<?php echo $data['product_id']; ?>" name="qty_received[]"
+                                type="text" size="5" class="admin__control-text required-entry col-qty qtyReceived"
+                                data-id="<?php echo $data['product_id']; ?>"
+                                data-validate="{required:true, 'validate-greater-than-zero': true, 'validate-not-negative-number': true, 'validate-number': true}"/>
+                            </div>
+                        </td>
+                        <td class="col-row-total">
+                            <div class="admin__field-control control">
+                                <input type="text" class="input-text admin__control-text input-inactive rowTotal"
+                                readonly="readonly"
+                                id="row_total_<?php echo $data['product_id']; ?>"
+                                value="<?php echo $data['row_total'] ?>"
+                                size="5" name="row_total[]"/>
+                            </div>
+                        </td>
+                    </tr>
+                    <?php }
+                    ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<section class="admin__page-section">
+    <div class="admin__page-section-content">
+        <div class="admin__page-section-item order-comments-history">
+            <div class="admin__page-section-item-title">
+                <span class="title"><?php echo __('Additional Details') ?></span>
+            </div>
+            <div id="edit-purchase-order" class="edit-order-comments">
+                <div class="admin__field">
+                    <label for="po_comment" class="admin__field-label"><?php echo __('Stock Received') ?></label>
+
+                    <div class="admin__field-control">
+                        <select class="admin__control-select required-entry po_status" id="po_status"
+                        name="po_status">
+                        <option value=""><?php echo __('Select SR Status') ?></option>
+                        <option value="processing"><?php echo __('Partial'); ?></option>
+                        <option value="completed"><?php echo __('Complete'); ?></option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="admin__field">
+                <label for="po_comment" class="admin__field-label"><?php echo __('Comment') ?></label>
+
+                <div class="admin__field-control">
+                    <textarea type="text" rows="3" cols="5" id="stock_received_comment"
+                    class="admin__control-textarea" name="stock_received_comment"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="admin__page-section-content">
+        <fieldset id="order-totals" class="admin__fieldset order-totals">
+            <legend class="admin__legend"><span><?php echo __('Order Totals') ?></span></legend>
+            <br>
+
+            <table class="admin__table-secondary data-table">
+                <tbody>
+                    <tr class="row-totals">
+                        <td style="" class="admin__total-mark" colspan="1">
+                            <?php echo __('Subtotal') ?>
+                        </td>
+                        <td style="" class="admin__total-amount">
+                            <span class="price"
+                            id="sub_total_span"><?php echo $priceHelper->currency($poData['total'], true, false); ?>
+                            <input type="hidden" name="sub_total" id="sub_total"
+                            value="<?php echo $poData['total'] ?>"></span>
+                        </td>
+                    </tr>
+                    <tr class="row-totals">
+                        <td style="" class="admin__total-mark" colspan="1">
+                            <?php echo __('Shipping Cost') ?>
+                        </td>
+                        <td style="" class="admin__total-amount">
+                            <span class="price" id="ship_total"><input type="text" id="ship_cost"
+                             class="admin__control-text ship-cost required-entry"
+                             name="ship_cost" size="5"
+                             value="<?php echo $priceHelper->currency(0.00, false, false); ?>"></span>
+                         </td>
+                     </tr>
+                     <tr class="row-totals">
+                        <td style="" class="admin__total-mark" colspan="1">
+                            <strong><?php echo __('Grand Total') ?></strong>
+                        </td>
+                        <td style="" class="admin__total-amount">
+                            <strong>
+                                <span class="price"
+                                id="grand_total_span"><?php echo $priceHelper->currency($poData['total'], true, false); ?>
+                                <input type="hidden" name="grand_total" id="grand_total"
+                                value="<?php echo $poData['total'] ?>"></span>
+                            </strong>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="order-totals-actions">
+                <div class="actions">
+                    <button id="update_stock" title="Submit PO" type="button"
+                    class="action-default scalable save primary"
+                    data-ui-id="widget-button-10">
+                    <span><?php echo __('Update Stock') ?></span>
+                </button>
+            </div>
+        </div>
+
+
+    </fieldset>
+</div>
+</section>
+</form>
+
+<script type="text/javascript">
+    require([
+        'jquery',
+        'Magento_Ui/js/modal/alert',
+        'mage/translate',
+        'mage/validation'
+        ], function ($, alert, $t) {
+
+
+            $('button#update_stock').click(function () {
+                var dataForm = $('#stockreceive_form');
+                var ignore = null;
+
+                dataForm.mage('validation', {
+                    ignore: ignore ? ':hidden:not(' + ignore + ')' : ':hidden'
+                }).find('input:text').attr('autocomplete', 'off');
+
+
+                if (dataForm.validation('isValid')) {
+                    var flag = 0;
+                    var qtyReceived = 0;
+                    var warehouseFlag = 0;
+                    var reqQtyInpCost = 0;
+
+                    $('#po_status').each(function (index, el) {
+                        $(this).validation();
+                        if (!$(this).validation('isValid')) {
+                            flag = 1;
+                            return false;
+                        } else {
+                            if (jQuery(this).val() == '') {
+                                flag = 1;
+                            }
+                        }
+
+                    });
+
+                    $('.qtyReceived').each(function (index, el) {
+                        $(this).validation();
+                        if (!$(this).validation('isValid')) {
+                            qtyReceived = 1;
+                            return false;
+                        } else {
+                            var itemID = $(this).data('id');
+                            jQuery('#qty_received_' + itemID).css('borderColor', '#FFFFFF');
+                            if (jQuery(this).val() == '' || jQuery(this).val() == 0) {
+                                jQuery('#qty_received_' + itemID).focus();
+                                jQuery('#qty_received_' + itemID).css('borderColor', '#FB0606');
+                                qtyReceived = 1;
+                            }
+                        }
+                    });
+
+                    $('.reqQtyInpCost').each(function(index, el) {
+                        $(this).validation();
+                        if (!$(this).validation('isValid')) {
+                            reqQtyInpCost = 1;
+                            return false;
+                        }
+                    });
+
+                    $('.warehouse_select').each(function (index, el) {
+                        $(this).validation();
+                        if (!$(this).validation('isValid')) {
+                            warehouseFlag = 1;
+                            return false;
+                        } else {
+                            if (jQuery(this).val() == '') {
+                                jQuery(this).focus();
+                                warehouseFlag = 1;
+                            }
+                        }
+                    });
+
+
+                        if (qtyReceived == 0 && warehouseFlag == 0 && flag == 0 && reqQtyInpCost == 0 && dataForm.validation('isValid')) {
+                            $('#stockreceive_form').submit();
+                        }
+
+                }
+
+            });
+
+            $('#po_status').each(function(index, el) {
+                $(el).on('change', function(event) {
+                    event.preventDefault();
+                    $(this).validation();
+                    if ($(this).validation('isValid')) {
+                    }
+                });            
+            });
+
+            $('#ship_cost').on('change', function () {
+                event.preventDefault();
+                var shipCost;
+                $(this).validation();
+                if ($(this).validation('isValid')) {
+                    if ($(this).val() == '' || $(this).val() == 0) {
+                        shipCost = 0;
+                    } else {
+                        shipCost = $(this).val();
+                    }
+                    var grandTotal = parseFloat($('#sub_total').val()) + parseFloat(shipCost);
+                    formattedPrice = '<?php echo $currencySymbol ?>' + grandTotal.toFixed(2);
+                    $('#grand_total_span').html(formattedPrice + "<input type='hidden' id='grand_total' name='grand_total' />");
+                    $('#grand_total').val(grandTotal.toFixed(2));
+                }
+
+            });
+
+            $('.qtyReceived').each(function (index, ele) {
+
+                $(ele).on('change', function (event) {
+                    event.preventDefault();
+                    var rowTotal = 0;
+                    var total = 0;
+                    var itemID = $(this).data('id');
+                    $(this).validation();
+                    if ($(this).validation('isValid')) {
+                        if ($('#input_cost_' + itemID).val() != '') {
+                            console.log($('#input_cost_' + itemID).val());
+                            rowTotal = $('#input_cost_' + itemID).val() * $(ele).val();
+                            console.log(rowTotal);
+                        } else {
+                            console.log($('#cost_' + itemID).val());
+                            rowTotal = $('#cost_' + itemID).val() * $(ele).val();
+                            console.log(rowTotal);
+                        }
+
+                        $('#row_total_' + itemID).val(rowTotal.toFixed(2));
+
+                        $('.rowTotal').each(function (index, el) {
+                            total += Number($(el).val());
+                        });
+
+                        var shipCost;
+                        if ($('#ship_cost').val() == '' || $('#ship_cost').val() == 0) {
+                            shipCost = 0;
+                        } else {
+                            shipCost = $('#ship_cost').val();
+                        }
+                        total += Number(shipCost);
+                        formattedPrice = '<?php echo $currencySymbol ?>' + total.toFixed(2);
+                        $('#grand_total_span').html(formattedPrice + "<input type='hidden' id='grand_total' name='grand_total' />");
+                        $('#grand_total').val(total.toFixed(2));
+                        $('#sub_total_span').html(formattedPrice + "<input type='hidden' id='sub_total' name='sub_total' />");
+                        $('#sub_total').val(total.toFixed(2));
+                    }
+                });
+            });
+
+            $('.reqQtyInpCost').each(function (index, ele) {
+                $(ele).on('change', function (event) {
+                    event.preventDefault();
+                    var rowTotal = 0;
+                    var total = 0;
+                    var itemID = $(this).data('id');
+                    $(this).validation();
+                    if ($(this).validation('isValid')) {
+                        if ($('#qty_received_' + itemID).val() != '' && $(ele).val() != '') {
+                            rowTotal = $('#qty_received_' + itemID).val() * $(ele).val();
+                        } else if ($(ele).val() == '' && $('#qty_received_' + itemID).val() != '') {
+                            rowTotal = $('#cost_' + itemID).val() * $('#qty_received_' + itemID).val();
+                        } else if ($(ele).val() == '' && $('#qty_received_' + itemID).val() == '') {
+                            rowTotal = $('#cost_' + itemID).val() * $('#rec_qty_' + itemID).val();
+                        }
+
+                        $('#row_total_' + itemID).val(rowTotal.toFixed(2));
+
+                        $('.rowTotal').each(function (index, el) {
+                            total += Number($(el).val());
+                        });
+                        var shipCost;
+                        if ($('#ship_cost').val() == '' || $('#ship_cost').val() == 0) {
+                            shipCost = 0;
+                        } else {
+                            shipCost = $('#ship_cost').val();
+                        }
+                        total += Number(shipCost);
+                        formattedPrice = '<?php echo $currencySymbol ?>' + total.toFixed(2);
+                        $('#grand_total_span').html(formattedPrice + "<input type='hidden' id='grand_total' name='grand_total' />");
+                        $('#grand_total').val(total.toFixed(2));
+                        $('#sub_total_span').html(formattedPrice + "<input type='hidden' id='sub_total' name='sub_total' />");
+                        $('#sub_total').val(total.toFixed(2));
+                    }
+                })
+            });
+        });
+    </script>
+<?php endif; ?> 

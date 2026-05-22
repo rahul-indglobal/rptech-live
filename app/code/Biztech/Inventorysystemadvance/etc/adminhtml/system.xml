@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Biztech, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../Config/etc/system_file.xsd">
+    <system>
+        <section id="inventorysystem"  showInDefault="1"  showInWebsite="1" showInStore="1">
+            <tab>biztech</tab>
+            <label>Magemob Inventory</label>
+            <resource>Magento_Config::config</resource>
+            <group id="inventorysystemadvance"  showInDefault="1" sortOrder="4" showInWebsite="1" showInStore="1">
+                <label>Advance Inventory System: Configuration</label>
+                <field id="warehouse_level_quantity" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Warehouse Level Quantity</label>
+                    <validate>validate-number</validate>
+                    <comment>Display pending order and pending products whose quantity is lower than the entered quantity.</comment>
+                </field>
+                <field id="default_warehouse_select" translate="label" type="select" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Select Default Warehouse for Products</label>
+                    <source_model>Biztech\Inventorysystemadvance\Model\Warehouse</source_model>        
+                    <comment>This warehouse will be consider as primary warehouse, when stock is inserted for the first time and no other warehouse is assigned then it will update in this warehouses primarily.</comment>
+                </field>
+            </group>
+        </section> 
+    </system>
+</config>

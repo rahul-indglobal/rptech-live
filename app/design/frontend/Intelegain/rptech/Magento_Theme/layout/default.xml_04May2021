@@ -1,0 +1,69 @@
+<page layout="3columns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+	<body>
+		<attribute name="class" value="head-bg" />
+		<referenceBlock name="logo">
+			<arguments>
+				<argument name="logo_file" xsi:type="string">images/logo.png</argument>
+			</arguments>
+		</referenceBlock>
+		
+		<referenceContainer name="page.top"   />
+		<block name="navigation.sections" remove="true" />
+		<referenceContainer name="header.container">
+			<container name="header.panel.wrapper" htmlClass="panel wrapper" htmlTag="div" remove="true" />
+			<container name="header-wrapper" label="Page Header" as="header-wrapper" htmlTag="nav" htmlClass="navbar navbar-default">
+				<container htmlTag="div" htmlClass="container-fluid">
+					<container htmlTag="div" htmlClass="clearfix header-sec">
+						<block class="Magento\Theme\Block\Html\Header\Logo" name="logo" before="-">
+							<arguments>
+								<argument name="logo_file" xsi:type="string">images/logo.png</argument>
+							</arguments>
+						</block>
+						<container htmlTag="div" htmlClass="head-right" before="-">
+							<container htmlTag="div" htmlClass="categorie">
+								<container htmlTag="div" htmlClass="navigation">
+									<block class="Magento\Framework\View\Element\Template" name="store.menu" group="navigation-sections" template="Magento_Theme::html/container.phtml">
+										<arguments>
+											<argument name="title" translate="true" xsi:type="string">Menu</argument>
+										</arguments>
+										<block class="Magento\Theme\Block\Html\Topmenu" name="catalog.topnav" template="Magento_Theme::html/topmenu.phtml" ttl="3600" before="-"/>
+									</block>
+								</container>
+							</container>
+							<container htmlTag="div" htmlClass="searchbarncart">
+								<container htmlTag="div" htmlClass="search" >
+									<block class="Magento\Framework\View\Element\Template" name="top.search" as="topSearch" template="Magento_Search::form.mini.phtml" />
+								</container>
+								<container htmlTag="ul" htmlClass="clearfix cart btn-group" >
+									<block class="Magento\Checkout\Block\Cart\Sidebar" name="minicart" as="minicart" template="Magento_Checkout::cart/minicart.phtml" />
+									<block class="Magento\Checkout\Block\Cart\Sidebar" name="minicart" as="minicart" template="Magento_Checkout::cart/minicart.phtml" />
+									<block class="Magento\Customer\Block\Account\AuthorizationLink" name="login" as="login" template="Magecomp_Mobilelogin::authorization.phtml" />
+									<!-- <block class="Magento\Customer\Block\Account\AuthorizationLink" name="login" as="login" template="Magento_Customer::account/link/authorization.phtml" /> -->
+								</container>
+							</container>
+						</container>	
+					</container>
+				</container>
+			</container>
+		</referenceContainer>
+		<referenceContainer name="footer-container">
+			<container name="footer" as="footer" label="Page Footer" htmlClass="container" htmlTag="div" before="-">
+				<block class="Magento\Cms\Block\Block" name="footer-block">
+					<arguments>
+						<argument name="block_id" xsi:type="string">23</argument>
+					</arguments>
+				</block>
+			</container>
+			<container htmlTag="div"  name="footer-copyright" htmlClass="foot-copyright">
+				<block class="Magento\Theme\Block\Html\Footer" name="copyright" template="Magento_Theme::html/copyright.phtml"/>
+			</container>
+		</referenceContainer>
+		<referenceBlock name="authentication-popup" remove="true"/>
+		<referenceContainer name="before.body.end">
+			<block class="Magento\Framework\View\Element\Template"
+			       name="form.content"
+			       template="Magento_Theme::html/enquiry-form.phtml"
+			       cacheable="false" />
+		</referenceContainer>
+	</body>
+</page>	

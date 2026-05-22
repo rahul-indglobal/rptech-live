@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="rpt_general">
+            <resource>Rptech_General::config</resource>
+            <group id="sms" translate="label" type="text" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="0">
+                <label>SMS Settings</label>
+                <field id="smstxt_register_id" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>SMS Message Template ID - Registration</label>
+                    <comment>The id of template to be sent in the text message on customer registration</comment>
+                </field>
+                <field id="smstxt_register" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>SMS Message Text - Registration</label>
+                    <comment>The text to be sent in the text message on customer registration</comment>
+                </field>
+                <field id="smstxt_neworder_id" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>SMS Message Template ID - New Order</label>
+                    <comment>The id of template to be sent in the text message on new order place</comment>
+                </field>
+                <field id="smstxt_neworder" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>SMS Message Text - New Order</label>
+                    <comment>The text to be sent in the text message on new order place</comment>
+                </field>
+                <field id="smstxt_invoice_id" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>SMS Message Template ID - Invoice</label>
+                    <comment>The id of template to be sent in the text message on order invoicing</comment>
+                </field>
+                <field id="smstxt_invoice" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>SMS Message Text - Invoice</label>
+                    <comment>The text to be sent in the text message on invoice generation</comment>
+                </field>
+                <field id="smstxt_shipment_id" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>SMS Message Template ID - Shipment</label>
+                    <comment>The id of template to be sent in the text message on order shipment</comment>
+                </field>
+                <field id="smstxt_shipment" translate="label" type="text" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>SMS Message Text - Shipment</label>
+                    <comment>The text to be sent in the text message on shipment generation</comment>
+                </field>
+                <field id="smstxt_refund_id" translate="label" type="text" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>SMS Message Template ID - Refund</label>
+                    <comment>The id of template to be sent in the text message on order delivery</comment>
+                </field>
+                <field id="smstxt_refund" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>SMS Message Text - Refund</label>
+                    <comment>The text to be sent in the text message on order refund</comment>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

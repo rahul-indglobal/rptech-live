@@ -1,0 +1,101 @@
+<?php
+/**
+* Setubridge Technolabs
+* http://www.setubridge.com/
+* @author SetuBridge
+* @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+**/
+?>
+<?php 
+$_configHelper=$this->helper('SetuBridge\Holidaytheme\Helper\Data') ?>
+<?php
+
+if ($_configHelper->isActive() &&  $_configHelper->getConfig('setubridge_holidaytheme/contentimageconfiguration/contentimageactive') && $_configHelper->isAllowedPage()):
+
+    $fromDate=$_configHelper->getConfig('setubridge_holidaytheme/general/festivedatestart');
+
+    $toDate=$_configHelper->getConfig('setubridge_holidaytheme/general/festivedateend');
+    $result2=$_configHelper->isActiveForDate($fromDate,$toDate); 
+
+    if($result2):         
+        $final_movingsanta_image="";
+
+        $getspeedofmovingimage = $_configHelper->getConfig('setubridge_holidaytheme/contentimageconfiguration/contentimageanimatespeed');
+        if($getspeedofmovingimage=="")
+        {
+            $getspeedofmovingimage = 8000;
+        }
+        $getchristmasimagesoathsanta = $block->getMediaurl() . "festivethemebackgroundimage/";
+
+        $getchristmasimagesoathheaderr = $block->getViewFileUrl('SetuBridge_Holidaytheme::images/festivethemebackgroundimage/santa/moving_patterns/'.$_configHelper->getConfig('setubridge_holidaytheme/contentimageconfiguration/contentimageselect'));
+
+        $get_movingsanta_image = $_configHelper->getConfig('setubridge_holidaytheme/contentimageconfiguration/contentimagebrowse');
+
+        if ($get_movingsanta_image) {
+            $get_movingsanta_image = $_configHelper->getConfig('setubridge_holidaytheme/contentimageconfiguration/contentimagebrowse');
+            $final_movingsanta_image = $getchristmasimagesoathsanta . $get_movingsanta_image;
+        }else{
+            if($_configHelper->getConfig('setubridge_holidaytheme/contentimageconfiguration/contentimageactive')):
+                $get_movingsanta_image = $_configHelper->getConfig('setubridge_holidaytheme/contentimageconfiguration/contentimageselect');
+                if($get_movingsanta_image=="none")$get_movingsanta_image="";
+                $final_movingsanta_image = $getchristmasimagesoathheaderr;
+                endif;  
+        }
+
+
+        $get_movingsanta_effect_enable = $_configHelper->getConfig('setubridge_holidaytheme/contentimageconfiguration/contentimagemovingeffect');
+
+        if ($get_movingsanta_effect_enable)
+        {
+            $get_movingsanta_effect = "random";
+        } else {
+            $get_movingsanta_effect = "simple";
+        }
+
+        ?>
+        <script type="text/javascript">
+            require(['jquery'], function ($) {   
+                $(document).ready(function(){
+                    $('.page-main').append('<div class="moving-santa" id="moving-santa"><img id="movingsanta" class="movingsanta" alt="" src="<?php echo $final_movingsanta_image; ?>"/></div>');
+                    santa_animation_begin('<?php echo $get_movingsanta_effect; ?>', 15000, '<?php echo $final_movingsanta_image; ?>', '<?php echo $final_movingsanta_image; ?>');
+                    var right_to_left_image = '';
+                    function santa_animation_begin(type, new_speed, animate_image, next_image) {
+                        if (animate_image) {
+                            right_to_left_image = animate_image;
+                        }
+                        $('#moving-santa img').attr('src', animate_image);
+                        santa_animation();
+                    }
+                    function santa_animation() {
+                        var santa_animatio = '<?php echo $get_movingsanta_effect; ?>';
+                        var santa_animation_speed = '<?php echo $getspeedofmovingimage; ?>';
+                        if (santa_animatio == 'random') {
+                            var h = $(document).height() - 50;
+                            var w = $(document).width() - 50;
+                            var nh = Math.floor(Math.random() * h);
+                            var nw = Math.floor(Math.random() * w);
+                            $('#moving-santa').animate({top: nh, left: nw}, parseInt(santa_animation_speed), function() {
+                                santa_animation();
+                            });
+                        }
+                        else
+                        {
+                            $('#movingsanta').animate(
+                                {
+                                    'margin-left': '1100px'
+                                },
+                                10000,
+                                'linear', // Animation-duration
+                                function() {
+                                    $('#movingsanta').css('margin-left', '-300px');
+                                    setTimeout(function() {
+                                        santa_animation();
+                                        }.bind(this), 5000);
+                            });
+                        }
+                    }
+                });
+            });
+        </script>
+        <?php endif; ?>
+    <?php endif; ?>

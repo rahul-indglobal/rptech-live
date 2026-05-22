@@ -1,0 +1,32 @@
+{{template config_path="design/email/header_template"}}
+<!--@subject {{trans "Feedback Mail Received by %name" name=$name}}  @-->
+<p>{{trans "We have received a feedback from user. Following is the details."}}</p>
+<table>
+    <tr>
+        <th>Name</th>
+        <td>{{trans ": %name." name=$name}}</td>
+    </tr>
+    <tr>
+        <th>Email</th>
+        <td>{{trans ": %email." email=$email}}</td>
+    </tr>
+    <tr>
+        <th>Type</th>
+        <td>{{trans ": %type." type=$type}}</td>
+    </tr>
+    <tr>
+        <th>Mobile No.</th>
+        <td>{{trans ": %mobile." mobile=$mobile}}</td>
+    </tr>
+    <tr>
+        <th>Address</th>
+        <td>{{trans ": %address." address=$address}}</td>
+    </tr>
+    <tr>
+        <th>Description</th>
+        <td>{{trans ": %description." description=$description}}</td>
+    </tr>
+</table>
+<br>
+{{trans "This Feedback submitted successfully in the system."}}
+{{template config_path="design/email/footer_template"}}

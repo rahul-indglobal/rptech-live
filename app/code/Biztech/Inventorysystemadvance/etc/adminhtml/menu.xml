@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Biztech, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../Backend/etc/menu.xsd">
+    <menu>        
+        <add id="Biztech_Inventorysystem::biztech_warehouse_index" title="Warehouses" module="Biztech_Inventorysystem" sortOrder="100" parent="Biztech_Inventorysystem::base" action="inventorysystemadvance/warehouse/index" resource="Biztech_Inventorysystem::inventorysystem"/>
+        <add id="Biztech_Inventorysystem::biztech_managehistory_index" title="Inventory Log" module="Biztech_Inventorysystem" sortOrder="101" parent="Biztech_Inventorysystem::base" action="inventorysystemadvance/managehistory/index" resource="Biztech_Inventorysystem::inventorysystem"/>
+        <add id="Biztech_Inventorysystem::biztech_barcode_index" title="Barcode" module="Biztech_Inventorysystem" sortOrder="102" parent="Biztech_Inventorysystem::base" action="inventorysystemadvance/barcode/index" resource="Biztech_Inventorysystem::inventorysystem"/>
+    </menu>
+</config>

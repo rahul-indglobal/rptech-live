@@ -1,0 +1,116 @@
+<div class="manage-form">
+    <form class="form form-stock"
+        action="<?= $block->escapeUrl($block->getBaseUrl()) ?>productstock/index/update"
+        method="post"
+        id="stock-form"
+        data-mage-init='{"validation":{}}'>
+        <?= $block->getBlockHtml('formkey') ?>
+        <fieldset class="fieldset stock" data-hasrequired="<?= $block->escapeHtml(__('* Required Fields')) ?>">
+            <?php $j=0; //for($j=0; $j<3; $j++) { ?>
+            <div class="row row-cs" id="<?= $j; ?>">
+                <div class="field sku required col-xs-12 col-sm-5 col-md-5">
+                    <label class="label" for="sku"><span><?= $block->escapeHtml(__('SKU')) ?></span></label>
+                    <div class="control">
+                        <input name="product[<?= $j; ?>][sku]" value="<?= $block->escapeHtmlAttr($block->getSku()) ?>"
+                            id="sku" type="text" class="input-text"
+                            title="<?= $block->escapeHtmlAttr(__('SKU')) ?>"
+                            data-mage-init='{"mage/trim-input":{}}'
+                            data-validate="{required:true}">
+                    </div>
+                </div>
+                <div class="field qty required col-xs-12 col-sm-5 col-md-5">
+                    <label class="label" for="qty"><span><?= $block->escapeHtml(__('Qty')) ?></span></label>
+                    <div class="control">
+                        <input name="product[<?= $j; ?>][qty]" value="<?= $block->escapeHtmlAttr($block->getQty()) ?>"
+                            id="qty" type="text" class="input-text"
+                            title="<?= $block->escapeHtmlAttr(__('Qty')) ?>"
+                            data-mage-init='{"mage/trim-input":{}}'
+                            data-validate="{required:true, 'validate-zero-or-greater':true}">
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-2 col-md-2 add_remove">
+                    <span class="add"><i class="fa fa-plus"></i></span>
+                    <span class="remove"><i class="fa fa-minus"></i></span>
+                </div>
+            </div>
+            <?php //} ?>
+            <div class="actions-toolbar row-cs">
+                <div class="col-xs-12 col-sm-6 col-md-6 form-group">
+                    <label class="label" for="run_date">Date & Time to update stock</label>
+                    <input type="text" class="input-text required-entry hasDatepicker" id="run_date" name="run_date" aria-required="true" />
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-6 primary form-group">
+                    <button type="submit" class="action update primary" name="submit" id="submit">
+                        <span><?= $block->escapeHtml(__('Submit')) ?></span>
+                    </button>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+    <?php
+    $coll = $block->getStockUpdateRecords();
+    if($coll->getSize()) {
+        echo "<div class='table-responsive'>";
+        echo "<table border='1' cellspacing='1' cellpadding='1' class='table table-striped'>";
+        echo "<thead><th>SKU</th><th>Quantity</th><th>Run At</th><th>Status</th></thead><tbody>";
+        foreach ($coll as $key => $value) {
+            echo "<tr>";
+            //print_r($value->getData());
+            $data = $value->getData();
+            //$run_tim = date('d();/m/Y h:i:s', strtotime($data['run_at']));
+            //echo "<br>".$data['row_id'].".....".$run_tim.".....";
+            switch ($data['status']) {
+                case '1':
+                    $status = 'Pending';
+                    break;
+                case '2':
+                    $status = 'Updated';
+                    break;
+                case '3':
+                    $status = 'Error';
+                    break;
+                default:
+                    $status = '';
+                    break;
+            }
+            $run_at = date('d/m/Y h:i:s',strtotime($data['run_at']));
+            echo "<td>".$data['sku']."</td><td>".$data['qty']."</td><td>".$run_at."</td><td>".$status."</td>";
+            echo "</tr>";
+        }
+        echo "</tbody></table></div>";
+    } else {
+        echo "No record found!";
+    }
+    ?>
+</div>
+<script type="text/javascript">
+    require(['jquery','mage/mage','mage/calendar'],function($){
+        $('#run_date').datetimepicker({minDate:'+0d'});
+        $(document).on('click','span.add',function(){
+            var lid = $("fieldset.stock > div.row").last().attr("id");
+            $("fieldset.stock > div#"+lid).clone().insertAfter("fieldset.stock > div#"+lid);
+            var lid_new = Number(lid)+1;
+            $("fieldset.stock > div.row").last().attr("id",lid_new);
+            $("fieldset.stock > div#"+lid_new+" > div.sku > div.control > input").val("");
+            $("fieldset.stock > div#"+lid_new+" > div.qty > div.control > input").val("");
+            $("fieldset.stock > div#"+lid_new+" div.mage-error").remove();
+            $("fieldset.stock > div#"+lid_new+" input").removeClass("mage-error");
+            $("fieldset.stock > div#"+lid_new+" input").removeAttr("aria-invalid");
+            $("fieldset.stock > div#"+lid_new+" input").removeAttr("aria-describedby");
+            $("fieldset.stock > div#"+lid_new+" > div.sku > div.control > input").attr("name","product["+lid_new+"][sku]");
+            $("fieldset.stock > div#"+lid_new+" > div.qty > div.control > input").attr("name","product["+lid_new+"][qty]");
+        });
+        $(document).on('click','fieldset.stock span.remove',function(){
+            $(this).parents("div.row").remove();
+        });
+        $(document).on('click','a.admin-sign-out',function(){
+            var action = "<?= $block->escapeUrl($block->getBaseUrl()) ?>productstock/index/signout";
+            window.location.href = action;
+        });
+    });
+</script>
+<style type="text/css">
+    .authorization-link a.admin-sign-out {
+        cursor: pointer;
+    }
+</style>

@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+<table name="rptech_quantumrma" resource="default" engine="innodb" comment="Rptech Quantum RMA">
+    <column name="id" xsi:type="int" unsigned="true" nullable="false" identity="true" comment="Entity ID"/>
+    <column name="case_number" xsi:type="varchar" length="255" nullable="true" comment="Case Number"/>
+    <column name="product" xsi:type="varchar" length="255" nullable="true" comment="Product"/>
+    <column name="serial_number" xsi:type="varchar" length="255" nullable="true" comment="Serial Number"/>
+    <column name="service_level_type" xsi:type="varchar" length="255" nullable="true" comment="Service Level Type"/>
+    <column name="company" xsi:type="varchar" nullable="true" length="255" comment="Company"/>
+    <column name="address" xsi:type="varchar" nullable="true" length="255" comment="Address"/>
+    <column name="postal_code" xsi:type="varchar" nullable="true" length="255" comment="Postal Code"/>
+    <column name="country" xsi:type="varchar" nullable="true" length="255" comment="Country"/>
+    <column name="pri_contact_name" xsi:type="varchar" nullable="true" length="255" comment="Primary Contact Name"/>
+    <column name="pri_email" xsi:type="varchar" nullable="true" length="255" comment="Primary E-mail Address"/>
+    <column name="pri_contact_number" xsi:type="varchar" nullable="true" length="255" comment="Primary Contact Number"/>
+    <column name="pri_alt_contact_number" xsi:type="varchar" nullable="true" length="255" comment="Primary Alt Contact Number"/>
+    <column name="alt_contact_name" xsi:type="varchar" nullable="true" length="255" comment="Alt Contact Name"/>
+    <column name="alt_email" xsi:type="varchar" nullable="true" length="255" comment="Alt E-mail Address"/>
+    <column name="alt_contact_number" xsi:type="varchar" nullable="true" length="255" comment="Alt Contact Number"/>
+    <column name="alt_extra_contact_number" xsi:type="varchar" nullable="true" length="255" comment="Alt Extra Contact Number"/>
+    <column name="severity_impact" xsi:type="varchar" nullable="true" length="255" comment="Severity/Impact"/>
+    <column name="non_returnable_drive" xsi:type="varchar" nullable="true" length="255" comment="Non-returnable Drive or Array coverage"/>
+    <column name="description" xsi:type="text" nullable="true" comment="Description"/>
+    <column name="status" xsi:type="varchar" length="50" nullable="false" default="pending" comment="Status"/>
+    <column name="date_time" xsi:type="datetime" nullable="true" comment="Date and Time"/>
+    <column name="user" xsi:type="int" unsigned="true" nullable="true" comment="Admin User ID"/>
+    <column name="remarks" xsi:type="text" nullable="true" comment="Remarks"/>
+    <column name="created_at" xsi:type="timestamp" default="CURRENT_TIMESTAMP" nullable="false" comment="Created At"/>
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+        <column name="id"/>
+    </constraint>
+</table>
+</schema>

@@ -1,0 +1,65 @@
+{{template config_path="design/email/header_template"}}
+<!--@subject {{trans "Product Enquiry Mail Received by %username" username=$username}}  @-->
+<p>{{trans "We have received a query from user for product. Following is the details."}}</p>
+<table>
+    <tr>
+        <th>Name</th>
+        <td>{{trans ": %username." username=$username}}</td>
+    </tr>
+    <tr>
+        <th>Email</th>
+        <td>{{trans ": %useremail." useremail=$useremail}}</td>
+    </tr>
+    <tr>
+        <th>Mobile</th>
+        <td>{{trans ": %usermobile." usermobile=$usermobile}}</td>
+    </tr>
+    <tr>
+        <th>City</th>
+        <td>{{trans ": %usercity." usercity=$usercity}}</td>
+    </tr>
+    <tr>
+        <th>Product SKU</th>
+        <td>{{trans ": %product_sku." product_sku=$product_sku}}</td>
+    </tr>
+    <tr>
+        <th>Product Name</th>
+        <td>{{trans ": %product_name." product_name=$product_name}}</td>
+    </tr>
+    <tr>
+        <th>Comment</th>
+        <td>{{trans ": %usercomment." usercomment=$usercomment}}</td>
+    </tr>
+
+    {{depend liketoknow}}
+	<tr>
+        <th>We would like to know if you are a</th>
+        <td>{{trans ": %liketoknow." liketoknow=$liketoknow}}</td>
+    </tr>
+    {{/depend}}
+
+    {{depend applicationnvidia}}
+    <tr>
+        <th>Let us know the Application where Nvidia Jetson will be used</th>
+        <td>{{trans ": %applicationnvidia." applicationnvidia=$applicationnvidia}}</td>
+    </tr>
+    {{/depend}}
+
+    {{depend company_name}}
+    <tr>
+        <th>Company / University Name</th>
+        <td>{{trans ": %company_name." company_name=$company_name}}</td>
+    </tr>
+    {{/depend}}
+
+    {{depend quantity}}
+    <tr>
+        <th>Quantity</th>
+        <td>{{trans ": %quantity." quantity=$quantity}}</td>
+    </tr>
+    {{/depend}}
+
+</table>
+<br>
+{{trans "This Enquiry has been submitted successfully in the system."}}
+{{template config_path="design/email/footer_template"}}

@@ -1,0 +1,119 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+// @codingStandardsIgnoreFile
+
+/* @var $block \Magento\Catalog\Block\Product\Compare\ListCompare */
+?>
+<?php $total = $block->getItems()->getSize() ?>
+<?php if ($total): $priceHelper = $this->helper('Magento\Framework\Pricing\Helper\Data'); ?>
+    <section class="compare-product-section">
+
+        <div class="container-fluid">
+            <ul class="breadcrumb">
+                <li><a href="<?= $block->getUrl('') ?>">Home</a></li>
+                <li class="active">Compare with similar items</li>
+            </ul>
+
+            <div class="compare-wrap">
+                <!--<button class="btn btn-secondary btn-md pull-right addtocompare">Add More to Compare</button>-->
+                <div class="products">
+                    <div class="tb-responsive">
+                        <div class="product-feature">
+                            <div class="feature-label"></div>
+                            <div class="feature-value-group-wrap">
+                                <div class="feature-value-group">
+                                    <?php $index = 0 ?>
+                                    <?php $helper = $this->helper(\Magento\Catalog\Helper\Output::class); ?>
+                                    <?php foreach ($block->getItems() as $item): ?>
+                                        <div class="feature-value prod_img_wrap">
+                                            <?php $compareHelper = $this->helper(\Magento\Catalog\Helper\Product\Compare::class); ?>
+                                            <a href="#" data-post='<?= /* @escapeNotVerified */ $compareHelper->getPostDataRemove($item) ?>'
+                                               class="action delete btn closebtn" title="<?= /* @escapeNotVerified */ __('Remove Product') ?>">
+                                                X
+                                            </a>
+                                            <a class="product-item-photo prod_img" href="<?= /* @escapeNotVerified */ $block->getProductUrl($item) ?>" title="<?= /* @escapeNotVerified */ $block->stripTags($item->getName(), null, true) ?>">
+                                                <img src="<?= $block->getImage($item, 'product_comparison_list')->getImageUrl(); ?>">
+                                            </a>
+                                        </div>
+                                    <?php endforeach; ?>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="product-feature">
+                            <div class="feature-label"></div>
+                            <div class="feature-value-group-wrap">
+                                <div class="feature-value-group">
+                                    <?php foreach ($block->getItems() as $item): ?>
+                                        <div class="feature-value">
+                                            <div class="text-center">
+                                                <a href="<?= /* @escapeNotVerified */ $block->getProductUrl($item) ?>" title="<?= /* @escapeNotVerified */ $block->stripTags($item->getName(), null, true) ?>">
+                                                    <?= /* @escapeNotVerified */ $helper->productAttribute($item, $item->getName(), 'name') ?>
+                                                </a>
+                                                <form data-role="tocart-form" action="<?= /* @escapeNotVerified */ $this->helper(\Magento\Catalog\Helper\Product\Compare::class)->getAddToCartUrl($item) ?>" method="post">
+                                                    <?= $block->getBlockHtml('formkey') ?>
+                                                    <button type="submit" class="action tocart primary btn btn-secondary btn-md">
+                                                        <span><?= /* @escapeNotVerified */ __('Add to Cart') ?></span>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    <?php endforeach; ?>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="product-feature">
+                            <div class="feature-label">Customer Rating</div>
+                            <div class="feature-value-group-wrap">
+                                <div class="feature-value-group">
+                                    <?php foreach ($block->getItems() as $item): ?>
+                                        <div class="feature-value">
+                                            <?= $block->getReviewsSummaryHtml($item, 'short') ?>
+                                        </div>
+                                    <?php endforeach; ?>
+                                </div>
+                            </div>
+                        </div>
+                        <?php foreach ($block->getAttributes() as $attribute): ?>
+
+                            <div class="product-feature">
+                                <div class="feature-label"><?= $block->escapeHtml($attribute->getStoreLabel() ? $attribute->getStoreLabel() : __($attribute->getFrontendLabel())) ?></div>
+                                <div class="feature-value-group-wrap">
+                                    <div class="feature-value-group">
+                                        <?php foreach ($block->getItems() as $item): ?>
+                                            <div class="feature-value">
+                                                <?php
+                                                switch ($attribute->getAttributeCode()) {
+                                                    case "price":
+                                                        ?>
+                                                        <?php echo $priceHelper->currency($item->getFinalPrice(), true, false); ?>
+                                                        <?php
+                                                        break;
+                                                    case "small_image":
+                                                        break;
+                                                    default:
+                                                        ?>
+                                                        <?= /* @escapeNotVerified */ $helper->productAttribute($item, $block->getProductAttributeValue($item, $attribute), $attribute->getAttributeCode()) ?>
+                                                        <?php
+                                                        break;
+                                                }
+                                                ?>
+                                            </div>
+                                        <?php endforeach; ?>
+                                    </div>
+                                </div>
+                            </div>
+
+                        <?php endforeach; ?>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+<?php else: ?>
+    <div class="message info empty"><div><?= /* @escapeNotVerified */ __('You have no items to compare.') ?></div></div>
+<?php endif; ?>

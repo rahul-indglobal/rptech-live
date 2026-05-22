@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Biztech, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../Magento/Config/etc/system_file.xsd">
+    <system>
+        <tab id="biztech" translate="label" sortOrder="210">
+            <label>Appjetty</label>
+        </tab>
+        <section id="inventorysystem"  showInDefault="1"  showInWebsite="1" showInStore="1">
+            <tab>biztech</tab>
+            <label>Magemob Inventory</label>
+            <resource>Biztech_Inventorysystem::config_inventory</resource>
+            <group id="activation"  showInDefault="1">
+                <label>Inventory System Activation</label>
+                <field id="key" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Activation Key</label>
+                    <validate>required-entry</validate>
+                </field>
+                <field id="websites" translate="label" type="checkbox" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Select Websites</label>
+                    <source_model>Magento\Config\Model\Config\Source\Website</source_model>
+                    <frontend_model>Biztech\Inventorysystem\Block\Adminhtml\Config\Form\Renderer\Website</frontend_model>
+                </field>
+            </group>
+            <group id="enableextension" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Enable Extension</label>
+                <field id="enabled" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enabled</label>
+                    <source_model>Biztech\Inventorysystem\Model\Config\Source\Enabledisable</source_model>        
+                    <frontend_model>Biztech\Inventorysystem\Block\Adminhtml\Enabledisable</frontend_model>
+                </field>
+            </group>
+            <group id="supplierconfig" translate="label" type="text" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Select Supplier</label>
+                <field id="showsupplier" translate="label" type="select" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Show all suppliers in PO creation ?</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Select "Yes" to display all suppliers while generating Purchase order else it will show the suppliers related to that Products. If no supplier is selected for product, by default all suppliers will be displayed.</comment>
+                </field>
+            </group>
+        </section> 
+    </system>
+</config>

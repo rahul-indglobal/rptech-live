@@ -1,0 +1,42 @@
+<div class="page-title">
+    <h1><?php echo __('Edit Account Information') ?></h1>
+</div>
+<form action="<?php echo $this->getUrl('inventorysystem/supplierlogin/savesupplierinfo') ?>" method="post" id="supplier_account_form" autocomplete="off" ata-mage-init='{"validation": {}}'>
+    <div class="fieldset">
+        <h2 class="legend"><?php echo __('Account Information') ?></h2>
+        <ul class="form-list">
+            <li class="fields">
+                <label class="required"><?php echo __('First Name') ?></label><em>*</em>
+                <div class="input-box">
+                    <input type="text" name="first_name" id="first_name" value="<?php echo $this->escapeHtml($this->getSupplierFirstName()) ?>" title="<?php echo __('First Name') ?>" class="input-text required-entry" />
+                </div>
+            </li>
+            <li class="fields">
+                <label class="required"><?php echo __('Last Name') ?></label><em>*</em>
+                <div class="input-box">
+                    <input type="text" name="last_name" id="last_name" value="<?php echo $this->escapeHtml($this->getSupplierLastName()) ?>" title="<?php echo __('Last Name') ?>" class="input-text required-entry" />
+                </div>
+            </li>
+            <li class="fields">
+                <label class="required"><?php echo __('Company') ?></label><em>*</em>
+                <div class="input-box">
+                    <input type="text" name="company" id="company" value="<?php echo $this->escapeHtml($this->getSupplierCompany()) ?>" title="<?php echo __('Company') ?>" class="input-text required-entry" />
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="buttons-set">
+        <p class="required"><?php echo __('* Required Fields') ?></p>
+        <button type="submit" title="<?php echo __('Save') ?>" class="button"><span><span><?php echo __('Save') ?></span></span></button>
+    </div>
+</form>
+
+<script type="text/javascript">
+    require([
+        'jquery',
+        'mage/mage'
+    ], function($){
+        var dataForm = $('#supplier_account_form');
+        dataForm.mage('validation', {});
+    });
+</script>

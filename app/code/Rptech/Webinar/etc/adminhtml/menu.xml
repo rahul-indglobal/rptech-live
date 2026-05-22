@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/menu.xsd">
+    <menu>
+        <add id="Rptech_Webinar::webinar"
+             title="Webinar Submissions"
+             module="Rptech_Webinar"
+             sortOrder="20"
+             parent="Rptech_ServiceAddress::main"
+             action="rptech_webinar/webinar/index"
+             resource="Rptech_Webinar::main_menu"/>
+    </menu>
+</config>

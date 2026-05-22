@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <!-- PDF Uploader -->
+    <type name="Rptech\Announcement\Model\ImageUploader">
+        <arguments>
+            <argument name="baseTmpPath" xsi:type="string">announcement/docs</argument>
+            <argument name="basePath" xsi:type="string">announcement/docs</argument>
+            <argument name="allowedExtensions" xsi:type="array">
+                <item name="pdf" xsi:type="string">pdf</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Rptech\Announcement\Controller\Adminhtml\Admin\Upload">
+        <arguments>
+            <argument name="pdfUploader" xsi:type="object">VirtualTypeName</argument>
+        </arguments>
+    </type>
+    <!-- End PDF Uploader -->
+
+    <!--Admin GRID -->
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="announcement_grid_listing_data_source" xsi:type="string">
+                    Rptech\Announcement\Model\ResourceModel\Announcement\Grid\Collection
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <virtualType name="Rptech\Announcement\Model\ResourceModel\Announcement\Grid\Collection"
+                 type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">announcement</argument>
+            <argument name="resourceModel" xsi:type="string">Rptech\Announcement\Model\ResourceModel\Announcement</argument>
+        </arguments>
+    </virtualType>
+    <!--End Admin GRID -->
+</config>

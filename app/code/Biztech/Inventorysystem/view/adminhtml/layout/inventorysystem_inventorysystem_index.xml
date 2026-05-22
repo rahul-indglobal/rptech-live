@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Biztech, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../../../../lib/internal/Magento/Framework/View/Layout/etc/page_configuration.xsd">
+    <head>
+        <link src="Magento_Catalog::js/edit-tree.js"/>
+        <css src="Biztech_Inventorysystemadvance::css/bcinventorysystemadvane.css" />
+        <css src="Biztech_Inventorysystem::css/bcinventorysystem.css" />
+    </head>
+    <body>
+        <referenceContainer name="content">
+            <block class="Biztech\Inventorysystem\Block\Adminhtml\Inventorysystem" name="inventorysystem_inventorysystem_container"/>
+            <block class="Biztech\Inventorysystem\Block\Adminhtml\Inventorysystem\Warehouseselector" before="-" template="Biztech_Inventorysystem::managestock/switcher.phtml" name="switcher.phtml" ifconfig="inventorysystem/enableextension/enabled"/>
+        </referenceContainer>
+    </body>
+</page>

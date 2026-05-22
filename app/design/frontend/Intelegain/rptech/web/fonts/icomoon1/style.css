@@ -1,0 +1,164 @@
+@font-face {
+  font-family: 'icomoon';
+  src:  url('fonts/icomoon.eot?6memih');
+  src:  url('fonts/icomoon.eot?6memih#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?6memih') format('truetype'),
+    url('fonts/icomoon.woff?6memih') format('woff'),
+    url('fonts/icomoon.svg?6memih#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'icomoon' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-cross-remove-sign:before {
+  content: "\e92d";
+}
+.icon-shopping-cart:before {
+  content: "\e92c";
+}
+.icon-down-arrow:before {
+  content: "\e92b";
+}
+.icon-info:before {
+  content: "\e92a";
+}
+.icon-plug:before {
+  content: "\e911";
+}
+.icon-cool:before {
+  content: "\e912";
+}
+.icon-fan:before {
+  content: "\e913";
+}
+.icon-sound-card:before {
+  content: "\e914";
+}
+.icon-usb:before {
+  content: "\e915";
+}
+.icon-monitor:before {
+  content: "\e916";
+}
+.icon-usb-1:before {
+  content: "\e917";
+}
+.icon-mouse:before {
+  content: "\e918";
+}
+.icon-webcam:before {
+  content: "\e919";
+}
+.icon-speaker:before {
+  content: "\e91a";
+}
+.icon-headset:before {
+  content: "\e91b";
+}
+.icon-circuit-board:before {
+  content: "\e91c";
+}
+.icon-usb-2:before {
+  content: "\e91d";
+}
+.icon-external-hard-drive:before {
+  content: "\e91e";
+}
+.icon-router:before {
+  content: "\e91f";
+}
+.icon-router-1:before {
+  content: "\e920";
+}
+.icon-processor:before {
+  content: "\e921";
+}
+.icon-motherboard:before {
+  content: "\e922";
+}
+.icon-ram:before {
+  content: "\e923";
+}
+.icon-graphic-card:before {
+  content: "\e924";
+}
+.icon-hard-disk:before {
+  content: "\e925";
+}
+.icon-ssd:before {
+  content: "\e926";
+}
+.icon-cd-player:before {
+  content: "\e927";
+}
+.icon-dvd:before {
+  content: "\e928";
+}
+.icon-power:before {
+  content: "\e929";
+}
+.icon-back:before {
+  content: "\e900";
+}
+.icon-shopping-cart-1:before {
+  content: "\e901";
+}
+.icon-online-shopping-cart:before {
+  content: "\e902";
+}
+.icon-shopping-cart1:before {
+  content: "\e903";
+}
+.icon-people:before {
+  content: "\e904";
+}
+.icon-trolley:before {
+  content: "\e905";
+}
+.icon-percentage:before {
+  content: "\e906";
+}
+.icon-social-google-plus-circular-button:before {
+  content: "\e907";
+}
+.icon-social-linkedin-circular-button:before {
+  content: "\e908";
+}
+.icon-social-twitter-circular-button:before {
+  content: "\e909";
+}
+.icon-social-facebook-circular-button:before {
+  content: "\e90a";
+}
+.icon-mail:before {
+  content: "\e90b";
+}
+.icon-smartphone:before {
+  content: "\e90c";
+}
+.icon-placeholder:before {
+  content: "\e90d";
+}
+.icon-right-arrow:before {
+  content: "\e90e";
+}
+.icon-menu:before {
+  content: "\e90f";
+}
+.icon-right-arrow-1:before {
+  content: "\e910";
+}

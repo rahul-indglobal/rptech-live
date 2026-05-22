@@ -1,0 +1,311 @@
+<?php
+
+$poID = $this->getRequest()->getParam('porder_id');
+$poCollection = $this->loadPurchaseOrder($poID);
+
+$poData = $poCollection->getData();
+$poiData = $this->getPOModel()->getProducts($poCollection);
+$poCommentsCol = $this->getPOModel()->getComments($poCollection);
+$srIncrIdArr = $this->getPOModel()->getStockReceivedIds($poCollection);
+
+$priceHelper = $block->getPriceingHelper();
+$currencyCode = $block->getCurrentStore()->getCurrentCurrencyCode();
+$_localeCurrency = $block->getCurrencyInterface();
+$currencySymbol = $_localeCurrency->getCurrency($currencyCode)->getSymbol();
+$_bizHelper = $block->getBizHelper();
+$supName = $this->getSupplierFullName($poData['supplier_id']);
+?>
+<?php if ($_bizHelper->isEnable()) : ?>
+    <form enctype="multipart/form-data" method="post"
+    action="<?php echo $this->getUrl('inventorysystem/purchaseorders/save'); ?>" 
+    id="createpo_form"
+    data-hasrequired="<?php /* @escapeNotVerified */
+    echo __('* Required Fields') ?>"
+    data-mage-init='{"validation":{}}'>
+    <?php
+    echo $this->getBlockHtml('formkey');
+    ?>
+    <section class="admin__page-section">
+     <div class="admin__page-section-content">
+      <div class="admin__control-table-wrapper">
+      <table cellspacing="0" class="admin__control-table data-table" width="100%" id="reorderpotable">
+        <?php if ($poiData && is_array($poiData) && !empty($poiData)) :  ?>
+         <thead>
+          <tr class="headings">
+            <th class="col-name"><span><?php echo __('Name') ?></span></th>
+            <th class="col-sku"><span><?php echo __('SKU') ?></span></th>
+            <th class="col-ordered-qty"><span><?php echo __('Quantity Available') ?></span>
+            </th>
+            <th class="col-supplier"><span><?php echo __('Supplier') ?></span></th>
+            <?php if ($_bizHelper->isModuleEnabled('Biztech_Inventorysystemadvance')) { ?>
+            <th class="col-warehouse"><span><?php echo __('Warehouse') ?></span></th>
+            <?php } ?>
+            <th class="biz-fixed-width col-price"><span><?php echo __('Unit Cost') ?></span></th>
+            <th class="biz-fixed-width col-qty"><span><?php echo __('Required Qty.') ?></span></th>
+            <th class="col-row-total"><span><?php echo __('Row Total.') ?></span></th>
+            <th class="col-action"></th>
+        </tr>
+    </thead>
+    <?php $i = 0; foreach ($poiData as $key => $data) {  $i++;?>
+    <tbody class="<?php /* @escapeNotVerified */
+    echo ($i % 2) ? 'even' : 'odd' ?>">
+    <tr>
+       <td>
+        <span><?php echo $data['product_name'] ?></span>
+        <input type="hidden" name="product_id[]" id="product_id_<?php echo $data['product_id'] ?>"
+        value="<?php echo $data['product_id'] ?>">
+        <input type="hidden" name="name[]" id="name_<?php echo $data['product_id'] ?>"
+        value="<?php echo htmlspecialchars($data['product_name']) ?>">
+    </td>
+    <td>
+        <span><?php echo $data['product_sku'] ?></span>
+        <input type="hidden" name="sku[]" id="sku_<?php echo $data['product_id'] ?>"
+        value="<?php echo htmlspecialchars($data['product_sku']) ?>">
+    </td>
+    <td>
+        <span><?php echo $data['qty_avail'] ?></span>
+        <input type="hidden" name="qty[]" id="qty_<?php echo $data['product_id'] ?>"
+        value="<?php echo htmlspecialchars($data['qty_avail']) ?>">
+    </td>
+    <td>
+        <div><?php echo $block->getSupplierHtml($data['product_id']); ?></div>
+    </td>
+    <?php if ($_bizHelper->isModuleEnabled('Biztech_Inventorysystemadvance')) { ?>
+    <td>
+        <div><?php echo $_bizHelper->getWareHouseName($data['product_id']) ?></div>
+    </td>
+    <?php } ?>
+    <td>
+        <div class="admin__field">
+            <?php
+            if (isset($data['cost']) && !empty($data['cost'])) {
+                echo $priceHelper->currency($data['cost'], true, true);
+            } else {
+                echo $priceHelper->currency(0.00, true, false);
+            }
+            ?>
+            <input type="hidden" class="reqQtyCost" name="cost[]" id="cost_<?php echo $data['product_id'] ?>"
+            value="<?php echo !empty($data['cost']) ? $priceHelper->currency($data['cost'], false, false) : 0; ?>">
+            <input type="text" class="admin__control-text reqQtyInpCost" size="5"
+            id="input_cost_<?php echo $data['product_id'] ?>" name="input_cost[]"
+            data-id="<?php echo $data['product_id'] ?>"
+            value="<?php echo !empty($data['cost']) ? $priceHelper->currency($data['cost'], false, false) : 0; ?>"
+            data-validate="{required:true, 'validate-greater-than-zero': true, 'validate-not-negative-number': true, 'validate-number': true}"/>
+        </div>
+    </td>
+    <td>
+        <div class="admin__field">
+            <input type="text" size="5" class="admin__control-text reqQty" name="req_qty[]"
+            data-id="<?php echo $data['product_id'] ?>" id="req_qty_<?php echo $data['product_id'] ?>"
+            value="<?php echo $data['qty_purchased'] ?>"
+            data-validate="{required:true, 'validate-greater-than-zero': true, 'validate-not-negative-number': true, 'validate-number': true}"/>
+        </div>
+    </td>
+    <td>
+        <input type="text" class="input-text admin__control-text input-inactive rowTotal"
+        readonly="readonly"
+        id="row_total_<?php echo $data['product_id']; ?>"
+        size="5" name="row_total[]" value="<?php echo $data['row_total'] ?>"/>
+    </td>
+    <td class="col-actions">
+        <button id="row_delete_<?php echo $data['product_id'] ?>" data-id="<?php echo $data['product_id'] ?>"
+            name="row_delete[]" class="action-delete delete-row" type="button">
+            <span>Delete</span>
+        </button>
+    </td>
+</tr>
+<?php } ?>
+</tbody>
+<?php endif; ?>
+
+</table>
+</div>
+</div>
+</section>
+<section class="admin__page-section">
+    <div class="admin__page-section-content">
+        <fieldset id="order-totals" class="admin__fieldset order-totals">
+            <legend class="admin__legend"><span><?php echo __('Order Totals') ?></span></legend>
+            <br>
+
+            <table class="admin__table-secondary data-table">
+                <tbody>
+                    <tr class="row-totals">
+                        <td style="" class="admin__total-mark" colspan="1">
+                            <?php echo('Subtotal') ?>
+                        </td>
+                        <td style="" class="admin__total-amount">
+                            <span class="price"
+                            id="sub_total"><?php echo $priceHelper->currency($poData['total'], true, false); ?></span>
+                        </td>
+                    </tr>
+                    <tr class="row-totals">
+                        <td style="" class="admin__total-mark" colspan="1">
+                            <strong><?php echo __('Grand Total') ?></strong>
+                        </td>
+                        <td style="" class="admin__total-amount">
+                            <strong><span class="price"
+                              id="grand_total"><?php echo $priceHelper->currency($poData['total'], true, false); ?></span></strong>
+                          </td>
+                      </tr>
+                  </tbody>
+              </table>
+
+              <div class="order-totals-actions">
+                <div class="actions">
+                    <button id="submit_po" title="Submit PO" type="button"
+                    class="action-default scalable save primary"
+                    data-ui-id="widget-button-10">
+                    <span><?php echo __('Submit PO') ?></span>
+                </button>
+            </div>
+        </div>
+
+
+    </fieldset>
+</div>
+</section>
+</form>
+
+<script type="text/javascript">
+    require([
+        'jquery',
+        'Magento_Ui/js/modal/alert',
+        'mage/translate'
+        ], function ($, alert, $t) {
+
+            $(document).on('click', '#submit_po', function (event) {
+                event.preventDefault();
+
+                var dataForm = $('#createpo_form');
+                var ignore = null;
+
+                dataForm.mage('validation', {
+                    ignore: ignore ? ':hidden:not(' + ignore + ')' : ':hidden'
+                }).find('input:text').attr('autocomplete', 'off');
+
+                if (dataForm.validation('isValid')) {
+                    var flag = 0;
+                    var supFlag = 0;
+                    var reqQtyFlg = 0;
+
+                    $('.reqQty').each(function (index, el) {
+                        $(this).validation();
+                        if (!$(this).validation('isValid')) {
+                            flag = 1;
+                            return false;
+                        } else {
+                            if ($(el).val() == '' || $(el).val() == 0) {
+                                flag = 1;
+                            }
+                            if (parseFloat($(el).val()) % 1 != 0 && parseFloat($(el).val()) % 1 != NaN) {
+                                flag = 1;
+                            }
+                        }
+                    });
+                    $('.reqQtyInpCost').each(function (index, el) {
+                        $(this).validation();
+                        if (!$(this).validation('isValid')) {
+                            reqQtyFlg = 1;
+                            return false;
+                        } else {
+                            if (isNaN($(el).val())) {
+                                reqQtyFlg = 1;
+                            }
+                        }
+                    });
+
+                    $('.selectSup').each(function (index, el) {
+                        $(this).validation();
+                        if (!$(this).validation('isValid')) {
+                            supFlag = 1;
+                            return false;
+                        } else {
+                            if ($(el).val() == '') {
+                                supFlag = 1;
+                            }
+                        }
+                    });
+                if (reqQtyFlg == 0 && supFlag == 0 && flag == 0) {
+                    $('#createpo_form').submit();
+                }                
+            }
+
+        });
+
+            $('.delete-row').each(function (index, ele) {
+                $(ele).on('click', function (event) {
+                    event.preventDefault();
+                    var itemID = $(this).data('id');
+                    var total = 0;
+                    $('#pending_' + itemID).remove();
+
+                    $('.rowTotal').each(function (index, el) {
+                        total += Number($(el).val());
+                    });
+                    formattedPrice = '<?php echo $currencySymbol ?>' + total.toFixed(2);
+                    $('#grand_total').html(formattedPrice);
+                    $('#sub_total').html(formattedPrice);
+                });
+            });
+
+            $('.reqQty').each(function (index, ele) {
+
+                $(ele).on('change', function (event) {
+                    event.preventDefault();
+                    var rowTotal = 0;
+                    var total = 0;
+                    var itemID = $(this).data('id');
+
+                    $(this).validation();
+
+                    if ($(this).validation('isValid')) {
+
+                        if ($('#input_cost_' + itemID).val() != '') {
+                            rowTotal = $('#input_cost_' + itemID).val() * $(ele).val();
+                        } else {
+                            rowTotal = $('#cost_' + itemID).val() * $(ele).val();
+                        }
+
+                        $('#row_total_' + itemID).val(rowTotal.toFixed(2));
+
+                        $('.rowTotal').each(function (index, el) {
+                            total += Number($(el).val());
+                        });
+                        formattedPrice = '<?php echo $currencySymbol ?>' + total.toFixed(2);
+                        $('#grand_total').html(formattedPrice);
+                        $('#sub_total').html(formattedPrice);
+                    }
+                });
+            });
+
+            $('.reqQtyInpCost').each(function (index, ele) {
+                $(ele).on('change', function (event) {
+                    event.preventDefault();
+                    var rowTotal = 0;
+                    var total = 0;
+                    var itemID = $(this).data('id');
+                    $(this).validation();
+
+                    if ($(this).validation('isValid')) {
+
+                        if ($('#req_qty_' + itemID).val() != '') {
+                            rowTotal = $('#req_qty_' + itemID).val() * $(ele).val();
+                        } else {
+                            rowTotal = $('#cost_' + itemID).val() * $(ele).val();
+                        }
+                        console.log(rowTotal);
+                        $('#row_total_' + itemID).val(rowTotal.toFixed(2));
+
+                        $('.rowTotal').each(function (index, el) {
+                            total += Number($(el).val());
+                        });
+                        formattedPrice = '<?php echo $currencySymbol ?>' + total.toFixed(2);
+                        $('#grand_total').html(formattedPrice);
+                        $('#sub_total').html(formattedPrice);
+                    }
+                })
+            });
+        });
+    </script>
+<?php endif; ?> 

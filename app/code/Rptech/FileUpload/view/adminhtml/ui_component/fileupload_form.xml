@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">fileupload_form.fileupload_form_data_source</item>
+            <item name="deps" xsi:type="string">fileupload_form.fileupload_form_data_source</item>
+        </item>
+        <item name="label" xsi:type="string" translate="true">Awards</item>
+        <item name="config" xsi:type="array">
+            <item name="dataScope" xsi:type="string">data</item>
+            <item name="namespace" xsi:type="string">fileupload_form</item>
+        </item>
+        <item name="template" xsi:type="string">templates/form/collapsible</item>
+    </argument>
+    <settings>
+        <buttons>
+            <button name="back" class="Rptech\FileUpload\Block\Adminhtml\Data\Edit\Buttons\Back"/>
+            <button name="delete" class="Rptech\FileUpload\Block\Adminhtml\Data\Edit\Buttons\Delete"/>
+            <button name="reset" class="Rptech\FileUpload\Block\Adminhtml\Data\Edit\Buttons\Reset"/>
+            <button name="save" class="Rptech\FileUpload\Block\Adminhtml\Data\Edit\Buttons\Save"/>
+            <button name="save_and_continue"
+                    class="Rptech\FileUpload\Block\Adminhtml\Data\Edit\Buttons\SaveAndContinue"/>
+        </buttons>
+        <namespace>fileupload_form</namespace>
+        <dataScope>data</dataScope>
+        <deps>
+            <dep>fileupload_form.fileupload_form_data_source</dep>
+        </deps>
+    </settings>
+    <dataSource name="fileupload_form_data_source">
+        <argument name="dataProvider" xsi:type="configurableObject">
+            <argument name="class" xsi:type="string">Rptech\FileUpload\Model\DataProvider</argument>
+            <argument name="name" xsi:type="string">fileupload_form_data_source</argument>
+            <argument name="primaryFieldName" xsi:type="string">entity_id</argument>
+            <argument name="requestFieldName" xsi:type="string">entity_id</argument>
+        </argument>
+        <argument name="data" xsi:type="array">
+            <item name="js_config" xsi:type="array">
+                <item name="component" xsi:type="string">Magento_Ui/js/form/provider</item>
+            </item>
+        </argument>
+        <settings>
+            <submitUrl path="fileupload/admin/save"/>
+        </settings>
+    </dataSource>
+    <fieldset name="general">
+        <settings>
+            <collapsible>false</collapsible>
+            <label/>
+        </settings>
+        <field name="entity_id" formElement="hidden">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="source" xsi:type="string">fileupload</item>
+                </item>
+            </argument>
+            <settings>
+                <dataType>text</dataType>
+                <dataScope>entity_id</dataScope>
+            </settings>
+        </field>
+        <field name="file_upload">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">string</item>
+                    <item name="source" xsi:type="string">Label </item>
+                    <item name="label" xsi:type="string" translate="true">Upload File</item>
+                    <item name="visible" xsi:type="boolean">true</item>
+                    <item name="formElement" xsi:type="string">fileUploader</item>
+                    <item name="elementTmpl" xsi:type="string">ui/form/element/uploader/uploader</item>
+                    <item name="previewTmpl" xsi:type="string">Rptech_FileUpload/image-preview</item>
+                    <item name="isMultipleFiles" xsi:type="boolean">false</item>
+                    <item name="required" xsi:type="boolean">true</item>
+                    <item name="sortOrder" xsi:type="number">1</item>
+                    <item name="uploaderConfig" xsi:type="array">
+                        <item name="url" xsi:type="url" path="fileupload/admin/upload"/>
+                    </item>
+                </item>
+            </argument>
+        </field>
+    </fieldset>
+</form>

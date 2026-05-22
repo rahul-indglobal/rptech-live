@@ -1,0 +1,231 @@
+<?php
+
+$poID = $this->getRequest()->getParam('id');
+$poCollection = $this->loadPurchaseOrder($poID);
+$poData = $poCollection->getData();
+$poiData = $this->getPOModel()->getProducts($poCollection);
+$poCommentsCol = $this->getPOModel()->getComments($poCollection);
+$srIncrIdArr = $this->getPOModel()->getStockReceivedIds($poCollection);
+$invoiceIdArr = $this->getPOModel()->getInvoiceIds($poCollection);
+
+$priceHelper = $block->getPriceingHelper();
+$currencyCode = $block->getCurrentStore()->getCurrentCurrencyCode();
+$_localeCurrency = $block->getCurrencyInterface();
+$currencySymbol = $_localeCurrency->getCurrency($currencyCode)->getSymbol();
+$_bizHelper = $block->getBizHelper();
+$supName = $this->getSupplierFullName($poData['supplier_id']);
+
+?>
+<?php if ($_bizHelper->isEnable()) : ?>
+<section class="admin__page-section">
+    <div class="admin__page-section-content">
+        <div class="admin__page-section-title">
+            <span class="title"> <?php echo __('Purchase Order Items') ?> </span>
+        </div>
+        <div class="admin__control-table-wrapper">
+            <table cellspacing="0" class="admin__control-table data-table" width="100%">
+                <thead>
+                    <tr class="headings">
+                        <th><?php echo __('Image'); ?></th>
+                        <th class="col-product"><?php echo __('Name') ?></th>
+                        <th><?php echo __('SKU'); ?></th>
+                        <?php if ($_bizHelper->isModuleEnabled('Biztech_Inventorysystemadvance')): ?>
+                            <th><?php echo __('Warehouse'); ?></th>
+                        <?php endif; ?>
+                        <th><?php echo __('Quantity Purchased'); ?></th>
+                        <th><?php echo __('Quantity Received'); ?></th>
+                        <th><?php echo __('Unit Cost'); ?></th>
+                        <th><?php echo __('Row Total'); ?></th>
+                    </tr>
+                </thead>
+                <?php
+                $i = 0;
+                foreach ($poiData as $key => $data) { $i++;?>
+                <tbody class="<?php /* @escapeNotVerified */ echo($i%2) ? 'even' : 'odd' ?>">
+                    <tr>
+                        <td><?php echo $this->getProductImage($data['product_id']) ?></td>
+                        <td><?php echo $data['product_name'] ?></td>
+                        <td><?php echo $data['product_sku'] ?></td>
+                        <?php if ($_bizHelper->isModuleEnabled('Biztech_Inventorysystemadvance')):
+
+                        $warehouseModel = $block->getWarehouse($data['warehouse_id']);                         
+                        $warehouseName = $warehouseModel->getWarehouseName(); ?>
+
+                        <td><?php echo $warehouseName ?></td>
+                    <?php endif; ?>
+                    <td><?php echo $data['qty_purchased'] ?></td>
+                    <td><?php echo !is_null($data['qty_received']) ? $data['qty_received'] : 0 ?></td>
+                    <td><?php echo $priceHelper->currency($data['cost'], true, true); ?></td>
+                    <td><?php echo $priceHelper->currency($data['row_total'], true, true); ?></td>
+                </tr>
+            </tbody>
+            <?php }
+            ?>
+        </table>
+    </div>
+</div>
+</section>
+
+<section class="admin__page-section order-summary">
+    <div class="admin__page-section-content">
+        <div class="admin__page-section-item order-comments-history">
+            <div class="admin__page-section-item-title">
+                <span class="title"><?php echo __('Additional Details') ?></span>
+            </div>
+            <table cellspacing="0" class="admin__table-primary dashboard-data">
+                <tbody>
+                    <tr class="admin__field">
+                        <td>
+                            <strong> <?php echo __('Supplier') ?></strong>
+                            <span><?php echo $supName ?></span>
+                        </td>
+                    </tr>
+                    <tr class="admin__field">
+                        <td>
+                            <strong> <?php echo __('PO Status') ?></strong>
+                            <span><?php echo $poData['status'] ?></span>
+                        </td>
+                    </tr>
+
+                    <tr class="admin__field">
+                        <td>
+                            <strong> <?php echo __('Sales Order(s)') ?></strong>
+                            <?php
+                            if ($poData['sales_order_id']) {
+                                $getIncrIds = explode(",", $poData['sales_order_id']);
+                                for ($i = 0; $i < count($getIncrIds); $i++) {
+                                    $orderModel = $block->getOrder();
+                                    $order = $orderModel->loadByIncrementId($getIncrIds[$i]);
+                                    $id = $order->getId();
+                                    $setLinks[] = "<a href='" . $this->getUrl('sales/order/view', ['order_id' => $id]) . "'>" . $getIncrIds[$i] . "</a>";
+                                }
+                                echo '<span>' . implode(",", $setLinks) . '</span>';
+                            } else {
+                                echo '<span>N/A</span>';
+                            }
+                            ?>
+                        </td>
+                    </tr>
+
+                    <tr class="admin__field">
+                        <td>
+                            <strong> <?php echo __('Stock Received Id(s)') ?></strong>
+                            <?php
+                            if (!empty($srIncrIdArr[0])) {
+                                echo '<span>' . $srIncrIdArr[0] . '</span>';
+                            } else {
+                                echo '<span>N/A</span>';
+                            }
+                            ?>
+                        </td>
+                    </tr>
+                    <!-- TODO: PO Invoice -->
+                    <tr class="admin__field">
+                        <td>
+                            <strong> <?php echo __('Invoice Id') ?></strong>
+                            <?php
+                            if (!empty($invoiceIdArr)) {
+                                echo '<span>' . $invoiceIdArr . '</span>';
+                            } else {
+                                echo '<span>N/A</span>';
+                            }
+                            ?>
+                        </td>
+                    </tr>
+
+                    <tr class="admin__field">
+                        <td>
+                            <strong> <?php echo __('Expected Delivery Date') ?></strong>
+                            <?php
+                            if ($poData['required_date'] == '0000-00-00 00:00:00' || $poData['required_date'] == '1970-01-01 00:00:00') {
+                                echo "N/A";
+                            } else {
+                                echo date("M d, Y", strtotime(__($poData['required_date'])));
+                            }
+                            ?>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="admin__page-section-item order-totals">
+            <div class="admin__field">
+                <div class="admin__page-section-item-title">
+                    <span class="title"><?php echo __('Shippment Information') ?></span>
+                </div>
+                <div class="admin__page-section-item-content">
+                    <fieldset class="admin__fieldset">
+                        <strong><?php echo $poData['shipment_method'] ? $poData['shipment_method'] : 'N/A'; ?></strong>
+                    </fieldset>
+                </div>
+            </div>
+            <div class="admin__field">
+                <div class="admin__page-section-item-title">
+                    <span class="title"><?php echo __('Payment Information') ?></span>
+                </div>
+
+                <div class="admin__page-section-item-content">
+                    <fieldset class="admin__fieldset">
+                        <strong><?php echo $poData['payment_method'] ? $poData['payment_method'] : 'N/A'; ?></strong>
+                    </fieldset>
+                </div>
+            </div>
+
+            <div class="admin__field">
+
+                <div class="admin__page-section-item-title">
+                    <span class="title"><?php echo __('Order Totals') ?></span>
+                </div>
+
+                <div class="admin__page-section-item-content">
+                    <fieldset id="order-totals" class="admin__fieldset">
+                        <table class="admin__table-secondary data-table">
+                            <tbody>
+                                <tr class="row-totals">
+                                    <td style="" class="admin__total-mark" colspan="1">
+                                        <?php echo __('Subtotal') ?>
+                                    </td>
+                                    <td style="" class="admin__total-amount">
+                                        <span class="price"
+                                        id="sub_total"><?php echo $priceHelper->currency($poData['total'], true, true); ?></span>
+                                    </td>
+                                </tr>
+                                <tr class="row-totals">
+                                    <td style="" class="admin__total-mark" colspan="1">
+                                        <strong><?php echo __('Grand Total') ?></strong>
+                                    </td>
+                                    <td style="" class="admin__total-amount">
+                                        <strong><span class="price"
+                                          id="grand_total"><?php echo $priceHelper->currency($poData['total'], true, true); ?></span></strong>
+                                      </td>
+                                  </tr>
+                              </tbody>
+                          </table>
+                      </fieldset>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </section>
+
+  <section class="admin__page-section comment-history">
+    <div class="admin__page-section-content">
+        <div class="admin__page-section-item order-comments-history">
+            <?php echo $block->getChildHtml('po_order_history') ?>
+        </div>
+    </div>
+</section>
+<script>
+    require(['prototype'], function () {
+
+        submitComment = function () {
+            submitAndReloadArea($('po_history_block').parentNode, '<?php /* @escapeNotVerified */ echo $block->getSubmitUrl() ?>')
+        }
+
+        if ($('submit_comment_button')) {
+            $('submit_comment_button').observe('click', submitComment);
+        }
+
+    });
+</script>
+<?php endif; ?>

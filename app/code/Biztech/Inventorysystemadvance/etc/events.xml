@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Copyright © Biztech, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../../../lib/internal/Magento/Framework/Event/etc/events.xsd">
+    <event name="catalog_product_save_after">
+        <observer name="managehistoryevent" instance="Biztech\Inventorysystemadvance\Observer\ManageafterSave" />
+    </event>
+    <event name="checkout_onepage_controller_success_action">
+        <observer name="managehistoryeventonepage" instance="Biztech\Inventorysystemadvance\Observer\ManageafterSave" />
+    </event>
+    <event name="multishipping_checkout_controller_success_action">
+        <observer name="managehistoryevent" instance="Biztech\Inventorysystemadvance\Observer\ManageafterSave" />
+    </event>
+    <event name="order_cancel_after">
+        <observer name="managehistoryevent" instance="Biztech\Inventorysystemadvance\Observer\ManageafterSave" />
+    </event>
+    <event name="sales_order_creditmemo_refund">
+        <observer name="managehistoryevent" instance="Biztech\Inventorysystemadvance\Observer\ManageafterSave" />
+    </event>
+    <event name="is_manage_stock_grid_save">
+        <observer name="managehistoryevent" instance="Biztech\Inventorysystemadvance\Observer\ManageafterSave" />
+    </event>
+    <event name="product_stock_update_barcode_scan">
+        <observer name="barcodeStockUpdate" instance="Biztech\Inventorysystemadvance\Observer\ManageafterSave" />
+    </event>
+    <event name="update_product_stock_after_stock_received">
+        <observer name="updateproductstock" instance="Biztech\Inventorysystemadvance\Observer\ManageafterSave" />
+    </event>
+    <event name="warehouse_stock_update_log_barcode">
+        <observer name="warehousestockupdate" instance="Biztech\Inventorysystemadvance\Observer\ManageafterSave" />
+    </event>
+</config>
