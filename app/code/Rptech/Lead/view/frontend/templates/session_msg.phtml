@@ -1,0 +1,22 @@
+<?php
+$typeClass = "";
+$message = "";
+if (isset($_SESSION['success_msg'])) {
+	$typeClass = 'message-success success';
+	$message = $_SESSION['success_msg'];
+	unset($_SESSION['success_msg']);
+} elseif (isset($_SESSION['error_msg'])) {
+	$typeClass = 'message-error error';
+	$message = $_SESSION['error_msg'];
+	unset($_SESSION['error_msg']);
+}
+?>
+<?php if ($message): ?>
+	<div class="page messages">
+		<div class="messages">
+			<div class="message <?= $typeClass ?>">
+				<div><?= $message ?></div>
+			</div>
+		</div>
+	</div>
+<?php endif; ?>

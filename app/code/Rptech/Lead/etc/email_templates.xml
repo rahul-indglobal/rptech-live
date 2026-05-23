@@ -1,4 +1,6 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Email:etc/email_templates.xsd">
     <template id="rptech_lead_otp_verify_email" label="Send OTP Email Template" file="send_otp.html" type="html" module="Rptech_Lead" area="adminhtml"/>
+
+    <template id="dell_gb_lead_mail" label="Send Dell GB Enquiry Alert" file="dell_gb_email_template.html" type="html" module="Rptech_Lead" area="frontend"/>
 </config>

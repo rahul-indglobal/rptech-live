@@ -11,5 +11,13 @@
              parent="Rptech_ServiceAddress::main"
              action="delllead/index/index"
              resource="Rptech_Lead::dell_leads" />
+
+        <add id="Rptech_Lead::dell_gb_leads"
+             title="Dell GB10 Leads"
+             module="Rptech_Lead"
+             sortOrder="201"
+             parent="Rptech_ServiceAddress::main"
+             action="delllead/dellgb/index"
+             resource="Rptech_Lead::dell_leads" />
     </menu>
 </config>

@@ -1,13 +1,22 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../../lib/internal/Magento/Framework/ObjectManager/etc/config.xsd">
-    <!-- Admin Grid  -->
+    <!-- Admin Grid Dell Pro Max with GB 10 -->
     <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
         <arguments>
             <argument name="collections" xsi:type="array">
+                <item name="dell_gb_lead_grid_listing_data_source" xsi:type="string">Rptech\Lead\Model\ResourceModel\DellGbLead\Grid\Collection</item>
+
                 <item name="dell_lead_grid_listing_data_source" xsi:type="string">Rptech\Lead\Model\ResourceModel\DellLead\Grid\Collection</item>
             </argument>
         </arguments>
     </type>
+    <virtualType name="Rptech\Lead\Model\ResourceModel\DellGbLead\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">rptech_dell_leads_gb10</argument>
+            <argument name="resourceModel" xsi:type="string">Rptech\Lead\Model\ResourceModel\DellGbLead</argument>
+        </arguments>
+    </virtualType>
+    <!-- Admin Grid Dell Pro Max with GB 10 -->
     <virtualType name="Rptech\Lead\Model\ResourceModel\DellLead\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
         <arguments>
             <argument name="mainTable" xsi:type="string">rptech_dell_leads</argument>

@@ -85,7 +85,7 @@ class FormValidator
 		/** ------------------------------ */
 
 		if ($errors) {
-			throw new InputException(__(implode("\n", $errors)));
+			throw new InputException(__(implode("<br>", $errors)));
 		}
 
 		return true;
