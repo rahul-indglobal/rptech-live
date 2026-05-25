@@ -1218,5 +1218,45 @@ require([
             galleryActiveClass: "active",
             imageCrossfade: true
         });
+
+        //dell-dummy page
+        $('body').on('submit', '#downloadModal', function (e) {
+            e.preventDefault();
+            var name = $('#fullName').val();
+            var email = $('#email').val();
+            var formKey = '<?= $block->escapeJs($formKey) ?>';
+            if (name && email) {
+                $.ajax({
+                    url: '/rptechlead/lead/SaveBrochureLead',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        name: name,
+                        email: email,
+                        form_key: formKey
+                    },
+                    //showLoader: true,
+                    success: function (response) {
+                        if (response.success) {
+                            const link = document.createElement("a");
+                            link.href = "https://rptechindia.com/media/fileupload/Dell_CSG_Catalog_FY27Q1-India_1.pdf";
+                            link.download = "GB10-Brochure.pdf";
+                            link.click();
+
+                            alert("Thank you " + name + "! Your brochure is downloading.");
+                            closeModal();
+                            $('#downloadForm')[0].reset();
+                        } else {
+                            alert("Backend Error: " + response.message);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("AJAX Error Status: " + status);
+                        console.error("AJAX Error Thrown: " + error);
+                        alert("An error occurred while saving your details. Please check the console logs.");
+                    }
+                });
+            }
+        });
     });
 });

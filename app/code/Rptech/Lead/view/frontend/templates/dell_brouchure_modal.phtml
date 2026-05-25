@@ -1,0 +1,36 @@
+<?php
+/**
+ * @var $block \Magento\Framework\View\Element\Template
+ */
+$formKeyBlock = $block->getLayout()->createBlock(\Magento\Framework\View\Element\FormKey::class);
+$formKey = $formKeyBlock->getFormKey();
+?>
+
+<!-- Download Modal -->
+<div class="download-modal" id="downloadModal">
+	<div class="modal-box">
+		<span class="close-btn" onclick="closeModal()">×</span>
+
+		<h2>Download GB10 Product Brochure</h2>
+
+		<form id="downloadForm">
+			<input type="text" id="fullName" placeholder="Full Name" required />
+			<input type="email" id="email" placeholder="Email ID" required />
+
+			<button type="submit" class="btn-custom w-100" id="btn_download_brochure">Download Brochure</button>
+		</form>
+	</div>
+</div>
+
+<script type="text/javascript">
+    function openModal() {
+        document.getElementById("downloadModal").style.display = "flex";
+    }
+
+    function closeModal() {
+        document.getElementById("downloadModal").style.display = "none";
+    }
+</script>
+
+
+
