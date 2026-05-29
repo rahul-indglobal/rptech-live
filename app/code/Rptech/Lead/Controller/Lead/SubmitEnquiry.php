@@ -46,7 +46,8 @@ class SubmitEnquiry extends Action
 		if (!$post) {
 			$this->messageManager->addErrorMessage(__('No form data received.'));
 			$_SESSION['error_msg'] = 'No form data received.';
-			return $this->_redirect($this->_redirect->getRefererUrl());
+			$resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
+			return $resultRedirect->setRefererUrl();
 		}
 
 		try {
@@ -54,9 +55,7 @@ class SubmitEnquiry extends Action
 			$this->formValidator->validate($post);
 
 			// Determine redirect URL safely
-			$url = (!empty($post['type']) && $post['type'] == "Dell Form")
-				? 'dell-form'
-				: 'dellstoragethroughpartner';
+			$url = 'dell-pro-max-with-gb10-form-submitted';
 
 			/** @var DellGbLead $model */
 			$model = $this->dellGbLeadFactory->create();
@@ -86,17 +85,13 @@ class SubmitEnquiry extends Action
 				$this->sendEmailAlert($model);
 			};
 
-			if ($post['type'] == "Dell Form") {
-				$_SESSION['display_links'] = 'yes';
-			}
-
-
 		} catch (\Magento\Framework\Exception\InputException $e) {
 
 			// Validation failure message
 			$this->messageManager->addErrorMessage($e->getMessage());
 			$_SESSION['error_msg'] = $e->getMessage();
-			return $this->_redirect($this->_redirect->getRefererUrl());
+			$resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
+			return $resultRedirect->setRefererUrl();
 
 		} catch (\Exception $e) {
 
@@ -109,11 +104,13 @@ class SubmitEnquiry extends Action
 			);
 			$_SESSION['error_msg'] = 'Something went wrong while saving your data. Please try again.';
 
-			return $this->_redirect($this->_redirect->getRefererUrl());
+			$resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
+			return $resultRedirect->setRefererUrl();
 		}
 
 		// Final redirect
-		return $this->_redirect($this->_redirect->getRefererUrl());
+		$resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
+		return $resultRedirect->setPath($url);
 	}
 
 	public function sendEmailAlert($model){

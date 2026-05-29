@@ -1239,7 +1239,7 @@ require([
                     success: function (response) {
                         if (response.success) {
                             const link = document.createElement("a");
-                            link.href = "https://rptechindia.com/media/fileupload/Dell_CSG_Catalog_FY27Q1-India_1.pdf";
+                            link.href = "https://rptechindia.com/media/fileupload/dell-pro-max-with-gb10-workstation-brochure-and-spec-sheet.pdf";
                             link.download = "GB10-Brochure.pdf";
                             link.click();
 
